@@ -21,6 +21,8 @@ export function mountILBMPanel({ api, memory, documentObject = globalThis.docume
   const addRecord = el(documentObject, 'button', { type: 'button', textContent: '添加事件' });
   const invalidateFloor = el(documentObject, 'button', { type: 'button', textContent: '从此楼层作废后续记录' });
   const invalidateSwipe = el(documentObject, 'button', { type: 'button', textContent: '保留指定 Swipe，作废其它分支' });
+  const replayLayers = el(documentObject, 'input', { class: 'ilbm-debug-input', type: 'number', value: '10', min: '0', max: '10000' });
+  const activeLayers = el(documentObject, 'input', { class: 'ilbm-debug-input', type: 'number', value: '5', min: '0', max: '1000' });
   const refresh = el(documentObject, 'button', { type: 'button', textContent: '刷新状态' });
   const result = el(documentObject, 'pre', { class: 'ilbm-debug-result', textContent: '尚未测试。' });
   const memoryOutput = el(documentObject, 'pre', { class: 'ilbm-debug-result', textContent: '' });
@@ -29,7 +31,7 @@ export function mountILBMPanel({ api, memory, documentObject = globalThis.docume
   const buttons = el(documentObject, 'div', { class: 'ilbm-debug-actions' });
   buttons.append(test, refresh);
   const memoryActions = el(documentObject, 'div', { class: 'ilbm-debug-actions' }); memoryActions.append(addEntity, addRecord);
-  body.append(input, buttons, el(documentObject, 'h3', { textContent: '标记处理结果' }), result, el(documentObject, 'h3', { textContent: '手动记忆测试' }), entityName, entityType, recordText, recordFloor, sourceMessageId, swipeId, memoryActions, el(documentObject, 'div', { class: 'ilbm-debug-actions' }), memoryOutput, el(documentObject, 'h3', { textContent: '运行状态' }), status);
+  body.append(input, buttons, el(documentObject, 'h3', { textContent: '标记处理结果' }), result, el(documentObject, 'h3', { textContent: '手动记忆测试' }), entityName, entityType, recordText, recordFloor, sourceMessageId, swipeId, el(documentObject, 'label', { textContent: '活跃窗口层数' }), activeLayers, el(documentObject, 'label', { textContent: '回放窗口层数' }), replayLayers, memoryActions, el(documentObject, 'div', { class: 'ilbm-debug-actions' }), memoryOutput, el(documentObject, 'h3', { textContent: '运行状态' }), status);
   const invalidationActions = body.children[body.children.length - 2];
   invalidationActions.append(invalidateFloor, invalidateSwipe);
   const head = el(documentObject, 'header', { class: 'ilbm-debug-head' }); head.append(title, close); root.append(head, body); documentObject.body.append(toggle, root);
@@ -41,6 +43,8 @@ export function mountILBMPanel({ api, memory, documentObject = globalThis.docume
   addRecord.addEventListener('click', () => { try { memory?.addRecord({ text: recordText.value, floor: Number(recordFloor.value), sourceMessageId: sourceMessageId.value || null, swipeId: Number(swipeId.value) || 0 }); render(); } catch (error) { memoryOutput.textContent = `添加事件失败：${error?.message ?? error}`; } });
   invalidateFloor.addEventListener('click', () => { try { memory?.invalidateFromMessage({ floor: Number(recordFloor.value), sourceMessageId: sourceMessageId.value || null }); render(); } catch (error) { memoryOutput.textContent = `作废失败：${error?.message ?? error}`; } });
   invalidateSwipe.addEventListener('click', () => { try { memory?.invalidateSwipeBranch({ sourceMessageId: sourceMessageId.value, selectedSwipeId: Number(swipeId.value) || 0 }); render(); } catch (error) { memoryOutput.textContent = `分支处理失败：${error?.message ?? error}`; } });
+  activeLayers.addEventListener('change', () => { try { memory?.setSettings({ activeWindowLayers: Number(activeLayers.value) }); render(); } catch (error) { status.textContent = `设置失败：${error?.message ?? error}`; } });
+  replayLayers.addEventListener('change', () => { try { memory?.setSettings({ replayLayers: Number(replayLayers.value) }); render(); } catch (error) { status.textContent = `设置失败：${error?.message ?? error}`; } });
   render(); return { ok: true, root, toggle, close: () => show(false), destroy: () => { root.remove(); toggle.remove(); } };
 }
 

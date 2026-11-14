@@ -1,5 +1,16 @@
 # ILBM Change Log
 
+## CHG-20261114-006 — Replay window controls in debug UI
+
+- Type: FEATURE / CONFIG / UI / TEST
+- Date: 2026-11-14
+- Added: debug controls for active-window layer count and replay-window layer count; settings persist per chat via memory store.
+- Current state and replay output remain derived from normalized valid history; no duplicated state table introduced.
+- Verification: Node suite 28/28; syntax checks pass.
+- Commit: pending in this cycle.
+
+---
+
 ## CHG-20261114-005 — ST message lifecycle adapter
 
 - Type: FEATURE / EVT / TEST
