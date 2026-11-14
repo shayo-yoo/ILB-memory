@@ -48,6 +48,14 @@
 - 候选事件不是最终事实；没有通过程序校验的内容不能进入有效历史。
 - 否决：让 AI 直接写最终存储、整批失败导致合法项丢失、错误内容静默跳过。
 
+## D-ILBM-006 · AI 响应先解析再进入候选事件校验
+
+- 日期：2026-11-14
+- 状态：Accepted
+- AI 响应只作为候选 JSON 输入；支持纯数组、`{events: []}` 和 fenced JSON，解释性 prose 不当作事实。
+- 解析失败不写入存储，返回错误；解析成功仍必须经过候选事件校验、实体引用验证和部分接受。
+- 第一周期/第二阶段不主动调用模型；调试面板只提供手动粘贴测试入口。
+
 ## LEGACY-BASELINE
 
 See `LEGACY-BASELINE.md`. Initial directory contained only the user-provided requirements document and no Git repository.

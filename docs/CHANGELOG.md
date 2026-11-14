@@ -1,5 +1,16 @@
 # ILBM Change Log
 
+## CHG-20261114-010 — AI candidate response parser
+
+- Type: FEATURE / API / TEST / UI
+- Date: 2026-11-14
+- Added: parser for plain JSON, fenced JSON and `{events: []}` AI responses; prose/malformed/empty responses fail closed with diagnostic error.
+- Added: debug panel action “解析 AI 候选响应” that feeds parsed output into the existing validator/store path; no model call is made.
+- Verification: Node suite 35/35.
+- Commit: pending in this cycle.
+
+---
+
 ## CHG-20261114-009 — Candidate event validation and manual import
 
 - Type: FEATURE / DATA / UI / TEST
