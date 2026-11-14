@@ -1,5 +1,17 @@
 # ILBM Change Log
 
+## CHG-20261114-004 — Message invalidation and Swipe branch controls
+
+- Type: FEATURE / DATA / TEST / UI
+- Date: 2026-11-14
+- Added: `invalidateFromMessage` invalidates records at an edited/deleted floor and all later records while retaining history; `invalidateSwipeBranch` invalidates non-selected swipe records without deletion.
+- Added: debug panel inputs/actions for source message ID, swipe ID, “从此楼层作废后续记录” and “保留指定 Swipe，作废其它分支”.
+- State remains derived through full recomputation; no incremental patching is used.
+- Verification: Node suite 25/25, syntax checks pass. Real ST UI probe for these two new controls is pending; previous debug panel probe passed.
+- Commit: pending in this cycle.
+
+---
+
 ## CHG-20261114-003 — Manual memory store, state replay and user debug controls
 
 - Type: FEATURE / DATA / TEST / UI

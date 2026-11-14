@@ -42,7 +42,7 @@ export function initializeILBM({ context, eventSource, eventTypes, globalObject 
   const chatId = context?.getCurrentChatId?.() ?? context?.chatId ?? 'default';
   const memory = createMemoryStore({ chatId });
   const inspectMemory = () => ({ ...memory.inspect(), currentState: calculateCurrentState(memory.inspect()), replay: replayRecords(memory.inspect()) });
-  const memoryApi = { id: 'ILBM-Memory', version: '0.1.0', inspect: inspectMemory, registerEntity: input => memory.registerEntity(input), addRecord: input => memory.addRecord(input), reset: () => memory.reset() };
+  const memoryApi = { id: 'ILBM-Memory', version: '0.1.0', inspect: inspectMemory, registerEntity: input => memory.registerEntity(input), addRecord: input => memory.addRecord(input), invalidateFromMessage: input => memory.invalidateFromMessage(input), invalidateSwipeBranch: input => memory.invalidateSwipeBranch(input), reset: () => memory.reset() };
   const ilb = registerILBSeriesAPI(globalObject, bridge);
   integration = { display, prompt, capture, ilb, ilbr, memory: memoryApi };
   try { globalObject.ILBM_MEMORY = memoryApi; } catch { /* optional global diagnostic */ }

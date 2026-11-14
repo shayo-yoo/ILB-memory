@@ -23,6 +23,15 @@
 - Replay uses a closed floor interval immediately before the active window; it never deletes out-of-window records.
 - AI extraction and branch invalidation are not silently approximated in this cycle.
 
+## D-ILBM-003 · 编辑、删除与 Swipe 采用保留历史的失效标记
+
+- 日期：2026-11-14
+- 状态：Accepted
+- 编辑/删除第 N 层时，将第 N 层及之后记录标记为 `valid:false`，不物理删除，后续由重新提取补回有效记录。
+- Swipe 切换时，仅将同一 source message 的非选中 swipe 记录标记为无效。
+- 当前状态始终从有效记录全量重算；本阶段不做局部影响分析。
+- 否决：直接删除记录、只作废单条记录、以 floor+sequence 作为永久 ID。
+
 ## LEGACY-BASELINE
 
 See `LEGACY-BASELINE.md`. Initial directory contained only the user-provided requirements document and no Git repository.

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { addRecord, calculateCurrentState, createMemoryState, registerEntity, replayRecords } from '../lib/memory-model.js';
+import { addRecord, calculateCurrentState, createMemoryState, invalidateFromMessage, invalidateSwipeBranch, registerEntity, replayRecords } from '../lib/memory-model.js';
 import { createMemoryStore } from '../lib/memory-store.js';
 
 test('entity names collide safely and IDs remain stable', () => {
@@ -28,6 +28,24 @@ test('replay uses closed interval before active window', () => {
   let state = createMemoryState({ settings: { activeWindowLayers: 5, replayLayers: 3 } });
   for (let floor = 1; floor <= 10; floor += 1) state = addRecord(state, { id: `r${floor}`, text: String(floor), floor }).state;
   assert.deepEqual(replayRecords(state, { currentFloor: 10 }).map(x => x.floor), [3, 4, 5]);
+});
+
+test('editing a floor invalidates that floor and every later record but preserves history', () => {
+  let state = createMemoryState();
+  state = addRecord(state, { id: 'a', text: 'old', floor: 3, sourceMessageId: 'm3' }).state;
+  state = addRecord(state, { id: 'b', text: 'later', floor: 5, sourceMessageId: 'm5' }).state;
+  const next = invalidateFromMessage(state, { floor: 3, sourceMessageId: 'm3' });
+  assert.equal(next.records.length, 2);
+  assert.equal(next.records.every(record => record.valid === false), true);
+});
+
+test('swipe invalidation keeps selected branch and invalidates other branch', () => {
+  let state = createMemoryState();
+  state = addRecord(state, { id: 's1', text: 'left', floor: 4, sourceMessageId: 'm4', swipeId: 0 }).state;
+  state = addRecord(state, { id: 's2', text: 'right', floor: 4, sourceMessageId: 'm4', swipeId: 1 }).state;
+  const next = invalidateSwipeBranch(state, { sourceMessageId: 'm4', selectedSwipeId: 1 });
+  assert.equal(next.records.find(record => record.id === 's1').valid, false);
+  assert.equal(next.records.find(record => record.id === 's2').valid, true);
 });
 
 test('store persists independently and degrades when storage fails', () => {
