@@ -55,7 +55,7 @@ export function initializeILBM({ context, eventSource, eventTypes, globalObject 
   const ilb = registerILBSeriesAPI(globalObject, bridge);
   integration = { display, prompt, capture, ilb, ilbr, memory: memoryApi };
   try { globalObject.ILBM_MEMORY = memoryApi; } catch { /* optional global diagnostic */ }
-  try { globalObject.__ILBM_DEBUG_PANEL__ = mountILBMPanel({ api: globalObject.ILBM, memory: memoryApi, documentObject: globalObject.document, showToggle: false }); installSettingsEntry(globalObject, globalObject.__ILBM_DEBUG_PANEL__); } catch { /* UI optional */ }
+  try { globalObject.__ILBM_DEBUG_PANEL__ = mountILBMPanel({ api: globalObject.ILBM, memory: memoryApi, documentObject: globalObject.document, showToggle: false }); installSettingsEntryWhenReady(globalObject, globalObject.__ILBM_DEBUG_PANEL__); } catch { /* UI optional */ }
   return { ok: true, version: VERSION, capabilities: bridge.capabilities, integration };
 }
 
@@ -113,14 +113,32 @@ export function publishGlobalApi(globalObject, context, initialized) {
 export function installSettingsEntry(globalObject = globalThis, panel) {
   const documentObject = globalObject?.document;
   if (!documentObject?.body || !panel) return false;
-  const host = documentObject.querySelector('#extensions_settings, #extensions_settings2, .extensions_settings');
-  if (!host || host.querySelector('#ilbm-settings-entry')) return false;
-  const card = documentObject.createElement('div'); card.id = 'ilbm-settings-entry'; card.className = 'inline-drawer';
-  const title = documentObject.createElement('div'); title.className = 'inline-drawer-toggle inline-drawer-header'; title.textContent = 'ILB-Memory 记忆管理';
-  const content = documentObject.createElement('div'); content.className = 'inline-drawer-content';
-  const button = documentObject.createElement('button'); button.type = 'button'; button.textContent = '打开 ILB-Memory 记忆管理面板'; button.addEventListener('click', () => { const root = documentObject.getElementById('ilbm-debug-root') ?? panel.root; if (root) { root.hidden = false; root.removeAttribute?.('hidden'); root.style.display = 'block'; } if (typeof panel.open === 'function') panel.open(); });
-  const hint = documentObject.createElement('p'); hint.className = 'ilbm-settings-hint'; hint.textContent = '管理实体、事件、状态、回放和调试信息。默认不会自动注入记忆。';
-  content.append(hint, button); card.append(title, content); host.append(card); return true;
+  const hosts = [...documentObject.querySelectorAll('#extensions_settings, #extensions_settings2, .extensions_settings')];
+  if (!hosts.length) return false;
+  let mounted = false;
+  hosts.forEach((host, index) => {
+    const id = `ilbm-settings-entry-${index + 1}`;
+    if (host.querySelector(`#${id}`)) return;
+    const card = documentObject.createElement('div'); card.id = id; card.className = 'inline-drawer ilbm-settings-entry';
+    const title = documentObject.createElement('div'); title.className = 'inline-drawer-toggle inline-drawer-header'; title.textContent = 'ILB-Memory 记忆管理';
+    const content = documentObject.createElement('div'); content.className = 'inline-drawer-content';
+    const button = documentObject.createElement('button'); button.type = 'button'; button.textContent = '打开 ILB-Memory 记忆管理面板'; button.addEventListener('click', () => { const root = documentObject.getElementById('ilbm-debug-root') ?? panel.root; if (root) { root.hidden = false; root.removeAttribute?.('hidden'); root.style.display = 'block'; } panel.open?.(); });
+    const hint = documentObject.createElement('p'); hint.className = 'ilbm-settings-hint'; hint.textContent = '管理实体、事件、状态、回放和调试信息。默认不会自动注入记忆。';
+    content.append(hint, button); card.append(title, content); host.append(card); mounted = true;
+  });
+  return mounted;
+}
+
+export function installSettingsEntryWhenReady(globalObject = globalThis, panel) {
+  if (installSettingsEntry(globalObject, panel)) return true;
+  const documentObject = globalObject?.document;
+  if (!documentObject?.body) return false;
+  let attempts = 0;
+  const timer = setInterval(() => {
+    attempts += 1;
+    if (installSettingsEntry(globalObject, panel) || attempts >= 40) clearInterval(timer);
+  }, 500);
+  return false;
 }
 
 if (typeof window !== 'undefined' && typeof document !== 'undefined') {

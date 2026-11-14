@@ -11,6 +11,15 @@
 
 ---
 
+## CHG-20261115-026 — Mobile settings entry and delayed host mount
+
+- Mobile ST can use a different settings container or render it after extension startup; ILBM now mounts its settings entry into every available extensions settings host and retries for up to 20 seconds.
+- No floating button is restored; panel remains settings-entry driven.
+- Verification: Node suite 51/51; mobile real-device probe remains manual due to current CDP desktop limitations.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-025 — Force visible ILBM panel from settings entry
 
 - Root cause: ST host CSS retained `display:none` even after removing the `hidden` attribute; settings click appeared to do nothing.
