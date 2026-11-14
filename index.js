@@ -2,6 +2,8 @@ import { createIlbmBridge, registerDisplayFilter, registerMessageCapture, regist
 import { createIlbrService } from './lib/ilbr-engine.js';
 import { createMarkerResult } from './lib/ilbm-bridge.js';
 import { mountILBMPanel } from './ui.js';
+import { createMemoryStore } from './lib/memory-store.js';
+import { calculateCurrentState, replayRecords } from './lib/memory-model.js';
 
 export const VERSION = '0.1.0';
 export const ILBM_EXTENSION_ID = 'ilb-memory';
@@ -37,8 +39,14 @@ export function initializeILBM({ context, eventSource, eventTypes, globalObject 
     onMarked(payload);
   });
 
+  const chatId = context?.getCurrentChatId?.() ?? context?.chatId ?? 'default';
+  const memory = createMemoryStore({ chatId });
+  const inspectMemory = () => ({ ...memory.inspect(), currentState: calculateCurrentState(memory.inspect()), replay: replayRecords(memory.inspect()) });
+  const memoryApi = { id: 'ILBM-Memory', version: '0.1.0', inspect: inspectMemory, registerEntity: input => memory.registerEntity(input), addRecord: input => memory.addRecord(input), reset: () => memory.reset() };
   const ilb = registerILBSeriesAPI(globalObject, bridge);
-  integration = { display, prompt, capture, ilb, ilbr };
+  integration = { display, prompt, capture, ilb, ilbr, memory: memoryApi };
+  try { globalObject.ILBM_MEMORY = memoryApi; } catch { /* optional global diagnostic */ }
+  try { globalObject.__ILBM_DEBUG_PANEL__ = mountILBMPanel({ api: globalObject.ILBM, memory: memoryApi, documentObject: globalObject.document }); } catch { /* UI optional */ }
   return { ok: true, version: VERSION, capabilities: bridge.capabilities, integration };
 }
 

@@ -5,7 +5,8 @@
 ## 模块
 
 - `manifest.json` + `index.js`：ST 扩展入口；发布 `window.ILBM` 和 additive `window.ILB_SERIES.memory`。
-- `ui.js`：非技术用户可用的基础调试面板；打开页面右下角 `ILBM` 按钮，输入文本并点击「测试标记处理」。
+- `ui.js`：非技术用户可用的基础调试面板；打开页面右下角 `ILBM` 按钮，输入文本并点击「测试标记处理」，也可手动添加实体/事件、查看当前状态和回放。
+- `lib/memory-model.js` + `lib/memory-store.js`：第二阶段手动记忆存储、实体注册、事件排序、状态重算和回放窗口。
 - `lib/ilbr-engine.js`：纯同步、按调用的正则处理引擎；调用方传规则，返回原文/输出/命中/捕获/错误。
 - `lib/ilbm-bridge.js`：ILBM marker result、ST display formatter 和 prompt event adapters。
 - `tests/*.test.mjs`：Node 原生单元/契约测试。

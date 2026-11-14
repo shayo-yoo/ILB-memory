@@ -1,5 +1,18 @@
 # ILBM Change Log
 
+## CHG-20261114-003 — Manual memory store, state replay and user debug controls
+
+- Type: FEATURE / DATA / TEST / UI
+- Date: 2026-11-14
+- Added: entity registration with same-name numbering; stable event record IDs; floor/sequence ordering; validity flags; source message/swipe fields; manual localStorage-backed memory store.
+- Added: current state recomputation from valid records and closed-interval replay window before the active chat window.
+- Added: debug UI controls for adding entities and manual events, plus state/replay inspection.
+- Kept out of scope: AI extraction, automatic entity resolution, branch invalidation listeners, relation expansion, and production memory UI.
+- Verification: Node suite 23/23; syntax and manifest validation; prior real ST debug UI probe passed. No real model call or automatic memory extraction was run.
+- Commit: pending in this cycle.
+
+---
+
 ## CHG-20261114-002 — Second-stage debug UI and Git baseline
 
 - Type: FEATURE / TEST / BUILD / DOCS
