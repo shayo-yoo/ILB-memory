@@ -105,6 +105,14 @@
 - 调试面板导入是显式替换，不自动覆盖；失败时保留现有记忆。
 - 否决：直接导出裸数组、按 JSON 猜格式、静默覆盖当前聊天记忆。
 
+## D-ILBM-013 · 调试面板入口放到 ST 扩展设置页
+
+- 日期：2026-11-14
+- 状态：Accepted
+- 默认不显示 ILBM 悬浮按钮；在 ST 扩展设置容器内提供“打开 ILB-Memory 调试面板”按钮。
+- 保留全局 `window.ILBM` 和隐藏诊断 root，但不增加新的常驻悬浮球。
+- 否决：继续增加独立悬浮球，避免与 ILB/其它扩展入口堆叠。
+
 ## LEGACY-BASELINE
 
 See `LEGACY-BASELINE.md`. Initial directory contained only the user-provided requirements document and no Git repository.

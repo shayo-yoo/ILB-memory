@@ -1,0 +1,5 @@
+import { openStPage } from './st-cdp.mjs';
+process.env.ST_URL='http://127.0.0.1:8001/'; process.env.CDP_PORT='9223';
+const page=await openStPage(); await page.send('Runtime.enable'); await page.send('Network.enable'); await page.send('Network.setCacheDisabled',{cacheDisabled:true}); await page.send('Page.reload',{ignoreCache:true});
+for(let i=0;i<40;i+=1){if(await page.evaluate('Boolean(globalThis.SillyTavern?.getContext && globalThis.ILBM)'))break;await new Promise(r=>setTimeout(r,500));}
+const report=await page.evaluate(`(()=>({ilbm:Boolean(globalThis.ILBM),toggle:Boolean(document.querySelector('.ilbm-debug-toggle:not([hidden])')),settingsButton:[...document.querySelectorAll('#extensions_settings button, #extensions_settings2 button, .extensions_settings button')].some(x=>x.textContent.includes('打开 ILB-Memory')),root:Boolean(document.querySelector('#ilbm-debug-root'))}))()`); console.log(JSON.stringify(report)); page.close(); if(!report.ilbm||report.toggle||!report.settingsButton)process.exit(1);

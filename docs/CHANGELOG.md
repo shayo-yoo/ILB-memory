@@ -1,5 +1,17 @@
 # ILBM Change Log
 
+## CHG-20261114-021 — Move ILBM entry to ST extension settings
+
+- Type: UX / UI / TEST
+- Date: 2026-11-14
+- Changed ILBM debug panel default entry: no visible floating button is created; ST extension settings receives “打开 ILB-Memory 调试面板”.
+- Keeps `window.ILBM` and diagnostic root available, but reduces floating-ball clutter.
+- Real ST probe: ILBM loaded, settings button visible, floating toggle hidden, panel root mounted hidden.
+- Verification: Node suite 50/50.
+- Commit: pending in this cycle.
+
+---
+
 ## CHG-20261114-020 — Manual acceptance checklist and status copy
 
 - Type: DOCS / UI / TEST

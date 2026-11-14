@@ -22,7 +22,8 @@ test('debug panel mounts, opens, tests marker text, and refreshes status', () =>
   const api = { processMarker: text => ({ ok: true, triggered: text.includes('(((ILBM)))'), extractionText: text.replace('(((ILBM)))','') }), status: () => ({ markCount: 1 }) };
   const mounted = mountILBMPanel({ api, documentObject });
   assert.equal(mounted.ok, true);
-  assert.equal(documentObject.body.children.length, 2);
+  assert.equal(documentObject.body.children.length, 1);
+  assert.equal(mounted.toggle.hidden, true);
   mounted.toggle.click();
   assert.equal(mounted.root.hidden, false);
   const textarea = mounted.root.children[1].children[0];
