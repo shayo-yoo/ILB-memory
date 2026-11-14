@@ -11,6 +11,17 @@
 
 ---
 
+## CHG-20261115-024 — Fix repeated ILBM panel settings entry and ILB focus warning
+
+- ILBM: duplicate panel mount now returns existing `root/open/close` handles; settings-page button no longer accesses undefined `panel.root`.
+- ILBM commit: `f1692ec`, pushed to `https://github.com/shayo-yoo/ILB-memory.git`.
+- ILB: focus is restored before applying `aria-hidden`/closing desktop or mobile shell, preventing the browser warning about a focused descendant being hidden.
+- ILB commit: `7360cb3`, pushed to `https://github.com/shayo-yoo/ILB.git`.
+- ILB full tests: 402/402; ILBM full tests: 51/51.
+- `content-runtime.js`/`contextmenuhlpr.js` `wxt/storage` and `sendMessage` errors are from a separate browser extension, not ILB/ILBM.
+
+---
+
 ## CHG-20261115-023 — Fix repeated ILBM panel settings entry
 
 - Type: FIX / UI / TEST
