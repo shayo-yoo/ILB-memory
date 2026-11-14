@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createIlbmMarkerRule, createIlbrService, inspectRegexRule, processText } from '../lib/ilbr-engine.js';
+import { createIlbmMarkerRule, createLiteralRemovalRule, createIlbrService, inspectRegexRule, processText } from '../lib/ilbr-engine.js';
 
 test('pure replacement returns original, output, match positions and captures', () => {
   const result = processText('a (((ILBM))) b', [createIlbmMarkerRule()]);
