@@ -81,6 +81,14 @@
 - 失败项不进入有效 records，不改变当前状态；调试面板可读展示。
 - 否决：静默吞掉失败、把错误文本保存成事件、让失败阻塞聊天。
 
+## D-ILBM-010 · 先提供记忆注入预览，不自动注入模型
+
+- 日期：2026-11-14
+- 状态：Accepted
+- 记忆文本由当前状态卡和回放记录组成，回放按配置窗口，注入前做预算裁剪，最早历史优先裁掉。
+- 第一版只在调试面板预览，不自动写入 ST prompt；真实注入位置、预算和人工可读性先验证。
+- 否决：在没有人工确认和真实模型测试前默认修改每轮上下文，避免破坏用户对话。
+
 ## LEGACY-BASELINE
 
 See `LEGACY-BASELINE.md`. Initial directory contained only the user-provided requirements document and no Git repository.

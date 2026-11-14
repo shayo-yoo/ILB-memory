@@ -1,5 +1,16 @@
 # ILBM Change Log
 
+## CHG-20261114-015 — Readable memory injection preview
+
+- Type: FEATURE / INJECTION / UI / TEST
+- Date: 2026-11-14
+- Added pure `buildMemoryText()` combining derived current state with replay records, applying a conservative character/token budget and oldest-first history trimming.
+- Added debug-panel “预览记忆注入文本”; preview only, no automatic prompt injection.
+- Verification: Node suite 44/44.
+- Commit: pending in this cycle.
+
+---
+
 ## CHG-20261114-014 — Failure log cleanup control
 
 - Type: UI / DATA / TEST
