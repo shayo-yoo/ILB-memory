@@ -11,6 +11,17 @@
 
 ---
 
+## CHG-20261115-029 — Mobile close interaction and high-contrast controls
+
+- Type: FIX / UI / TEST
+- Close button now handles both click and pointerup, prevents propagation, closes dialog/section directly, and has visible hover/active/focus feedback.
+- All ILBM buttons use forced high-contrast dark background, white text, border, focus outline and pressed state to resist ST theme overrides.
+- Startup remains closed by default.
+- Node suite: 51/51.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-028 — Mobile dialog bottom navigation
 
 - Type: UI / TEST

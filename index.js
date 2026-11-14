@@ -46,7 +46,6 @@ export function initializeILBM({ context, eventSource, eventTypes, globalObject 
 
   const chatId = context?.getCurrentChatId?.() ?? context?.chatId ?? 'default';
   const memory = createMemoryStore({ chatId });
-  let memoryInjectionEnabled = false;
   memoryInjector = createMemoryInjector({ getContext: () => context, getText: () => buildMemoryText(memory.inspect(), { tokenBudget: 2000 }).text });
   let lastMemoryChange = null;
   const eventAdapter = createMemoryEventAdapter({ eventSource: adapterSource, eventTypes: types, getContext: () => context, store: memory, onChange: change => { lastMemoryChange = { ...change, at: Date.now() }; } });
