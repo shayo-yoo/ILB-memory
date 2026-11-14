@@ -69,7 +69,8 @@ export function registerILBSeriesAPI(globalObject = globalThis, bridge) {
 }
 
 export function getILBMStatus() {
-  return { version: VERSION, started, markCount, lastMarkAt, lastProcess, integration: { ...integration } };
+  const memory = integration.memory?.inspect?.() ?? null;
+  return { version: VERSION, started, markCount, lastMarkAt, lastProcess, memory, integration: { ...integration } };
 }
 
 export const ILBM_MARKER = '(((ILBM)))';

@@ -27,7 +27,7 @@ export function mountILBMPanel({ api, memory, documentObject = globalThis.docume
   const memoryActions = el(documentObject, 'div', { class: 'ilbm-debug-actions' }); memoryActions.append(addEntity, addRecord);
   body.append(input, buttons, el(documentObject, 'h3', { textContent: '标记处理结果' }), result, el(documentObject, 'h3', { textContent: '手动记忆测试' }), entityName, entityType, recordText, recordFloor, memoryActions, memoryOutput, el(documentObject, 'h3', { textContent: '运行状态' }), status);
   const head = el(documentObject, 'header', { class: 'ilbm-debug-head' }); head.append(title, close); root.append(head, body); documentObject.body.append(toggle, root);
-  const render = () => { try { status.textContent = JSON.stringify(api.status?.() ?? {}, null, 2); memoryOutput.textContent = JSON.stringify(memory?.inspect?.() ?? {}, null, 2); } catch (error) { status.textContent = `读取失败：${error?.message ?? error}`; } };
+  const render = () => { try { const currentStatus = api.status?.() ?? {}; status.textContent = JSON.stringify(currentStatus, null, 2); memoryOutput.textContent = JSON.stringify(currentStatus.memory ?? memory?.inspect?.() ?? {}, null, 2); } catch (error) { status.textContent = `读取失败：${error?.message ?? error}`; } };
   const show = visible => { root.hidden = !visible; toggle.setAttribute('aria-expanded', String(visible)); };
   toggle.addEventListener('click', () => { show(root.hidden); render(); }); close.addEventListener('click', () => show(false)); refresh.addEventListener('click', render);
   test.addEventListener('click', () => { try { result.textContent = JSON.stringify(api.processMarker(input.value), null, 2); render(); } catch (error) { result.textContent = `处理失败：${error?.message ?? error}`; } });
