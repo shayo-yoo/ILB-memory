@@ -1,5 +1,16 @@
 # ILBM Change Log
 
+## CHG-20261114-018 — Entity and record filtering in debug UI
+
+- Type: UI / FEATURE / TEST
+- Date: 2026-11-14
+- Added query filter across entity name/type, event text/floor/source message ID and a “只看有效记录” toggle.
+- Filtering only affects readable/raw debug views; storage and state calculation remain unchanged.
+- Verification: Node suite 48/48.
+- Commit: pending in this cycle.
+
+---
+
 ## CHG-20261114-017 — Memory backup import/export
 
 - Type: FEATURE / DATA / UI / TEST
