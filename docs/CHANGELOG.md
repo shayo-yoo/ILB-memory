@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-027 — Independent mobile dialog UI
+
+- Type: UI / ARCH / TEST
+- Added independent mobile `dialog` shell for ILBM; desktop uses normal section panel, mobile uses full-screen top-layer dialog.
+- Settings entry opens the mobile dialog at 390×844 with `open=true`, `display:flex`, 390×844 bounds; no floating button is restored.
+- Node suite: 51/51; real mobile viewport probe passed.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-026 — Mobile settings entry and delayed host mount
 
 - Mobile ST can use a different settings container or render it after extension startup; ILBM now mounts its settings entry into every available extensions settings host and retries for up to 20 seconds.
