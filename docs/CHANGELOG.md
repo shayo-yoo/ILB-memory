@@ -1,5 +1,26 @@
 # ILBM Change Log
 
+## CHG-20261114-014 — Failure log cleanup control
+
+- Type: UI / DATA / TEST
+- Date: 2026-11-14
+- Added: debug panel “清除失败日志” action; failure history remains bounded and explicitly user-clearable.
+- Verification: Node suite 41/41.
+- Commit: pending in this cycle.
+
+---
+
+## CHG-20261114-013 — Candidate extraction failure logs
+
+- Type: FEATURE / DATA / UI / TEST
+- Date: 2026-11-14
+- Added: bounded per-chat failure log for parse/validation/extraction failure; entries include floor, source message ID, stage, reason and timestamp.
+- Failure logs never become memory records and are visible in the debug panel.
+- Verification: Node suite 41/41.
+- Commit: pending in this cycle.
+
+---
+
 ## CHG-20261114-012 — Candidate event preview before import
 
 - Type: FEATURE / DATA / UI / TEST

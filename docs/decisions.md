@@ -73,6 +73,14 @@
 - AI 输出永远是候选记录，不直接成为最终事实。
 - 否决：解析成功后静默自动写入，避免错误/推测污染历史。
 
+## D-ILBM-009 · 提取失败记录为诊断，不作为记忆事实
+
+- 日期：2026-11-14
+- 状态：Accepted
+- JSON 解析、候选校验、模型超时等失败写入有界 failure log，包含楼层/消息 ID/阶段/原因/时间。
+- 失败项不进入有效 records，不改变当前状态；调试面板可读展示。
+- 否决：静默吞掉失败、把错误文本保存成事件、让失败阻塞聊天。
+
 ## LEGACY-BASELINE
 
 See `LEGACY-BASELINE.md`. Initial directory contained only the user-provided requirements document and no Git repository.
