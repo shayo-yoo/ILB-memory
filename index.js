@@ -6,6 +6,7 @@ import { createMemoryStore } from './lib/memory-store.js';
 import { runCandidateExtraction } from './lib/extractor.js';
 import { calculateCurrentState, replayRecords } from './lib/memory-model.js';
 import { buildMemoryText } from './lib/memory-injection.js';
+import { createMemoryInjector } from './lib/memory-injector.js';
 import { createMemoryEventAdapter } from './lib/memory-events.js';
 
 export const VERSION = '0.1.0';
@@ -16,6 +17,7 @@ let integration = { display: null, prompt: null, ilb: null, ilbr: null };
 let lastProcess = null;
 let markCount = 0;
 let lastMarkAt = 0;
+let memoryInjector = null;
 
 /**
  * Initialize the independent extension against public ST/ILB interfaces.
@@ -44,10 +46,12 @@ export function initializeILBM({ context, eventSource, eventTypes, globalObject 
 
   const chatId = context?.getCurrentChatId?.() ?? context?.chatId ?? 'default';
   const memory = createMemoryStore({ chatId });
+  let memoryInjectionEnabled = false;
+  memoryInjector = createMemoryInjector({ getContext: () => context, getText: () => buildMemoryText(memory.inspect(), { tokenBudget: 2000 }).text });
   let lastMemoryChange = null;
   const eventAdapter = createMemoryEventAdapter({ eventSource: adapterSource, eventTypes: types, getContext: () => context, store: memory, onChange: change => { lastMemoryChange = { ...change, at: Date.now() }; } });
   const inspectMemory = () => ({ ...memory.inspect(), currentState: calculateCurrentState(memory.inspect()), replay: replayRecords(memory.inspect()), lastChange: lastMemoryChange, eventAdapter: { ok: eventAdapter.ok, events: eventAdapter.events ?? [], degraded: Boolean(lastMemoryChange?.degraded) } });
-  const memoryApi = { id: 'ILBM-Memory', version: '0.1.0', inspect: inspectMemory, buildMemoryText: options => buildMemoryText(memory.inspect(), options), registerEntity: input => memory.registerEntity(input), addRecord: input => memory.addRecord(input), invalidateFromMessage: input => memory.invalidateFromMessage(input), invalidateSwipeBranch: input => memory.invalidateSwipeBranch(input), setSettings: input => memory.setSettings(input), removeRecord: id => memory.removeRecord(id), removeEntity: id => memory.removeEntity(id), clearFailures: () => memory.clearFailures(), previewCandidates: (payload, meta) => memory.previewCandidates(payload, meta), importCandidates: (payload, meta) => memory.importCandidates(payload, meta), importCandidateResponse: (raw, meta) => memory.importCandidateResponse(raw, meta), extractCandidates: (text, options) => runCandidateExtraction(text, options), reset: () => memory.reset(), events: () => ({ ...eventAdapter, events: eventAdapter.events ?? [] }) };
+  const memoryApi = { id: 'ILBM-Memory', version: '0.1.0', inspect: inspectMemory, buildMemoryText: options => buildMemoryText(memory.inspect(), options), injection: { enabled: () => memoryInjector?.isEnabled() ?? false, enable: () => memoryInjector?.setEnabled(true), disable: () => memoryInjector?.setEnabled(false), apply: () => memoryInjector?.apply(), clear: () => memoryInjector?.clear() }, registerEntity: input => memory.registerEntity(input), addRecord: input => memory.addRecord(input), invalidateFromMessage: input => memory.invalidateFromMessage(input), invalidateSwipeBranch: input => memory.invalidateSwipeBranch(input), setSettings: input => memory.setSettings(input), removeRecord: id => memory.removeRecord(id), removeEntity: id => memory.removeEntity(id), clearFailures: () => memory.clearFailures(), previewCandidates: (payload, meta) => memory.previewCandidates(payload, meta), importCandidates: (payload, meta) => memory.importCandidates(payload, meta), importCandidateResponse: (raw, meta) => memory.importCandidateResponse(raw, meta), extractCandidates: (text, options) => runCandidateExtraction(text, options), reset: () => memory.reset(), events: () => ({ ...eventAdapter, events: eventAdapter.events ?? [] }) };
   const ilb = registerILBSeriesAPI(globalObject, bridge);
   integration = { display, prompt, capture, ilb, ilbr, memory: memoryApi };
   try { globalObject.ILBM_MEMORY = memoryApi; } catch { /* optional global diagnostic */ }
@@ -75,7 +79,7 @@ export function registerILBSeriesAPI(globalObject = globalThis, bridge) {
 
 export function getILBMStatus() {
   const memory = integration.memory?.inspect?.() ?? null;
-  return { version: VERSION, started, markCount, lastMarkAt, lastProcess, memory, integration: { ...integration } };
+  return { version: VERSION, started, markCount, lastMarkAt, lastProcess, memory, injection: { enabled: memoryInjector?.isEnabled?.() ?? false, key: memoryInjector?.key ?? null }, integration: { ...integration } };
 }
 
 export const ILBM_MARKER = '(((ILBM)))';

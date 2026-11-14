@@ -89,6 +89,14 @@
 - 第一版只在调试面板预览，不自动写入 ST prompt；真实注入位置、预算和人工可读性先验证。
 - 否决：在没有人工确认和真实模型测试前默认修改每轮上下文，避免破坏用户对话。
 
+## D-ILBM-011 · 记忆提示词注入默认关闭且手动应用
+
+- 日期：2026-11-14
+- 状态：Accepted
+- 记忆注入使用独立 adapter 写入 `setExtensionPrompt`，默认 disabled；用户显式开启并点击应用才写入，关闭时主动清空。
+- 第一版只提供注入预览和手动应用，不自动随每轮生成改变上下文。
+- 否决：启动即注入、每轮自动注入、直接修改 chat 或 ST 内部 prompt 数组。
+
 ## LEGACY-BASELINE
 
 See `LEGACY-BASELINE.md`. Initial directory contained only the user-provided requirements document and no Git repository.

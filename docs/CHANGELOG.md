@@ -1,5 +1,16 @@
 # ILBM Change Log
 
+## CHG-20261114-016 — Optional memory prompt injector
+
+- Type: FEATURE / INJECTION / CONFIG / TEST
+- Date: 2026-11-14
+- Added: `createMemoryInjector` and debug controls for “开启记忆注入 / 立即应用注入 / 关闭并清除注入”.
+- Injection is disabled by default; only explicit enable + apply writes an extension prompt. Disable clears it.
+- Verification: Node suite 46/46; no automatic prompt modification occurs while disabled.
+- Commit: pending in this cycle.
+
+---
+
 ## CHG-20261114-015 — Readable memory injection preview
 
 - Type: FEATURE / INJECTION / UI / TEST
