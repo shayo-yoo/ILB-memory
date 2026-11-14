@@ -3,8 +3,8 @@
 - 日期：2026-11-14
 - 项目阶段：第二阶段基础 UI/诊断、手动记忆存储、实体注册、事件记录、状态重算和回放窗口已完成；AI 事件提取、关联补充和完整历史 UI 仍未实现。
 - 版本：ILBM `0.1.0`；ILBR API `1.0.0`。
-- Git：已创建本地 Git 仓库，基线提交见 `256d39f`；当前第二阶段改动待提交。
-- 最终自动验证：`node --test tests/*.test.mjs` 19/19；入口、库与 probe 脚本语法检查通过；manifest JSON 有效；真实 ST synthetic probe 和调试 UI probe 均通过。
+- Git：已创建本地 Git 仓库；基线提交 `256d39f`，调试 UI 提交 `82b9011`，手动记忆/状态提交 `8f26855`；工作区当前干净。
+- 最终自动验证：`node --test tests/*.test.mjs` 23/23；入口、库与 probe 脚本语法检查通过；manifest JSON 有效；真实 ST synthetic probe 和调试 UI probe 均通过。
 - ST 测试安装和隔离 CDP profile 已清理；备份保留。
 
 ## 已完成
