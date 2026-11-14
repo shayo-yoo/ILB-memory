@@ -1,5 +1,16 @@
 # ILBM Change Log
 
+## CHG-20261114-009 — Candidate event validation and manual import
+
+- Type: FEATURE / DATA / UI / TEST
+- Date: 2026-11-14
+- Added: candidate event JSON validation with `fact/state/relation` kinds, entity-reference validation, source floor/message/swipe metadata, partial acceptance and rejected-item reasons.
+- Added: debug panel JSON textarea and “导入候选事件 JSON” action; this does not call AI, it tests the future extraction result path.
+- Verification: Node suite 31/31.
+- Commit: pending in this cycle.
+
+---
+
 ## CHG-20261114-008 — Manual entity and record removal controls
 
 - Type: FEATURE / DATA / UI / TEST

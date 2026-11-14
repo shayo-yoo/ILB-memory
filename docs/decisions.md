@@ -40,6 +40,14 @@
 - 能拿到稳定消息 ID 时保留 sourceMessageId；只有楼层时按楼层及以后作废，并标记诊断 degraded。
 - 不猜测未提供的 ID，不物理删除历史，不触发 AI 提取。
 
+## D-ILBM-005 · 候选事件先校验再落库
+
+- 日期：2026-11-14
+- 状态：Accepted
+- AI 或用户提交候选 JSON 时，程序先验证文本、事件类型、实体引用和来源元数据，再逐项写入；合法项可以部分接受，非法项返回索引和原因。
+- 候选事件不是最终事实；没有通过程序校验的内容不能进入有效历史。
+- 否决：让 AI 直接写最终存储、整批失败导致合法项丢失、错误内容静默跳过。
+
 ## LEGACY-BASELINE
 
 See `LEGACY-BASELINE.md`. Initial directory contained only the user-provided requirements document and no Git repository.
