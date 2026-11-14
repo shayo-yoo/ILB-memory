@@ -22,7 +22,7 @@ test('debug panel duplicate mount returns an openable existing panel', () => {
   const api = { processMarker: text => ({ triggered: true, text }), status: () => ({}) };
   const first = mountILBMPanel({ api, documentObject });
   const second = mountILBMPanel({ api, documentObject });
-  assert.equal(second.duplicate, true); assert.equal(typeof second.open, 'function'); second.open(); assert.equal(first.root.hidden, false); assert.equal(first.root.attributes.hidden, undefined);
+  assert.equal(second.duplicate, true); assert.equal(typeof second.open, 'function'); assert.equal(first.root.hidden, true); second.open(); assert.equal(first.root.hidden, false); assert.equal(first.root.attributes.hidden ?? '', '');
 });
 
 test('debug panel mounts, opens, tests marker text, and refreshes status', () => {

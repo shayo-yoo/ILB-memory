@@ -8,10 +8,11 @@ export function mountILBMPanel({ api, memory, documentObject = globalThis.docume
     const isMobileRoot = existingRoot.tagName === 'DIALOG' || existingRoot.classList?.contains?.('ilbm-debug-mobile');
     const openExisting = () => { existingRoot.hidden = false; existingRoot.removeAttribute?.('hidden'); if (existingRoot.style == null) existingRoot.style = {}; existingRoot.style.display = isMobileRoot ? 'flex' : 'block'; if (isMobileRoot && typeof existingRoot.showModal === 'function' && !existingRoot.open) existingRoot.showModal(); existingToggle?.setAttribute('aria-expanded', 'true'); };
     const closeExisting = () => { existingRoot.hidden = true; existingRoot.setAttribute?.('hidden', ''); if (existingRoot.style == null) existingRoot.style = {}; existingRoot.style.display = 'none'; if (isMobileRoot && typeof existingRoot.close === 'function' && existingRoot.open) existingRoot.close(); };
+    closeExisting();
     return { ok: true, duplicate: true, root: existingRoot, toggle: existingToggle, open: openExisting, close: closeExisting };
   }
   injectStyle(documentObject);
-  const root = el(documentObject, mobile ? 'dialog' : 'section', { id: 'ilbm-debug-root', class: mobile ? 'ilbm-debug-root ilbm-debug-mobile' : 'ilbm-debug-root', hidden: true });
+  const root = el(documentObject, mobile ? 'dialog' : 'section', { id: 'ilbm-debug-root', class: mobile ? 'ilbm-debug-root ilbm-debug-mobile' : 'ilbm-debug-root', hidden: true, style: 'display:none' });
   const toggle = el(documentObject, 'button', { class: 'ilbm-debug-toggle', type: 'button', textContent: 'ILBM' });
   const title = el(documentObject, 'h2', { textContent: 'ILB-Memory 调试面板' });
   const close = el(documentObject, 'button', { class: 'ilbm-debug-close', type: 'button', textContent: '×', title: '关闭' });
