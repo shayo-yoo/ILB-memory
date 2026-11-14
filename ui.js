@@ -26,16 +26,17 @@ export function mountILBMPanel({ api, memory, documentObject = globalThis.docume
   const refresh = el(documentObject, 'button', { type: 'button', textContent: '刷新状态' });
   const result = el(documentObject, 'pre', { class: 'ilbm-debug-result', textContent: '尚未测试。' });
   const memoryOutput = el(documentObject, 'pre', { class: 'ilbm-debug-result', textContent: '' });
+  const memoryReadable = el(documentObject, 'div', { class: 'ilbm-debug-readable', textContent: '还没有记忆数据。' });
   const status = el(documentObject, 'pre', { class: 'ilbm-debug-status', textContent: '' });
   const body = el(documentObject, 'div', { class: 'ilbm-debug-body' });
   const buttons = el(documentObject, 'div', { class: 'ilbm-debug-actions' });
   buttons.append(test, refresh);
   const memoryActions = el(documentObject, 'div', { class: 'ilbm-debug-actions' }); memoryActions.append(addEntity, addRecord);
-  body.append(input, buttons, el(documentObject, 'h3', { textContent: '标记处理结果' }), result, el(documentObject, 'h3', { textContent: '手动记忆测试' }), entityName, entityType, recordText, recordFloor, sourceMessageId, swipeId, el(documentObject, 'label', { textContent: '活跃窗口层数' }), activeLayers, el(documentObject, 'label', { textContent: '回放窗口层数' }), replayLayers, memoryActions, el(documentObject, 'div', { class: 'ilbm-debug-actions' }), memoryOutput, el(documentObject, 'h3', { textContent: '运行状态' }), status);
+  body.append(input, buttons, el(documentObject, 'h3', { textContent: '标记处理结果' }), result, el(documentObject, 'h3', { textContent: '手动记忆测试' }), entityName, entityType, recordText, recordFloor, sourceMessageId, swipeId, el(documentObject, 'label', { textContent: '活跃窗口层数' }), activeLayers, el(documentObject, 'label', { textContent: '回放窗口层数' }), replayLayers, memoryActions, el(documentObject, 'div', { class: 'ilbm-debug-actions' }), el(documentObject, 'h3', { textContent: '可读记忆视图' }), memoryReadable, el(documentObject, 'h3', { textContent: '原始数据' }), memoryOutput, el(documentObject, 'h3', { textContent: '运行状态' }), status);
   const invalidationActions = body.children[body.children.length - 2];
   invalidationActions.append(invalidateFloor, invalidateSwipe);
   const head = el(documentObject, 'header', { class: 'ilbm-debug-head' }); head.append(title, close); root.append(head, body); documentObject.body.append(toggle, root);
-  const render = () => { try { const currentStatus = api.status?.() ?? {}; status.textContent = JSON.stringify(currentStatus, null, 2); memoryOutput.textContent = JSON.stringify(currentStatus.memory ?? memory?.inspect?.() ?? {}, null, 2); } catch (error) { status.textContent = `读取失败：${error?.message ?? error}`; } };
+  const render = () => { try { const currentStatus = api.status?.() ?? {}; status.textContent = JSON.stringify(currentStatus, null, 2); const data = currentStatus.memory ?? memory?.inspect?.() ?? {}; memoryOutput.textContent = JSON.stringify(data, null, 2); memoryReadable.innerHTML = renderReadable(documentObject, data); } catch (error) { status.textContent = `读取失败：${error?.message ?? error}`; } };
   const show = visible => { root.hidden = !visible; toggle.setAttribute('aria-expanded', String(visible)); };
   toggle.addEventListener('click', () => { show(root.hidden); render(); }); close.addEventListener('click', () => show(false)); refresh.addEventListener('click', render);
   test.addEventListener('click', () => { try { result.textContent = JSON.stringify(api.processMarker(input.value), null, 2); render(); } catch (error) { result.textContent = `处理失败：${error?.message ?? error}`; } });
@@ -49,4 +50,23 @@ export function mountILBMPanel({ api, memory, documentObject = globalThis.docume
 }
 
 function el(documentObject, tag, props = {}) { const node = documentObject.createElement(tag); for (const [key, value] of Object.entries(props)) { if (key === 'textContent') node.textContent = String(value); else if (key === 'value') node.value = String(value); else if (key === 'hidden') node.hidden = Boolean(value); else if (key in node) node[key] = value; else node.setAttribute(key, String(value)); } return node; }
-function injectStyle(documentObject) { if (documentObject.getElementById(STYLE_ID)) return; const style = documentObject.createElement('style'); style.id = STYLE_ID; style.textContent = `.ilbm-debug-toggle{position:fixed;right:16px;bottom:112px;z-index:2147483000;border:1px solid #888;border-radius:999px;padding:8px 12px;background:#1d2530;color:#fff;cursor:pointer}.ilbm-debug-root{position:fixed;right:16px;bottom:160px;z-index:2147483001;width:min(560px,calc(100vw - 32px));max-height:min(80vh,720px);overflow:auto;background:var(--SmartThemeBlurTintColor,#20242b);color:var(--SmartThemeBodyColor,#eee);border:1px solid var(--SmartThemeBorderColor,#687080);border-radius:10px;box-shadow:0 12px 36px #0008;padding:0}.ilbm-debug-head{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #ffffff22;position:sticky;top:0;background:var(--SmartThemeBlurTintColor,#20242b)}.ilbm-debug-head h2{font-size:16px;margin:0}.ilbm-debug-close{font-size:20px;background:transparent;color:inherit;border:0;cursor:pointer}.ilbm-debug-body{padding:12px}.ilbm-debug-input{width:100%;box-sizing:border-box;background:#0003;color:inherit;border:1px solid #ffffff44;border-radius:6px;padding:8px;margin:3px 0}.ilbm-debug-actions{display:flex;gap:8px;margin:8px 0;flex-wrap:wrap}.ilbm-debug-actions button{padding:6px 10px;cursor:pointer}.ilbm-debug-result,.ilbm-debug-status{white-space:pre-wrap;overflow:auto;max-height:240px;background:#0005;border-radius:6px;padding:8px;font-size:12px}`; documentObject.head?.append(style); }
+function renderReadable(documentObject, data) {
+  const wrap = documentObject.createElement('div');
+  const current = data.currentState ?? { entities: [], recordsApplied: [] };
+  const title = documentObject.createElement('strong'); title.textContent = `当前状态（${current.entities?.length ?? 0} 个实体）`; wrap.append(title);
+  for (const entity of current.entities ?? []) {
+    const line = documentObject.createElement('div');
+    const state = Object.entries(entity.state ?? {}).map(([key, value]) => `${key}=${typeof value === 'object' ? JSON.stringify(value) : value}`).join('，');
+    line.textContent = `${entity.name}（${entity.type}）${state ? `：${state}` : '：暂无状态'}`;
+    wrap.append(line);
+  }
+  const replay = documentObject.createElement('div');
+  replay.textContent = `回放记录：${(data.replay ?? []).length} 条`;
+  wrap.append(replay);
+  for (const record of data.replay ?? []) {
+    const row = documentObject.createElement('div'); row.textContent = `第 ${record.floor} 层：${record.text}`; wrap.append(row);
+  }
+  return wrap.innerHTML;
+}
+
+function injectStyle(documentObject) { if (documentObject.getElementById(STYLE_ID)) return; const style = documentObject.createElement('style'); style.id = STYLE_ID; style.textContent = `.ilbm-debug-toggle{position:fixed;right:16px;bottom:112px;z-index:2147483000;border:1px solid #888;border-radius:999px;padding:8px 12px;background:#1d2530;color:#fff;cursor:pointer}.ilbm-debug-root{position:fixed;right:16px;bottom:160px;z-index:2147483001;width:min(560px,calc(100vw - 32px));max-height:min(80vh,720px);overflow:auto;background:var(--SmartThemeBlurTintColor,#20242b);color:var(--SmartThemeBodyColor,#eee);border:1px solid var(--SmartThemeBorderColor,#687080);border-radius:10px;box-shadow:0 12px 36px #0008;padding:0}.ilbm-debug-head{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #ffffff22;position:sticky;top:0;background:var(--SmartThemeBlurTintColor,#20242b)}.ilbm-debug-head h2{font-size:16px;margin:0}.ilbm-debug-close{font-size:20px;background:transparent;color:inherit;border:0;cursor:pointer}.ilbm-debug-body{padding:12px}.ilbm-debug-input{width:100%;box-sizing:border-box;background:#0003;color:inherit;border:1px solid #ffffff44;border-radius:6px;padding:8px;margin:3px 0}.ilbm-debug-actions{display:flex;gap:8px;margin:8px 0;flex-wrap:wrap}.ilbm-debug-actions button{padding:6px 10px;cursor:pointer}.ilbm-debug-result,.ilbm-debug-status{white-space:pre-wrap;overflow:auto;max-height:240px;background:#0005;border-radius:6px;padding:8px;font-size:12px}.ilbm-debug-readable{padding:8px;background:#0003;border-radius:6px;line-height:1.6;max-height:240px;overflow:auto}.ilbm-debug-readable div{border-bottom:1px solid #ffffff12;padding:2px 0}`; documentObject.head?.append(style); }

@@ -1,5 +1,15 @@
 # ILBM Change Log
 
+## CHG-20261114-007 — Readable state and replay view
+
+- Type: UI / FEATURE / TEST
+- Date: 2026-11-14
+- Added: readable Chinese current-state cards and replay rows in the debug panel; raw JSON remains available below for diagnostics.
+- Verification: Node suite 28/28.
+- Commit: pending in this cycle.
+
+---
+
 ## CHG-20261114-006 — Replay window controls in debug UI
 
 - Type: FEATURE / CONFIG / UI / TEST
