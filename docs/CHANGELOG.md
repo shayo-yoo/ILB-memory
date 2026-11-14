@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-028 — Mobile dialog bottom navigation
+
+- Type: UI / TEST
+- Added mobile-only bottom navigation buttons: 状态 / 实体 / 事件 / 设置.
+- Desktop section panel remains unchanged; the same API/content remains shared.
+- Node suite: 51/51.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-027 — Independent mobile dialog UI
 
 - Type: UI / ARCH / TEST
