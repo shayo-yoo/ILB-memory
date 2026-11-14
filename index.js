@@ -9,7 +9,7 @@ import { buildMemoryText } from './lib/memory-injection.js';
 import { createMemoryInjector } from './lib/memory-injector.js';
 import { createMemoryEventAdapter } from './lib/memory-events.js';
 
-export const VERSION = '0.1.0';
+export const VERSION = '0.1.1';
 export const ILBM_EXTENSION_ID = 'ilb-memory';
 
 let started = false;
@@ -112,19 +112,19 @@ export function publishGlobalApi(globalObject, context, initialized) {
 export function installSettingsEntry(globalObject = globalThis, panel) {
   const documentObject = globalObject?.document;
   if (!documentObject?.body || !panel) return false;
-  const hosts = [...documentObject.querySelectorAll('#extensions_settings, #extensions_settings2, .extensions_settings')];
-  if (!hosts.length) return false;
+  const host = documentObject.querySelector('#extensions_settings, #extensions_settings2, .extensions_settings');
+  if (!host) return false;
+  const id = 'ilbm-settings-entry';
+  if (documentObject.querySelector('#ilbm-settings-entry')) return true;
   let mounted = false;
-  hosts.forEach((host, index) => {
-    const id = `ilbm-settings-entry-${index + 1}`;
-    if (host.querySelector(`#${id}`)) return;
+  {
     const card = documentObject.createElement('div'); card.id = id; card.className = 'inline-drawer ilbm-settings-entry';
     const title = documentObject.createElement('div'); title.className = 'inline-drawer-toggle inline-drawer-header'; title.textContent = 'ILB-Memory 记忆管理';
     const content = documentObject.createElement('div'); content.className = 'inline-drawer-content';
     const button = documentObject.createElement('button'); button.type = 'button'; button.textContent = '打开 ILB-Memory 记忆管理面板'; button.addEventListener('click', () => { panel.open?.(); });
     const hint = documentObject.createElement('p'); hint.className = 'ilbm-settings-hint'; hint.textContent = '管理实体、事件、状态、回放和调试信息。默认不会自动注入记忆。';
     content.append(hint, button); card.append(title, content); host.append(card); mounted = true;
-  });
+  }
   return mounted;
 }
 
