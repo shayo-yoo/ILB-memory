@@ -1,7 +1,6 @@
 import { createIlbmBridge, registerDisplayFilter, registerMessageCapture, registerPromptFilter } from './lib/ilbm-bridge.js';
 import { createIlbrService } from './lib/ilbr-engine.js';
 import { createMarkerResult } from './lib/ilbm-bridge.js';
-import { mountILBMPanel } from './ui.js';
 import { mountILBMShell } from './ui-shell.js';
 import { createMemoryStore } from './lib/memory-store.js';
 import { runCandidateExtraction } from './lib/extractor.js';

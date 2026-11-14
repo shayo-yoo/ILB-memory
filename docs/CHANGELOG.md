@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-031 — Isolate minimal shell from legacy business panel
+
+- Type: REFACTOR / UI / FIX / TEST
+- Removed legacy `mountILBMPanel` startup mounting from the main entry; only the new `ui-shell` is mounted, eliminating two competing panel states.
+- New shell uses explicit dark high-contrast inline styling, fixed title/status area and deterministic close state; business panel will be plugged in later as content.
+- Node suite: 54/54.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-030 — Minimal decoupled UI shell
 
 - Type: ARCH / UI / TEST
