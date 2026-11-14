@@ -1,5 +1,17 @@
 # ILBM Change Log
 
+## CHG-20261114-005 — ST message lifecycle adapter
+
+- Type: FEATURE / EVT / TEST
+- Date: 2026-11-14
+- Added: tolerant ST adapter for `MESSAGE_EDITED`, `MESSAGE_DELETED`, `MESSAGE_SWIPED`, and `MESSAGE_SWIPE_DELETED`.
+- Integer message events use floor invalidation with a visible degraded diagnostic when no stable source ID is available; object-shaped events preserve message IDs when provided.
+- Swipe events invalidate non-selected branch records without deleting history.
+- Verification: Node suite 28/28; no real chat messages or model calls were used for event tests.
+- Commit: pending in this cycle.
+
+---
+
 ## CHG-20261114-004 — Message invalidation and Swipe branch controls
 
 - Type: FEATURE / DATA / TEST / UI

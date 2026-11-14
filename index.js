@@ -4,6 +4,7 @@ import { createMarkerResult } from './lib/ilbm-bridge.js';
 import { mountILBMPanel } from './ui.js';
 import { createMemoryStore } from './lib/memory-store.js';
 import { calculateCurrentState, replayRecords } from './lib/memory-model.js';
+import { createMemoryEventAdapter } from './lib/memory-events.js';
 
 export const VERSION = '0.1.0';
 export const ILBM_EXTENSION_ID = 'ilb-memory';
@@ -41,8 +42,10 @@ export function initializeILBM({ context, eventSource, eventTypes, globalObject 
 
   const chatId = context?.getCurrentChatId?.() ?? context?.chatId ?? 'default';
   const memory = createMemoryStore({ chatId });
-  const inspectMemory = () => ({ ...memory.inspect(), currentState: calculateCurrentState(memory.inspect()), replay: replayRecords(memory.inspect()) });
-  const memoryApi = { id: 'ILBM-Memory', version: '0.1.0', inspect: inspectMemory, registerEntity: input => memory.registerEntity(input), addRecord: input => memory.addRecord(input), invalidateFromMessage: input => memory.invalidateFromMessage(input), invalidateSwipeBranch: input => memory.invalidateSwipeBranch(input), reset: () => memory.reset() };
+  let lastMemoryChange = null;
+  const eventAdapter = createMemoryEventAdapter({ eventSource: adapterSource, eventTypes: types, getContext: () => context, store: memory, onChange: change => { lastMemoryChange = { ...change, at: Date.now() }; } });
+  const inspectMemory = () => ({ ...memory.inspect(), currentState: calculateCurrentState(memory.inspect()), replay: replayRecords(memory.inspect()), lastChange: lastMemoryChange, eventAdapter: { ok: eventAdapter.ok, events: eventAdapter.events ?? [], degraded: Boolean(lastMemoryChange?.degraded) } });
+  const memoryApi = { id: 'ILBM-Memory', version: '0.1.0', inspect: inspectMemory, registerEntity: input => memory.registerEntity(input), addRecord: input => memory.addRecord(input), invalidateFromMessage: input => memory.invalidateFromMessage(input), invalidateSwipeBranch: input => memory.invalidateSwipeBranch(input), reset: () => memory.reset(), events: () => ({ ...eventAdapter, events: eventAdapter.events ?? [] }) };
   const ilb = registerILBSeriesAPI(globalObject, bridge);
   integration = { display, prompt, capture, ilb, ilbr, memory: memoryApi };
   try { globalObject.ILBM_MEMORY = memoryApi; } catch { /* optional global diagnostic */ }

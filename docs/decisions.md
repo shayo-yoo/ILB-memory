@@ -32,6 +32,14 @@
 - 当前状态始终从有效记录全量重算；本阶段不做局部影响分析。
 - 否决：直接删除记录、只作废单条记录、以 floor+sequence 作为永久 ID。
 
+## D-ILBM-004 · ST 消息生命周期事件采用宽容降级适配
+
+- 日期：2026-11-14
+- 状态：Accepted
+- 订阅 `MESSAGE_EDITED`、`MESSAGE_DELETED`、`MESSAGE_SWIPED`、`MESSAGE_SWIPE_DELETED`；事件参数支持整数楼层和对象形态。
+- 能拿到稳定消息 ID 时保留 sourceMessageId；只有楼层时按楼层及以后作废，并标记诊断 degraded。
+- 不猜测未提供的 ID，不物理删除历史，不触发 AI 提取。
+
 ## LEGACY-BASELINE
 
 See `LEGACY-BASELINE.md`. Initial directory contained only the user-provided requirements document and no Git repository.
