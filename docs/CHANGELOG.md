@@ -11,6 +11,17 @@
 
 ---
 
+## CHG-20261115-023 — Fix repeated ILBM panel settings entry
+
+- Type: FIX / UI / TEST
+- Root cause: a second `mountILBMPanel()` call returned only `duplicate:true`; the settings-page button then accessed missing `panel.root`, causing `Cannot set properties of undefined (setting 'hidden')`.
+- Fix: duplicate mount returns existing `root/toggle/open/close` handles; settings entry calls `panel.open()` safely.
+- Verification: Node suite 51/51.
+- The separate `contextmenuhlpr.js sendMessage` error is not ILBM-owned and remains outside this fix.
+- Commit: pending.
+
+---
+
 ## CHG-20261114-021 — Move ILBM entry to ST extension settings
 
 - Type: UX / UI / TEST

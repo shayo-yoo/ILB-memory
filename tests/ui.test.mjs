@@ -17,6 +17,14 @@ function fakeDocument() {
   return documentObject;
 }
 
+test('debug panel duplicate mount returns an openable existing panel', () => {
+  const documentObject = fakeDocument();
+  const api = { processMarker: text => ({ triggered: true, text }), status: () => ({}) };
+  const first = mountILBMPanel({ api, documentObject });
+  const second = mountILBMPanel({ api, documentObject });
+  assert.equal(second.duplicate, true); assert.equal(typeof second.open, 'function'); second.open(); assert.equal(first.root.hidden, false);
+});
+
 test('debug panel mounts, opens, tests marker text, and refreshes status', () => {
   const documentObject = fakeDocument();
   const api = { processMarker: text => ({ ok: true, triggered: text.includes('(((ILBM)))'), extractionText: text.replace('(((ILBM)))','') }), status: () => ({ markCount: 1 }) };

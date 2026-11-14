@@ -2,7 +2,11 @@ const STYLE_ID = 'ilbm-debug-style';
 
 export function mountILBMPanel({ api, memory, documentObject = globalThis.document, showToggle = false } = {}) {
   if (!documentObject?.body || !api) return { ok: false, reason: 'document or API unavailable' };
-  if (documentObject.getElementById('ilbm-debug-root')) return { ok: true, duplicate: true };
+  const existingRoot = documentObject.getElementById('ilbm-debug-root');
+  if (existingRoot) {
+    const existingToggle = documentObject.querySelector?.('.ilbm-debug-toggle') ?? null;
+    return { ok: true, duplicate: true, root: existingRoot, toggle: existingToggle, open: () => { existingRoot.hidden = false; existingToggle?.setAttribute('aria-expanded', 'true'); }, close: () => { existingRoot.hidden = true; } };
+  }
   injectStyle(documentObject);
   const root = el(documentObject, 'section', { id: 'ilbm-debug-root', class: 'ilbm-debug-root', hidden: true });
   const toggle = el(documentObject, 'button', { class: 'ilbm-debug-toggle', type: 'button', textContent: 'ILBM' });
