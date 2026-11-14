@@ -33,6 +33,23 @@ const result = ilbr.processText(rawText, [createIlbmMarkerRule()], { scope: 'pro
 
 `onMarked` 回调仅在 Chat Completion `prompt-ready` 事件的 assistant 消息、且非 dry-run 时触发；附带临时 `sourceKey`（聊天 ID/数组索引/内容哈希）供调用方本次处理幂等参考。该 key 不是永久记录 ID；稳定 message/swipe ID 未完成接口验证前，不可将其当存储主键。`GENERATE_AFTER_DATA` 当前只做字符串净化，不触发记忆持久化。
 
+## ILBM Memory API
+
+`window.ILBM_MEMORY`（以及 `window.ILBM_MEMORY` 的 `ILB_SERIES` 适配）提供当前聊天的记忆管理能力：
+
+- `inspect()`：返回 entities、records、settings、failures、currentState、replay、lastChange 和 eventAdapter。
+- `registerEntity({name,type,aliases?})`：注册实体，同名自动编号。
+- `addRecord(record)`：添加手动事件记录；程序生成稳定记录 ID。
+- `previewCandidates(payload, meta?)`：校验候选事件但不保存。
+- `importCandidates(payload, meta?)`：校验并保存合法候选事件。
+- `importCandidateResponse(raw, meta?)`：解析 AI 文本后再进入候选校验。
+- `extractCandidates(text, {extract?,timeoutMs?})`：可注入 AI 适配器；默认不调用模型。
+- `buildMemoryText({currentFloor?,tokenBudget?})`：生成当前状态/历史回放预览。
+- `injection.enable()` / `injection.apply()` / `injection.disable()`：记忆 extension prompt 注入；默认关闭，只有用户明确操作才写入。
+- `removeRecord(id)`、`removeEntity(id)`、`reset()`：显式管理数据。
+
+失败时返回诊断或抛出可读错误；失败不会阻塞聊天。候选事件必须先预览/校验，AI 不直接拥有最终存储权。
+
 ## ST 适配时序
 
 - 显示：`getContext().messageFormatter.addHook()`，`beforeRegex`、early 顺序。只返回展示转换字符串，不保存到 chat。

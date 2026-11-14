@@ -1,5 +1,16 @@
 # ILBM Change Log
 
+## CHG-20261114-019 — ILBM public API contract docs and tests
+
+- Type: API / DOCS / TEST
+- Date: 2026-11-14
+- Documented `window.ILBM_MEMORY` methods, derived status shape, candidate/import semantics and opt-in injection behavior.
+- Added API contract tests for inspect/currentState/replay/event adapter and memory text preview metadata.
+- Verification: Node suite 50/50.
+- Commit: pending in this cycle.
+
+---
+
 ## CHG-20261114-018 — Entity and record filtering in debug UI
 
 - Type: UI / FEATURE / TEST
