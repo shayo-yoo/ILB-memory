@@ -1,5 +1,16 @@
 # ILBM Change Log
 
+## CHG-20261114-017 — Memory backup import/export
+
+- Type: FEATURE / DATA / UI / TEST
+- Date: 2026-11-14
+- Added `ilbm-memory` schema v1 backup export/import; malformed, wrong-kind, and future versions reject without replacement.
+- Debug panel offers export JSON and explicit import replacement; no automatic overwrite.
+- Verification: Node suite 48/48.
+- Commit: pending in this cycle.
+
+---
+
 ## CHG-20261114-016 — Optional memory prompt injector
 
 - Type: FEATURE / INJECTION / CONFIG / TEST

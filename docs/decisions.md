@@ -97,6 +97,14 @@
 - 第一版只提供注入预览和手动应用，不自动随每轮生成改变上下文。
 - 否决：启动即注入、每轮自动注入、直接修改 chat 或 ST 内部 prompt 数组。
 
+## D-ILBM-012 · 记忆备份使用专有包格式并显式替换
+
+- 日期：2026-11-14
+- 状态：Accepted
+- 备份包含 `kind: ilbm-memory` 与 schema_version；导入先校验格式和未来版本。
+- 调试面板导入是显式替换，不自动覆盖；失败时保留现有记忆。
+- 否决：直接导出裸数组、按 JSON 猜格式、静默覆盖当前聊天记忆。
+
 ## LEGACY-BASELINE
 
 See `LEGACY-BASELINE.md`. Initial directory contained only the user-provided requirements document and no Git repository.
