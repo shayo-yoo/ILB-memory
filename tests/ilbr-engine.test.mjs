@@ -13,7 +13,7 @@ test('pure replacement returns original, output, match positions and captures', 
 
 test('ILBM marker accepts content syntax and legacy syntax', () => {
   assert.equal(processText('x (((ILBM:短剑交给甲)))', [createLiteralRemovalRule({ marker: '(((ILBM:短剑交给甲)))' })]).text, 'x ');
-  assert.equal(processText('x (((ILBM)))', [{ pattern: String.raw`\\(\\(\\(ILBM(?:\\:[\\s\\S]*?)?\\)\\)\\)`, flags: 'g', replacement: '' }]).text, 'x ');
+  assert.equal(processText('x (((ILBM)))', [createIlbmMarkerRule()]).text, 'x ');
 });
 
 test('literal helper safely escapes regex metacharacters', () => {
