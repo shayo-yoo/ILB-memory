@@ -1,5 +1,16 @@
 # ILBM Change Log
 
+## CHG-20261115-022 — Publish ILBM and standalone ILBR repositories
+
+- Type: BUILD / ARCH / DOCS
+- Date: 2026-11-15
+- Pushed ILBM to `https://github.com/shayo-yoo/ILB-memory.git` and standalone ILBR to `https://github.com/shayo-yoo/ILB-regex.git`.
+- ILBR repository owns the pure engine and generic tests; ILBM retains the ILBM marker adapter and memory integration.
+- Verified raw GitHub `manifest.json` and `index.js` return HTTP 200 for both repositories.
+- ILBM tests: 50/50; ILBR tests: 7/7. No remote history was overwritten.
+
+---
+
 ## CHG-20261114-021 — Move ILBM entry to ST extension settings
 
 - Type: UX / UI / TEST
