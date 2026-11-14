@@ -1,5 +1,17 @@
 # ILBM Change Log
 
+## CHG-20261114-002 — Second-stage debug UI and Git baseline
+
+- Type: FEATURE / TEST / BUILD / DOCS
+- Date: 2026-11-14
+- State: Implemented locally; no remote repository configured.
+- Added: `ui.js` debug panel with visible `ILBM` button, marker test textarea, JSON result display, runtime status display, and close/refresh controls.
+- Added: local Git repository and initial baseline commit `256d39f`; UI changes are the next commit.
+- Verification: Node suite 19/19; real ST 1.19.0 UI probe opened panel and returned marker result/status JSON; test install and isolated browser profile removed after verification.
+- Not implemented: event extraction, storage, entities, state/replay UI.
+
+---
+
 ## CHG-20261114-001 — First-cycle framework and text-processing bridge
 
 - Type: FEATURE / ARCH / API / TEST / DOCS

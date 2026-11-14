@@ -1,11 +1,11 @@
 # ILBM 当前项目状态
 
 - 日期：2026-11-14
-- 项目阶段：第一周期实现完成，等待用户/人工验收关键 UI 与真实生成行为。
+- 项目阶段：第二阶段基础 UI/诊断骨架已完成，事件提取/实体存储/状态计算/回放仍未实现。
 - 版本：ILBM `0.1.0`；ILBR API `1.0.0`。
-- 最终自动验证：`node --test tests/*.test.mjs` 17/17；入口、库与 probe 脚本语法检查通过；manifest JSON 有效；ST test install 与 CDP profile 已清理，备份保留。
-- 最终自动验证：`node --test tests/*.test.mjs` 17/17；关键入口和库文件 `node --check` 通过；manifest JSON 可解析。
-- Git：工作区尚非 Git 仓库；没有历史提交，不能据此声称已推送。
+- Git：已创建本地 Git 仓库，基线提交见 `256d39f`；当前第二阶段改动待提交。
+- 最终自动验证：`node --test tests/*.test.mjs` 19/19；入口、库与 probe 脚本语法检查通过；manifest JSON 有效；真实 ST synthetic probe 和调试 UI probe 均通过。
+- ST 测试安装和隔离 CDP profile 已清理；备份保留。
 
 ## 已完成
 
