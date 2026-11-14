@@ -1,5 +1,16 @@
 # ILBM Change Log
 
+## CHG-20261114-008 — Manual entity and record removal controls
+
+- Type: FEATURE / DATA / UI / TEST
+- Date: 2026-11-14
+- Added: debug panel controls to remove one record or entity by ID; state/replay outputs refresh after removal.
+- No AI extraction or automatic record deletion was added; manual removal is explicit and history/state rules remain visible.
+- Verification: Node suite 28/28; syntax checks pass.
+- Commit: pending in this cycle.
+
+---
+
 ## CHG-20261114-007 — Readable state and replay view
 
 - Type: UI / FEATURE / TEST

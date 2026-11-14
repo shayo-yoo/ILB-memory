@@ -24,6 +24,9 @@ export function mountILBMPanel({ api, memory, documentObject = globalThis.docume
   const replayLayers = el(documentObject, 'input', { class: 'ilbm-debug-input', type: 'number', value: '10', min: '0', max: '10000' });
   const activeLayers = el(documentObject, 'input', { class: 'ilbm-debug-input', type: 'number', value: '5', min: '0', max: '1000' });
   const refresh = el(documentObject, 'button', { type: 'button', textContent: '刷新状态' });
+  const removeId = el(documentObject, 'input', { class: 'ilbm-debug-input', placeholder: '要删除的记录/实体 ID' });
+  const removeRecord = el(documentObject, 'button', { type: 'button', textContent: '删除记录' });
+  const removeEntity = el(documentObject, 'button', { type: 'button', textContent: '删除实体' });
   const result = el(documentObject, 'pre', { class: 'ilbm-debug-result', textContent: '尚未测试。' });
   const memoryOutput = el(documentObject, 'pre', { class: 'ilbm-debug-result', textContent: '' });
   const memoryReadable = el(documentObject, 'div', { class: 'ilbm-debug-readable', textContent: '还没有记忆数据。' });
@@ -32,9 +35,9 @@ export function mountILBMPanel({ api, memory, documentObject = globalThis.docume
   const buttons = el(documentObject, 'div', { class: 'ilbm-debug-actions' });
   buttons.append(test, refresh);
   const memoryActions = el(documentObject, 'div', { class: 'ilbm-debug-actions' }); memoryActions.append(addEntity, addRecord);
-  body.append(input, buttons, el(documentObject, 'h3', { textContent: '标记处理结果' }), result, el(documentObject, 'h3', { textContent: '手动记忆测试' }), entityName, entityType, recordText, recordFloor, sourceMessageId, swipeId, el(documentObject, 'label', { textContent: '活跃窗口层数' }), activeLayers, el(documentObject, 'label', { textContent: '回放窗口层数' }), replayLayers, memoryActions, el(documentObject, 'div', { class: 'ilbm-debug-actions' }), el(documentObject, 'h3', { textContent: '可读记忆视图' }), memoryReadable, el(documentObject, 'h3', { textContent: '原始数据' }), memoryOutput, el(documentObject, 'h3', { textContent: '运行状态' }), status);
+  body.append(input, buttons, el(documentObject, 'h3', { textContent: '标记处理结果' }), result, el(documentObject, 'h3', { textContent: '手动记忆测试' }), entityName, entityType, recordText, recordFloor, sourceMessageId, swipeId, el(documentObject, 'label', { textContent: '活跃窗口层数' }), activeLayers, el(documentObject, 'label', { textContent: '回放窗口层数' }), replayLayers, memoryActions, removeId, el(documentObject, 'div', { class: 'ilbm-debug-actions' }), el(documentObject, 'h3', { textContent: '可读记忆视图' }), memoryReadable, el(documentObject, 'h3', { textContent: '原始数据' }), memoryOutput, el(documentObject, 'h3', { textContent: '运行状态' }), status);
   const invalidationActions = body.children[body.children.length - 2];
-  invalidationActions.append(invalidateFloor, invalidateSwipe);
+  invalidationActions.append(invalidateFloor, invalidateSwipe, removeRecord, removeEntity);
   const head = el(documentObject, 'header', { class: 'ilbm-debug-head' }); head.append(title, close); root.append(head, body); documentObject.body.append(toggle, root);
   const render = () => { try { const currentStatus = api.status?.() ?? {}; status.textContent = JSON.stringify(currentStatus, null, 2); const data = currentStatus.memory ?? memory?.inspect?.() ?? {}; memoryOutput.textContent = JSON.stringify(data, null, 2); memoryReadable.innerHTML = renderReadable(documentObject, data); } catch (error) { status.textContent = `读取失败：${error?.message ?? error}`; } };
   const show = visible => { root.hidden = !visible; toggle.setAttribute('aria-expanded', String(visible)); };
@@ -45,6 +48,8 @@ export function mountILBMPanel({ api, memory, documentObject = globalThis.docume
   invalidateFloor.addEventListener('click', () => { try { memory?.invalidateFromMessage({ floor: Number(recordFloor.value), sourceMessageId: sourceMessageId.value || null }); render(); } catch (error) { memoryOutput.textContent = `作废失败：${error?.message ?? error}`; } });
   invalidateSwipe.addEventListener('click', () => { try { memory?.invalidateSwipeBranch({ sourceMessageId: sourceMessageId.value, selectedSwipeId: Number(swipeId.value) || 0 }); render(); } catch (error) { memoryOutput.textContent = `分支处理失败：${error?.message ?? error}`; } });
   activeLayers.addEventListener('change', () => { try { memory?.setSettings({ activeWindowLayers: Number(activeLayers.value) }); render(); } catch (error) { status.textContent = `设置失败：${error?.message ?? error}`; } });
+  removeRecord.addEventListener('click', () => { try { memory?.removeRecord(removeId.value); render(); } catch (error) { status.textContent = `删除记录失败：${error?.message ?? error}`; } });
+  removeEntity.addEventListener('click', () => { try { memory?.removeEntity(removeId.value); render(); } catch (error) { status.textContent = `删除实体失败：${error?.message ?? error}`; } });
   replayLayers.addEventListener('change', () => { try { memory?.setSettings({ replayLayers: Number(replayLayers.value) }); render(); } catch (error) { status.textContent = `设置失败：${error?.message ?? error}`; } });
   render(); return { ok: true, root, toggle, close: () => show(false), destroy: () => { root.remove(); toggle.remove(); } };
 }
