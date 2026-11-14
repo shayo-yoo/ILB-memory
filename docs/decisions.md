@@ -65,6 +65,14 @@
 - 候选响应仍必须经过 JSON 解析和候选事件校验，AI 不直接拥有最终存储权。
 - 否决：在扩展启动时自动调用用户模型、把模型供应商配置硬编码到记忆扩展、让 AI 直接修改历史。
 
+## D-ILBM-008 · 候选事件必须先预览再确认写入
+
+- 日期：2026-11-14
+- 状态：Accepted
+- 调试/人工流程提供预览和确认导入两个动作；预览使用同一校验器但不保存，确认才写入。
+- AI 输出永远是候选记录，不直接成为最终事实。
+- 否决：解析成功后静默自动写入，避免错误/推测污染历史。
+
 ## LEGACY-BASELINE
 
 See `LEGACY-BASELINE.md`. Initial directory contained only the user-provided requirements document and no Git repository.

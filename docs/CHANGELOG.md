@@ -1,5 +1,16 @@
 # ILBM Change Log
 
+## CHG-20261114-012 — Candidate event preview before import
+
+- Type: FEATURE / DATA / UI / TEST
+- Date: 2026-11-14
+- Added: “预览候选事件（不保存）” alongside explicit import/commit; preview runs the same validation but keeps storage unchanged.
+- This enforces the requirement that AI output is a candidate, not final memory truth.
+- Verification: Node suite 39/39.
+- Commit: pending in this cycle.
+
+---
+
 ## CHG-20261114-011 — Configurable AI extraction adapter
 
 - Type: FEATURE / API / TEST / UI
