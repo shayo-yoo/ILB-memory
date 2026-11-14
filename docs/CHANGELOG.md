@@ -1,5 +1,16 @@
 # ILBM Change Log
 
+## CHG-20261114-020 — Manual acceptance checklist and status copy
+
+- Type: DOCS / UI / TEST
+- Date: 2026-11-14
+- Added `docs/MANUAL_ACCEPTANCE.md` with non-technical user steps and explicit unverified boundaries.
+- Added “复制状态” button to debug panel for support/reporting without console access.
+- Verification: Node suite 50/50; clean Git commits maintained.
+- Commit: pending in this cycle.
+
+---
+
 ## CHG-20261114-019 — ILBM public API contract docs and tests
 
 - Type: API / DOCS / TEST
