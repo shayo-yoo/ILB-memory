@@ -56,6 +56,15 @@
 - 解析失败不写入存储，返回错误；解析成功仍必须经过候选事件校验、实体引用验证和部分接受。
 - 第一周期/第二阶段不主动调用模型；调试面板只提供手动粘贴测试入口。
 
+## D-ILBM-007 · AI 提取只通过可注入适配器，默认关闭
+
+- 日期：2026-11-14
+- 状态：Accepted
+- ILBM 提供 `extractCandidates(text, options)` 适配接口；调用方必须显式提供 `extract` 函数，默认不调用模型。
+- 适配器有超时、耗时和解析失败结果；失败不阻塞聊天、不写入记忆。
+- 候选响应仍必须经过 JSON 解析和候选事件校验，AI 不直接拥有最终存储权。
+- 否决：在扩展启动时自动调用用户模型、把模型供应商配置硬编码到记忆扩展、让 AI 直接修改历史。
+
 ## LEGACY-BASELINE
 
 See `LEGACY-BASELINE.md`. Initial directory contained only the user-provided requirements document and no Git repository.

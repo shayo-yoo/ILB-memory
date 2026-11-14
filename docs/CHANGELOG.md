@@ -1,5 +1,16 @@
 # ILBM Change Log
 
+## CHG-20261114-011 — Configurable AI extraction adapter
+
+- Type: FEATURE / API / TEST / UI
+- Date: 2026-11-14
+- Added: `runCandidateExtraction(text, {extract, timeoutMs})`; no adapter means skipped, adapter errors/timeouts fail closed, successful string/object responses enter existing candidate parser.
+- Added: debug panel “模拟 AI 提取” action; it explicitly reports that no model call is configured by default.
+- Verification: Node suite 38/38.
+- Commit: pending in this cycle.
+
+---
+
 ## CHG-20261114-010 — AI candidate response parser
 
 - Type: FEATURE / API / TEST / UI

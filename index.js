@@ -3,6 +3,7 @@ import { createIlbrService } from './lib/ilbr-engine.js';
 import { createMarkerResult } from './lib/ilbm-bridge.js';
 import { mountILBMPanel } from './ui.js';
 import { createMemoryStore } from './lib/memory-store.js';
+import { runCandidateExtraction } from './lib/extractor.js';
 import { calculateCurrentState, replayRecords } from './lib/memory-model.js';
 import { createMemoryEventAdapter } from './lib/memory-events.js';
 
@@ -45,7 +46,7 @@ export function initializeILBM({ context, eventSource, eventTypes, globalObject 
   let lastMemoryChange = null;
   const eventAdapter = createMemoryEventAdapter({ eventSource: adapterSource, eventTypes: types, getContext: () => context, store: memory, onChange: change => { lastMemoryChange = { ...change, at: Date.now() }; } });
   const inspectMemory = () => ({ ...memory.inspect(), currentState: calculateCurrentState(memory.inspect()), replay: replayRecords(memory.inspect()), lastChange: lastMemoryChange, eventAdapter: { ok: eventAdapter.ok, events: eventAdapter.events ?? [], degraded: Boolean(lastMemoryChange?.degraded) } });
-  const memoryApi = { id: 'ILBM-Memory', version: '0.1.0', inspect: inspectMemory, registerEntity: input => memory.registerEntity(input), addRecord: input => memory.addRecord(input), invalidateFromMessage: input => memory.invalidateFromMessage(input), invalidateSwipeBranch: input => memory.invalidateSwipeBranch(input), setSettings: input => memory.setSettings(input), removeRecord: id => memory.removeRecord(id), removeEntity: id => memory.removeEntity(id), importCandidates: (payload, meta) => memory.importCandidates(payload, meta), importCandidateResponse: (raw, meta) => memory.importCandidateResponse(raw, meta), reset: () => memory.reset(), events: () => ({ ...eventAdapter, events: eventAdapter.events ?? [] }) };
+  const memoryApi = { id: 'ILBM-Memory', version: '0.1.0', inspect: inspectMemory, registerEntity: input => memory.registerEntity(input), addRecord: input => memory.addRecord(input), invalidateFromMessage: input => memory.invalidateFromMessage(input), invalidateSwipeBranch: input => memory.invalidateSwipeBranch(input), setSettings: input => memory.setSettings(input), removeRecord: id => memory.removeRecord(id), removeEntity: id => memory.removeEntity(id), importCandidates: (payload, meta) => memory.importCandidates(payload, meta), importCandidateResponse: (raw, meta) => memory.importCandidateResponse(raw, meta), extractCandidates: (text, options) => runCandidateExtraction(text, options), reset: () => memory.reset(), events: () => ({ ...eventAdapter, events: eventAdapter.events ?? [] }) };
   const ilb = registerILBSeriesAPI(globalObject, bridge);
   integration = { display, prompt, capture, ilb, ilbr, memory: memoryApi };
   try { globalObject.ILBM_MEMORY = memoryApi; } catch { /* optional global diagnostic */ }
