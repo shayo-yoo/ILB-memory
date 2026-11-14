@@ -11,6 +11,17 @@
 
 ---
 
+## CHG-20261115-030 — Minimal decoupled UI shell
+
+- Type: ARCH / UI / TEST
+- Replaced the old business-heavy panel entry with a minimal decoupled shell (`ui-shell.js`).
+- Desktop uses a fixed section; mobile uses a full-screen dialog top layer. Both expose deterministic `open/close/isOpen` and duplicate mount returns the same shell.
+- The shell initially shows only version/status; existing memory UI content is not coupled into shell state yet.
+- Node suite: 54/54.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-029 — Mobile close interaction and high-contrast controls
 
 - Type: FIX / UI / TEST

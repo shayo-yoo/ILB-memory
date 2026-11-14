@@ -2,6 +2,7 @@ import { createIlbmBridge, registerDisplayFilter, registerMessageCapture, regist
 import { createIlbrService } from './lib/ilbr-engine.js';
 import { createMarkerResult } from './lib/ilbm-bridge.js';
 import { mountILBMPanel } from './ui.js';
+import { mountILBMShell } from './ui-shell.js';
 import { createMemoryStore } from './lib/memory-store.js';
 import { runCandidateExtraction } from './lib/extractor.js';
 import { calculateCurrentState, replayRecords } from './lib/memory-model.js';
@@ -54,7 +55,7 @@ export function initializeILBM({ context, eventSource, eventTypes, globalObject 
   const ilb = registerILBSeriesAPI(globalObject, bridge);
   integration = { display, prompt, capture, ilb, ilbr, memory: memoryApi };
   try { globalObject.ILBM_MEMORY = memoryApi; } catch { /* optional global diagnostic */ }
-  try { globalObject.__ILBM_DEBUG_PANEL__ = mountILBMPanel({ api: globalObject.ILBM, memory: memoryApi, documentObject: globalObject.document, showToggle: false, mobile: globalObject.matchMedia?.('(max-width: 767px)')?.matches === true }); installSettingsEntryWhenReady(globalObject, globalObject.__ILBM_DEBUG_PANEL__); } catch { /* UI optional */ }
+  try { const isMobile = globalObject.matchMedia?.('(max-width: 767px)')?.matches === true; globalObject.__ILBM_SHELL__ = mountILBMShell({ version: VERSION, status: getILBMStatus, documentObject: globalObject.document, mobile: isMobile }); installSettingsEntryWhenReady(globalObject, globalObject.__ILBM_SHELL__); } catch { /* shell optional */ }
   return { ok: true, version: VERSION, capabilities: bridge.capabilities, integration };
 }
 
@@ -104,7 +105,7 @@ export function publishGlobalApi(globalObject, context, initialized) {
     capture: (source, getContext, onMarked) => registerMessageCapture(source, context?.eventTypes?.MESSAGE_RECEIVED ?? 'message_received', getContext, onMarked),
   });
   globalObject.ILBM = api;
-  try { globalObject.__ILBM_DEBUG_PANEL__ = mountILBMPanel({ api, documentObject: globalObject.document, mobile: globalObject.matchMedia?.('(max-width: 767px)')?.matches === true }); } catch { /* UI is optional */ }
+  // UI shell is mounted during initializeILBM; API publication must not create a second UI.
   try { globalObject.dispatchEvent?.(new CustomEvent('ilbm:ready', { detail: api })); } catch { /* optional event */ }
   return { ok: true, api };
 }
