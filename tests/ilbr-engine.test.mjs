@@ -11,6 +11,11 @@ test('pure replacement returns original, output, match positions and captures', 
   assert.equal(result.matches[0].captures[0].value, '(((ILBM)))');
 });
 
+test('ILBM marker accepts content syntax and legacy syntax', () => {
+  assert.equal(processText('x (((ILBM:短剑交给甲)))', [createLiteralRemovalRule({ marker: '(((ILBM:短剑交给甲)))' })]).text, 'x ');
+  assert.equal(processText('x (((ILBM)))', [{ pattern: String.raw`\\(\\(\\(ILBM(?:\\:[\\s\\S]*?)?\\)\\)\\)`, flags: 'g', replacement: '' }]).text, 'x ');
+});
+
 test('literal helper safely escapes regex metacharacters', () => {
   const result = processText('[tag] (literal)+', [{ id: 'literal', pattern: '\\[tag\\] \\(literal\\)\\+', flags: '', replacement: 'ok' }]);
   assert.equal(result.text, 'ok');

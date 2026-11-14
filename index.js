@@ -54,7 +54,7 @@ export function initializeILBM({ context, eventSource, eventTypes, globalObject 
   const ilb = registerILBSeriesAPI(globalObject, bridge);
   integration = { display, prompt, capture, ilb, ilbr, memory: memoryApi };
   try { globalObject.ILBM_MEMORY = memoryApi; } catch { /* optional global diagnostic */ }
-  try { const isMobile = globalObject.matchMedia?.('(max-width: 767px)')?.matches === true; globalObject.__ILBM_SHELL__ = mountILBMShell({ version: VERSION, status: getILBMStatus, documentObject: globalObject.document, mobile: isMobile }); installSettingsEntryWhenReady(globalObject, globalObject.__ILBM_SHELL__); } catch { /* shell optional */ }
+  try { const isMobile = globalObject.matchMedia?.('(max-width: 767px)')?.matches === true; globalObject.__ILBM_SHELL__ = mountILBMShell({ version: VERSION, status: getILBMStatus, api: globalObject.ILBM, documentObject: globalObject.document, mobile: isMobile }); installSettingsEntryWhenReady(globalObject, globalObject.__ILBM_SHELL__); } catch { /* shell optional */ }
   return { ok: true, version: VERSION, capabilities: bridge.capabilities, integration };
 }
 
@@ -81,7 +81,7 @@ export function getILBMStatus() {
   return { version: VERSION, started, markCount, lastMarkAt, lastProcess, memory, injection: { enabled: memoryInjector?.isEnabled?.() ?? false, key: memoryInjector?.key ?? null }, integration: { ...integration } };
 }
 
-export const ILBM_MARKER = '(((ILBM)))';
+export const ILBM_MARKER = '(((ILBM:{内容})))';
 
 /** Browser entry. The ST loader imports index.js as an ES module. */
 export async function bootILBM() {
