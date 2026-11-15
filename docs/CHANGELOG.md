@@ -11,6 +11,17 @@
 
 ---
 
+## CHG-20261115-037 — Extend v2 preflight evidence
+
+- Type: TEST / DOCS
+- Confirmed ILB-regex GitHub raw install files return HTTP 200.
+- Confirmed ST EventEmitter serially awaits listeners and catches listener errors.
+- Added source evidence that some MESSAGE events are emitted with floor/index primitives, while complete stable identity semantics remain pending.
+- No business feature implementation performed.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-036 — Record preflight regression suite
 
 - Type: TEST / DOCS

@@ -19,6 +19,8 @@
 | `setExtensionPrompt` | 通过 | 临时 `ILBM_PREFLIGHT` 注入对象出现，随后清空 |
 | 生命周期事件名称 | 通过 | received/edited/deleted/swiped/swipeDeleted/promptReady 均返回明确名称 |
 | ILBM 与 ILB 同时加载 | 通过 | 两个全局 API 同时存在 |
+| ILB-regex GitHub 网络文件 | 通过 | raw manifest/index 均 HTTP 200；尚未在 ST 中作为外部依赖加载 |
+| ST EventEmitter 顺序 | 通过 | `emit()` 按注册顺序串行 await listener，异常被宿主捕获后继续 |
 
 ## 回归测试
 
@@ -28,7 +30,7 @@
 ## 尚未完成/不能据此宣称通过
 
 - chat 变量随真实 chat 备份、分叉、切换继承；
-- 每个 MESSAGE_* 事件的真实参数形状和稳定消息/Swipe ID；
+- 每个 MESSAGE_* 事件的真实参数形状和稳定消息/Swipe ID；源码仅确认部分调用以楼层整数和来源字符串发出，例如 `MESSAGE_RECEIVED(index, source)`、`MESSAGE_EDITED(index)`；
 - Chat Completion 最终发送上下文的实际可见范围；
 - ILB-regex 外部网络安装后的发现/调用交接；
 - ILB 触发条件结果传递给 ILBM；
