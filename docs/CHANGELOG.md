@@ -11,6 +11,17 @@
 
 ---
 
+## CHG-20261115-038 — Clarify ILB variable persistence boundary
+
+- Type: API / DATA / DOCS
+- ILB source audit confirms `api.set` stores variables in `extension_settings.independent_lorebook.chatStates[chatId].__vars` and persists through the extension settings repository.
+- This is not yet proven equivalent to ST native `chat_metadata`; v2 backup/fork/switch inheritance remains open.
+- Updated preflight, contract and BUG tracker language to avoid overstating the capability.
+- No business feature implementation performed.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-037 — Extend v2 preflight evidence
 
 - Type: TEST / DOCS

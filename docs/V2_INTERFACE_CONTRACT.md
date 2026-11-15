@@ -108,6 +108,9 @@ ILBM v2 计划使用：
 ```js
 window.ILB.api.set('ilbm_memory', serializedMemory)
 window.ILB.api.snapshot()
+
+// 当前 ILB 1.4 实际实现：变量写入 extension_settings.independent_lorebook.chatStates[chatId].__vars，
+// 由 ILB repository 调用扩展设置持久化；不能直接称为 ST 原生 chat_metadata 变量。
 ```
 
 但以下仍需真实 ST + ILB 联动验证：
