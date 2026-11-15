@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-044 — Record context observability probe
+
+- Type: TEST / DOCS
+- Real ST probe confirmed prompt-ready, `setExtensionPrompt` and generation entry availability.
+- No model request was sent; final provider payload was not captured, so context visibility remains an explicit open gate.
+- Temporary browser profile cleaned; no chat data written.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-043 — Consolidate v2 preflight completion gates
 
 - Type: DOCS / ARCH / TEST
