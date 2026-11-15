@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-052 — Add entity management trial UI
+
+- Type: FEATURE / UI / TEST
+- Added entity management section to the decoupled shell: entity short-name input, register action, result display and help text.
+- Existing memory API remains the storage owner; UI only calls `registerEntity`.
+- Node suite: 61/61.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-051 — Connect direct records and trial UI
 
 - Type: FEATURE / UI / TEST

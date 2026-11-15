@@ -54,6 +54,7 @@
 - [ ] **GAP-004** 未实现待确认→有效的第 N+1 层延迟确认机制。
   - 已完成基础 lifecycle helper：上一楼层 pending 可确认，非选中 Swipe pending 可作废；尚未接入 ST 消息时序监听。
 - [ ] **GAP-005** 当前状态尚未完整覆盖物品/角色/地点三类 MVP 状态卡。
+  - 试运行 UI 已能查看当前状态，并新增实体注册；三类状态卡字段仍待实现。
 - [ ] **GAP-006** 未实现一跳关系线补充、宽度预算和入度排序。
 - [ ] **GAP-007** 未完成 ST 实际上下文可见范围和活跃窗口排除验证。
   - 当前基础能力：ST `setExtensionPrompt`、`CHAT_COMPLETION_PROMPT_READY` 和 `ctx.generate` 均可用；未发送真实模型请求或捕获最终 provider payload。
