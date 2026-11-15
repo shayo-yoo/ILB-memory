@@ -29,6 +29,29 @@
 - `node --test tests/*.test.mjs`：55/55 通过。
 - 这些测试验证当前原型不回归，不等于 v2 前置环境全部完成。
 
+## 前置完成度
+
+当前前置工作完成度：**基础接口/共存验证已完成，真实行为验证未完成**。
+
+可标记为“已验证”的范围仅包括：
+
+- ILB/ILBM/ILBR 同时加载；
+- ILB 1.4 set/snapshot/remove 临时往返；
+- ST chat/context 对象存在；
+- setExtensionPrompt 临时注入；
+- EventEmitter 串行/容错；
+- prompt-ready 的源码时序；
+- ILBR raw 网络文件和独立 processText。
+
+以下项目仍是前置完成门槛，全部完成前不得进入正式 v2 功能开发：
+
+- chat 备份/分叉/切换继承行为；
+- 生命周期事件稳定身份和真实参数；
+- 最终网络请求上下文；
+- post API 稳定边界和超时；
+- 真实手机 WebView；
+- 延迟确认时序。
+
 ## 尚未完成/不能据此宣称通过
 
 - chat 变量随真实 chat 备份、分叉、切换继承；ILB 源码显示变量位于 extension_settings 的 chatStates 桶，不能直接等同于 ST chat metadata；ST 源码显示 chat 文件加载时从 `data[0].chat_metadata` 读取元数据、通过 `saveMetadata()`/`saveMetadataDebounced()` 写回，但尚未证明 ILB 的 extension_settings 变量随同一 chat 文件复制。

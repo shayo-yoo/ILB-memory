@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-043 — Consolidate v2 preflight completion gates
+
+- Type: DOCS / ARCH / TEST
+- Separated verified foundation capabilities from unresolved real-behavior gates.
+- Added explicit rule: no v2 feature development until chat inheritance, stable message identity, final context, post API, mobile WebView and delayed-confirmation gates close.
+- No business feature implementation performed.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-042 — Decide external ILBR capability negotiation
 
 - Type: ARCH / API / DOCS
