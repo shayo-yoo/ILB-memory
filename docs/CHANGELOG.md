@@ -11,6 +11,15 @@
 
 ---
 
+## CHG-20261115-060 — Add v2 trial run guide
+
+- Type: DOCS / TEST
+- Added `docs/TRIAL_RUN.md` with installation, direct marker, entity, pending confirmation, invalidation, state-card and timeline acceptance steps.
+- Explicitly lists current limitations and feedback fields.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-059 — Add event invalidation control to trial UI
 
 - Type: UI / FEATURE / TEST
