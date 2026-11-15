@@ -62,7 +62,7 @@ export function mountILBMShell({ version = '0.2.1', status = () => ({}), api: co
   markerHelp.addEventListener('click', () => { markerResult.textContent = '语法：(((ILBM:{内容})))；例如 (((ILBM:短剑交给甲)))。旧格式 (((ILBM))) 仍兼容。'; });
   errorHelp.addEventListener('click', () => { markerResult.textContent = '错误不会阻塞正常聊天。常见错误：缺少 [entity:名称]、动作不在白名单、候选格式无效。错误会保留诊断，修正输入后可重新测试。'; });
   memoryHelp.addEventListener('click', () => { memoryResult.textContent = '记忆状态由有效事件重算；回放按活跃窗口/回放窗口设置预览。AI 候选必须先预览，再确认导入。'; });
-  const closeShell = () => { try { root.close?.(); } catch {} root.removeAttribute('open'); root.hidden = true; root.setAttribute('hidden', ''); root.setAttribute('aria-hidden','true'); root.style.cssText = 'display:none!important;visibility:hidden!important'; };
+  const closeShell = () => { try { root.close?.(); } catch {} root.removeAttribute('open'); root.hidden = true; root.setAttribute('hidden', ''); root.setAttribute('aria-hidden','true'); root.style.cssText = 'display:none!important;visibility:hidden!important'; root.style.display = 'none'; };
   const openShell = () => { root.hidden = false; root.removeAttribute('hidden'); root.removeAttribute('aria-hidden'); root.style.cssText = mobile ? 'display:flex!important;visibility:visible!important' : 'display:block!important;visibility:visible!important'; if (mobile) { try { root.showModal?.(); } catch {} } statusText.textContent = JSON.stringify(status(), null, 2); };
   close.addEventListener('click', (event) => { event.preventDefault(); event.stopPropagation(); closeShell(); }); root.addEventListener('cancel', closeShell); root.addEventListener('close', closeShell);
   let activeApi = contentApi;
