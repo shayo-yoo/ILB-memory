@@ -118,10 +118,10 @@ export function installSettingsEntry(globalObject = globalThis, panel) {
   if (documentObject.querySelector('#ilbm-settings-entry')) return true;
   let mounted = false;
   {
-    const card = documentObject.createElement('div'); card.id = id; card.className = 'inline-drawer ilbm-settings-entry';
+    const card = documentObject.createElement('div'); card.id = id; card.className = 'inline-drawer ilbm-settings-entry'; card.style.cssText = 'color:#f5f7fb;background:#17202c;border:1px solid #8095ad;border-radius:6px;padding:8px;margin:6px 0';
     const title = documentObject.createElement('div'); title.className = 'inline-drawer-toggle inline-drawer-header'; title.textContent = 'ILB-Memory 记忆管理';
     const content = documentObject.createElement('div'); content.className = 'inline-drawer-content';
-    const button = documentObject.createElement('button'); button.type = 'button'; button.textContent = '打开 ILB-Memory 记忆管理面板'; button.addEventListener('click', () => { panel.open?.(); });
+    const button = documentObject.createElement('button'); button.type = 'button'; button.textContent = '打开 ILB-Memory 记忆管理面板'; button.style.cssText = 'appearance:none!important;background:#2d4864!important;color:#fff!important;border:1px solid #b5c8dc!important;border-radius:6px!important;padding:8px 12px!important;min-height:38px;cursor:pointer'; button.addEventListener('click', () => { panel.open?.(); });
     const hint = documentObject.createElement('p'); hint.className = 'ilbm-settings-hint'; hint.textContent = '管理实体、事件、状态、回放和调试信息。默认不会自动注入记忆。';
     content.append(hint, button); card.append(title, content); host.append(card); mounted = true;
   }

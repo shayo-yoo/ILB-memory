@@ -11,6 +11,27 @@
 
 ---
 
+## CHG-20261115-046 — Fix PC shell layout and settings button contrast
+
+- Type: FIX / UI / ARCH / TEST
+- PC shell header now has isolated forced flex row layout with title flexing left and close button fixed right.
+- Settings entry card/button now has local high-contrast inline styling independent of ST global button theme.
+- Added versioned, replaceable `lib/memory-schema.js` envelope/status/mode adapter as v2 storage foundation; not yet connected to persistence.
+- Node suite: 55/55; UI probe confirms header flex row and entry button dark background/white text, but headless layout rectangles are zero and need real visible PC manual confirmation.
+- Commit: pending.
+
+---
+
+## CHG-20261115-045 — Record PC shell and settings-entry UI bugs
+
+- Type: BUG / DOCS / UI
+- Added BUG-005 for PC shell title/close layout misalignment.
+- Added BUG-006 for white settings-entry button with unreadable text.
+- No code changed in this report-only step.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-044 — Record context observability probe
 
 - Type: TEST / DOCS
