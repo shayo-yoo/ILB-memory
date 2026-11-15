@@ -39,6 +39,9 @@ export function initializeILBM({ context, eventSource, eventTypes, globalObject 
     getChat: () => context?.chat,
     marker: ILBM_MARKER,
   }), (payload) => {
+    if (payload?.index != null) memory?.confirmPending?.(payload.index);
+    const direct = parseDirectMarkers(payload?.result?.original ?? payload?.message?.mes ?? '', { floor: payload?.index ?? 0, sourceMessageId: payload?.message?.id ?? null, swipeId: payload?.message?.swipe_id ?? null });
+    for (const record of direct.records) { try { memory?.addRecord?.(record); } catch { /* candidate failures never block chat */ } }
     lastProcess = { source: payload.source, sourceKey: payload.sourceKey, triggered: payload.result.triggered, errors: payload.result.errors, at: Date.now() };
     markCount += 1;
     lastMarkAt = lastProcess.at;
