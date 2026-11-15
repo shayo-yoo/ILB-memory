@@ -42,7 +42,7 @@
 - [ ] **GAP-008** 未实现真实 post OpenAI 兼容 API、3 秒超时和晚到结果规则。
 - [ ] **GAP-009** ILB 触发条件复用尚未形成验证证据。
 - [ ] **GAP-010** 外部 ILB-regex 协作接口尚未在网络安装形态验证。
-  - 网络 raw manifest/index 已 HTTP 200；仍未验证 ST 扫描、加载和 ILBM 结果交接。
+  - 网络 raw manifest/index 已 HTTP 200；三者同时安装时 ST 加载和 `ILB_SERIES.regex` 已通过；ILBM 尚未切换为调用外部 ILBR，结果交接仍开放。
 
 ## 已关闭问题
 

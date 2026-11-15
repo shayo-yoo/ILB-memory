@@ -11,6 +11,17 @@
 
 ---
 
+## CHG-20261115-041 — Verify ILB/ILBM/ILBR coexistence
+
+- Type: TEST / API / DOCS
+- Combined isolated ST probe installed ILB, ILBM and ILBR simultaneously.
+- Verified `window.ILB`, `window.ILBM`, `window.ILBR`, `ILB_SERIES.regex`, `ILB_SERIES.memory` and ILBR `processText` all work together.
+- ILBM still uses its bundled compatibility engine; external service handoff remains an explicit later decision.
+- Temporary installs/profile were cleaned; no chat data written.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-040 — Audit prompt timing and post-request reuse boundaries
 
 - Type: TEST / API / DOCS
