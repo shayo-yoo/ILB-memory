@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-051 — Connect direct records and trial UI
+
+- Type: FEATURE / UI / TEST
+- Direct marker capture now creates pending EventRecords and confirmation API is exposed through the memory store.
+- New shell includes an event-record section with help text for pending/valid/invalid and direct/post/manual modes.
+- Node suite: 61/61.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-050 — Add pending confirmation lifecycle foundation
 
 - Type: FEATURE / DATA / TEST
