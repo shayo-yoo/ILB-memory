@@ -2,7 +2,7 @@ export function section(documentObject, title, ...children) { const box = docume
 
 
 
-export function mountILBMShell({ version = '0.2.0', status = () => ({}), api: contentApi = null, documentObject = globalThis.document, mobile = false } = {}) {
+export function mountILBMShell({ version = '0.2.1', status = () => ({}), api: contentApi = null, documentObject = globalThis.document, mobile = false } = {}) {
   if (!documentObject?.body) return { ok: false, reason: 'document unavailable' };
   const existing = documentObject.getElementById('ilbm-shell');
   if (existing?.__ilbmShell) return existing.__ilbmShell;
