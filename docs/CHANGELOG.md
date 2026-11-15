@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-042 — Decide external ILBR capability negotiation
+
+- Type: ARCH / API / DOCS
+- Accepted v2 decision: ILBM will prefer `ILB_SERIES.regex`, then `window.ILBR`, then a diagnostic-only compatibility fallback.
+- No implementation change in this preflight step; ordinary chat must continue if external ILBR is unavailable.
+- Added ADR `docs/decisions/D-ILBM-V2-001-external-ilbr-preference.md`.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-041 — Verify ILB/ILBM/ILBR coexistence
 
 - Type: TEST / API / DOCS

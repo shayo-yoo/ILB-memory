@@ -126,7 +126,7 @@ window.ILB.api.snapshot()
 - `createIlbrService().processText()` 是同步、按调用提供规则的纯处理接口；
 - ILBM 不应重新实现通用正则规则存储；
 - v2 正式目标是由 ILB-regex 识别/过滤内联标记，再把匹配结果交给 ILBM 解析器；
-- 外部扩展网络安装后的发现和调用仍为 pending。
+- 外部扩展网络安装后的发现和调用已通过三者共存 probe；v2 正式契约采用 `ILB_SERIES.regex` → `window.ILBR` → 兼容降级的能力协商，详见 `docs/decisions/D-ILBM-V2-001-external-ilbr-preference.md`。实际 ILBM 适配仍待前置阶段结束后实施。
 
 ## 6. 事件契约
 

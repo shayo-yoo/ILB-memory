@@ -34,7 +34,7 @@
 - chat 变量随真实 chat 备份、分叉、切换继承；ILB 源码显示变量位于 extension_settings 的 chatStates 桶，不能直接等同于 ST chat metadata；ST 源码显示 chat 文件加载时从 `data[0].chat_metadata` 读取元数据、通过 `saveMetadata()`/`saveMetadataDebounced()` 写回，但尚未证明 ILB 的 extension_settings 变量随同一 chat 文件复制。
 - 每个 MESSAGE_* 事件的真实参数形状和稳定消息/Swipe ID；源码仅确认部分调用以楼层整数和来源字符串发出，例如 `MESSAGE_RECEIVED(index, source)`、`MESSAGE_EDITED(index)`；
 - Chat Completion 最终发送上下文的实际可见范围；源码确认 `prepareOpenAIMessages()` 在 `getChat()` 后发出 `CHAT_COMPLETION_PROMPT_READY`，随后发送层继续使用生成参数，但仍需网络层 probe 捕获最终请求；
-- ILB-regex 外部网络安装后的发现/调用交接；三者共存和 `ILB_SERIES.regex` 已通过，ILBM 当前仍使用自身兼容引擎，尚未把处理调用切换为外部 ILBR；
+- ILB-regex 外部网络安装后的发现/调用交接；三者共存和 `ILB_SERIES.regex` 已通过，能力协商决策已记录，但 ILBM 当前仍使用自身兼容引擎，尚未把处理调用切换为外部 ILBR；
 - ILB 触发条件结果传递给 ILBM；
 - post OpenAI 兼容 API、API Key 边界和 3 秒超时；ST 源码已有 `custom-request.js` 和 `sendGenerationRequest`/`sendStreamingRequest`，但没有确认适合 ILBM 独立外部提取的稳定公开适配接口；
 - 真实手机 WebView；
