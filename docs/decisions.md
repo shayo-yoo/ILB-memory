@@ -113,6 +113,13 @@
 - 保留全局 `window.ILBM` 和隐藏诊断 root，但不增加新的常驻悬浮球。
 - 否决：继续增加独立悬浮球，避免与 ILB/其它扩展入口堆叠。
 
+## D-ILBM-V2-003 · 检索、关系线与合并裁剪语义
+
+- 日期：2026-11-16
+- 状态：Accepted（代码级）；真实 ST/模型验证待完成
+- 主节点由显式 ID/短名或 `mentionText` 识别；关系线只做一跳，只输出当前状态摘要；主节点时间线受 `timelineDepth` 限制；合并按记录 ID/实体 ID 去重；裁剪先砍关系线间接实体，再砍最早非保护历史。
+- 详见 `decisions/D-ILBM-V2-003-retrieval-pipeline.md`。
+
 ## LEGACY-BASELINE
 
 See `LEGACY-BASELINE.md`. Initial directory contained only the user-provided requirements document and no Git repository.

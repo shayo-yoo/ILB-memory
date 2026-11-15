@@ -19,14 +19,21 @@ function caseState() {
   return { state, sword, jia, yi, camp };
 }
 
-test('状态卡按需注入：只注入本轮提及的实体', () => {
+test('状态卡按需注入：主节点及其一跳关系实体', () => {
   const c = caseState();
   const result = buildMemoryText(c.state, { currentFloor: 15, mentionedEntityIds: [c.sword.id] });
   assert.equal(result.mentionFiltered, true);
-  assert.deepEqual(result.injectedEntityIds, [c.sword.id]);
+  assert.ok(result.injectedEntityIds.includes(c.sword.id));
   assert.ok(result.text.includes('短剑：'));
   assert.ok(result.text.includes('持有者=乙'), result.text);
-  assert.ok(!result.text.includes('营地：'), '未提及的实体不应注入状态卡');
+  // 关系线带出甲、乙的当前状态摘要，但不展开他们的历史。
+  assert.ok(result.text.includes('甲：'), result.text);
+  assert.ok(result.text.includes('乙：'), result.text);
+  assert.ok(result.injectedRelationEntityIds.includes(c.yi.id));
+  // 主节点时间线带出回放窗口之外的第3层记录。
+  assert.ok(result.timelineRecordIds.includes('r1'));
+  assert.ok(result.timelineRecordIds.includes('r2'));
+  assert.ok(result.text.includes('第3层'), result.text);
 });
 
 test('未提供提及实体时保持全量注入（兼容人工预览）', () => {
@@ -34,16 +41,18 @@ test('未提供提及实体时保持全量注入（兼容人工预览）', () =>
   const result = buildMemoryText(c.state, { currentFloor: 15 });
   assert.equal(result.mentionFiltered, false);
   assert.equal(result.injectedEntityIds.length, 4);
+  assert.deepEqual(result.injectedRelationEntityIds, []);
   assert.ok(result.text.includes('短剑：'));
   assert.ok(result.text.includes('营地：'));
 });
 
-test('按名称提及同样生效，且状态卡使用中文标签', () => {
+test('按名称提及同样生效，且只展开主节点一跳范围', () => {
   const c = caseState();
   const result = buildMemoryText(c.state, { currentFloor: 15, mentionedEntityIds: ['营地'] });
-  assert.deepEqual(result.injectedEntityIds, [c.camp.id]);
+  assert.deepEqual(result.mainEntityIds, [c.camp.id]);
+  assert.ok(result.injectedEntityIds.includes(c.camp.id));
   assert.ok(result.text.includes('营地：'));
-  assert.ok(!result.text.includes('短剑：'));
+  assert.ok(!result.text.includes('甲：'), '与营地不同事件的甲不应被带出');
 });
 
 test('预算裁剪保留当前状态并丢弃最早历史', () => {

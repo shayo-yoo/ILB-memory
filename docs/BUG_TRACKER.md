@@ -59,9 +59,15 @@
 - [ ] **GAP-005** 当前状态尚未完整覆盖物品/角色/地点三类 MVP 状态卡。
   - 2026-11-16 更新：三类卡字段集已实现（`lib/state-schema.js` + `calculateCurrentState().cards`），含 `displayText` 中文可读文本；新增 `tests/state-cards.test.mjs` 覆盖 §2.1 最小字段集。
   - 2026-11-16 更新：状态卡按需注入已实现（`buildMemoryText({ mentionedEntityIds })`），未提及实体不注入；注入文本使用中文标签与实体短名。
-  - 同时修复 `stateChanges` 未参与状态推导的核心缺陷。
-  - 仍待完成：主节点提及识别（由真实对话文本自动判定“本轮涉及实体”）与 §2.4 合并去重（关系线补充接入后统一处理）。
+  - 2026-11-16 更新（0.4.0）：主节点提及识别已接入（`lib/mention-resolver.js` + `mentionText`）；无状态记录时也输出 `位置=未知/持续状态=无` 等最小字段。
+  - 仍待完成：真实对话中的提及识别准确率、指代/别名覆盖与真实模型可读性验收。
 - [ ] **GAP-006** 未实现一跳关系线补充、宽度预算和入度排序。
+  - 2026-11-16 更新（0.4.0）：已实现 `lib/memory-retrieval.js` 与 `buildMemoryText()` 合并裁剪；关系线只带出一跳实体状态摘要，不再扩散；默认宽度 3；按直接相关/同互动/同楼层/实时入度排序；跳过活跃区间；记录 ID 去重。
+  - 代码级测试：`tests/relation-line.test.mjs` 7 项、`tests/memory-injection-merge.test.mjs` 7 项。
+  - 仍保持未关闭：尚未在真实 ST 聊天中按 §10 阶段六验收项人工确认。
+- [ ] **GAP-011** 时间线深度单位与真实上下文预算未验证。
+  - `settings.timelineDepth` 当前按“最近 N 条主节点记录”解释（默认 20），需求只定义为“追溯上限”，未规定按记录数还是按层数。
+  - 需在真实模型实验中确认；若按层数更合适，应在 `retrieveMainNodeTimeline()` 内调整而不是改变存储结构。
 - [ ] **GAP-007** 未完成 ST 实际上下文可见范围和活跃窗口排除验证。
   - 当前基础能力：ST `setExtensionPrompt`、`CHAT_COMPLETION_PROMPT_READY` 和 `ctx.generate` 均可用；未发送真实模型请求或捕获最终 provider payload。
   - 2026-11-16：代码级验证通过（`tests/lightweight-verification.mjs` 5/5）；环境级验证受阻——ST 运行于 127.0.0.1:8001，但 CDP 端口 9222/9227 关闭，无法捕获 payload。结论与限制见 `docs/GAP-007_VERIFICATION_REPORT.md`。

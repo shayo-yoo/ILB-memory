@@ -2,13 +2,15 @@
 
 > 当前开发唯一依据：[`ILBMemory需求文档v2.md`](./ILBMemory需求文档v2.md)。旧版需求已归档，仅保留历史参考。
 
-本目录是 ILB-Memory 独立 SillyTavern 扩展工作区，不是 Git 仓库（基线见 `docs/LEGACY-BASELINE.md`）。
+本目录是 ILB-Memory 独立 SillyTavern 扩展工作区；Git 远端为 `https://github.com/shayo-yoo/ILB-memory.git`。
 
 ## 模块
 
 - `manifest.json` + `index.js`：ST 扩展入口；发布 `window.ILBM` 和 additive `window.ILB_SERIES.memory`。
-- `ui.js`：非技术用户可用的基础调试面板；打开页面右下角 `ILBM` 按钮，输入文本并点击「测试标记处理」，也可手动添加实体/事件、查看当前状态和回放。
-- `lib/memory-model.js` + `lib/memory-store.js`：第二阶段手动记忆存储、实体注册、事件排序、状态重算和回放窗口。
+- `ui-shell.js`：解耦的 PC/手机管理面板 shell；业务控件仍在逐步接入。
+- `lib/memory-model.js` + `lib/memory-store.js`：实体注册、事件存储、状态重算、回放与 chat 级设置。
+- `lib/memory-retrieval.js`：主节点提及、一跳关系线、主节点时间线和同事件分组检索。
+- `lib/memory-injection.js`：当前状态 + 回放 + 关系线的合并、去重、预算裁剪。
 - `lib/ilbr-engine.js`：纯同步、按调用的正则处理引擎；调用方传规则，返回原文/输出/命中/捕获/错误。
 - `lib/ilbm-bridge.js`：ILBM marker result、ST display formatter 和 prompt event adapters。
 - `tests/*.test.mjs`：Node 原生单元/契约测试。

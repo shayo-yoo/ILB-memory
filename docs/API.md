@@ -2,7 +2,7 @@
 
 > 当前需求依据为 `../ILBMemory需求文档v2.md`；本文旧接口记录仅作为已实现能力参考，不代表 v2 目标均已完成。
 
-接口版本：ILBR 1.0.0；ILBM 0.1.0。第一周期范围仅供 ILB 系列扩展调用。
+接口版本：ILBR 1.0.0；ILBM 0.4.0。第一周期范围仅供 ILB 系列扩展调用。
 
 ## ILBR
 
@@ -46,8 +46,13 @@ const result = ilbr.processText(rawText, [createIlbmMarkerRule()], { scope: 'pro
 - `importCandidates(payload, meta?)`：校验并保存合法候选事件。
 - `importCandidateResponse(raw, meta?)`：解析 AI 文本后再进入候选校验。
 - `extractCandidates(text, {extract?,timeoutMs?})`：可注入 AI 适配器；默认不调用模型。
-- `buildMemoryText({currentFloor?,tokenBudget?})`：生成当前状态/历史回放预览。
-- `injection.enable()` / `injection.apply()` / `injection.disable()`：记忆 extension prompt 注入；默认关闭，只有用户明确操作才写入。
+- `buildMemoryText({currentFloor?,tokenBudget?,mentionedEntityIds?,mentionText?,relationLine?,relationLineWidth?,timelineDepth?,activeWindowLayers?,replayLayers?})`：生成合并后的记忆文本与诊断元数据。
+  - `mentionedEntityIds` 可传实体 ID 或短名；`mentionText` 传本轮文本由程序识别主节点；两者都未提供时退化为全量状态卡预览。
+  - 返回 `text`、`usedRecords`、`truncated`、`injectedEntityIds`、`mainEntityIds`、`relationEntityIds`、`timelineRecordIds`、`protectedRecordIds`、`droppedRecords`、`overBudget` 等。
+  - 裁剪顺序：关系线间接实体 → 最早的非保护回放记录；主节点时间线与同事件分组记录不裁剪。
+- `previewCurrentTurn(options?)`：使用当前聊天最后一条用户消息和当前楼层生成注入预览。
+- `setSettings({activeWindowLayers?,replayLayers?,relationLineWidth?,timelineDepth?})`：修改当前 chat 的检索/注入配置。
+- `injection.enable()` / `injection.apply()` / `injection.disable()`：记忆 extension prompt 注入；默认关闭，只有用户明确操作才写入。运行时注入文本会在应用时按当前最后一轮用户消息重新生成。
 - `removeRecord(id)`、`removeEntity(id)`、`reset()`：显式管理数据。
 
 失败时返回诊断或抛出可读错误；失败不会阻塞聊天。候选事件必须先预览/校验，AI 不直接拥有最终存储权。

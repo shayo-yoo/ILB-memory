@@ -1,5 +1,52 @@
 # ILBM Change Log
 
+## CHG-20261116-077 — One-hop relation line and §2.4 merge/trim (§2.3/§2.4)
+
+- Type: FEATURE / RETRIEVAL / INJECTION / DATA / TEST / DOCS
+- Added `lib/memory-retrieval.js`:
+  - `getRecordEntityIds()` derives entity references from `entityIds`, legacy `action`, and `stateChanges`.
+  - `resolveMainEntityIds()` accepts explicit IDs/short names or free mention text.
+  - `retrieveMainNodeTimeline()` follows the mentioned entity into the past, excludes the active window, and caps by `timelineDepth`.
+  - `retrieveInteractionGroup()` returns records sharing `interactionId` for protected merge.
+  - `collectRelationLine()` returns one-hop related entities only, ranked by direct co-occurrence, interaction/floor proximity and live in-degree, capped by `relationLineWidth`.
+- `buildMemoryText()` now merges three sources with record-ID dedupe:
+  - main-node state cards + one-hop relation state summaries;
+  - replay window;
+  - main-node timeline and same-interaction records.
+- Trimming order follows §2.4: relation-line indirect entities first, then earliest unprotected replay history; main-node timeline and same-event-group records are protected.
+- Added `mentionText` option and automatic mention resolution; runtime injection now uses the last user message and current floor instead of full-history injection.
+- State derivation now accepts `currentFloor` and excludes future-floor records (§2.2 time axis).
+- Record text is cleaned for injection (`[entity:名称]` → `名称`), so internal marker syntax is not shown to the model.
+- Added `settings.relationLineWidth` (default 3) and `settings.timelineDepth` (default 20 records).
+- New tests: `tests/relation-line.test.mjs` (7), `tests/memory-injection-merge.test.mjs` (7). Full suite: 98/98.
+- ADR: `docs/decisions/D-ILBM-V2-003-retrieval-pipeline.md`.
+- Known limits: timeline-depth unit is an interpretation pending real-chat validation; settings are API-level only; relation-line/merge not yet accepted in real ST.
+- Commit: pending.
+
+---
+
+## CHG-20261116-076 — Render MVP state-card fields with explicit unknown defaults
+
+- Type: FIX / INJECTION / TEST
+- `formatStateCard()` now always renders the §2.1 minimum field set instead of returning `暂无状态` when no state change has happened:
+  - item: `持有者=未知，位置=未知，状态=未知`;
+  - person: `位置=未知，持续状态=无，当前有效关系=无`;
+  - place: `在场角色=无，在场物品=无`.
+- Missing item status is displayed as `未知` rather than inferring `完好`, so display does not turn an assumption into a fact (§9.4).
+- Updated `tests/state-schema.test.mjs`. Full suite: 98/98.
+- Commit: pending.
+
+---
+
+## CHG-20261116-075 — Add entity mention resolver for main-node trigger
+
+- Type: FEATURE / RETRIEVAL / TEST
+- Added `lib/mention-resolver.js`: pure text matching over entity short names and aliases, no storage mutation.
+- Matching is ordered by text position with longest-label tie-break, so `短剑01` is not shadowed by `短剑` and `maxEntities` limits follow text order.
+- Added `tests/mention-resolver.test.mjs` (5). Full suite: 84/84 at that point.
+- Commit: 11cd191.
+
+---
 ## CHG-20261116-074 — On-demand state-card injection (§2.1)
 
 - Type: FEATURE / INJECTION / TEST

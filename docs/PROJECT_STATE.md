@@ -1,32 +1,39 @@
 # ILBM 当前项目状态
 
 - 日期：2026-11-16
-- 项目阶段：全权代理开发进行中。已完成首个 v2 核心功能切片：三类状态卡字段集（§2.1）与 `stateChanges` 状态推导修复。前置闸门 GAP-007/GAP-001 的代码级验证通过，但环境级验证被 CDP 端口关闭阻塞。前置验证完成前不进入完整 v2 功能开发。后续开发只按 v2。
-- 版本：ILBM `0.3.0`（`index.js` VERSION）；ILBR API `1.0.0`。
-- Git：已创建本地 Git 仓库并推送到 `https://github.com/shayo-yoo/ILB-memory.git`；独立 ILBR 仓库为 `https://github.com/shayo-yoo/ILB-regex.git`。
-- 最终自动验证：`node --test tests/*.test.mjs` 75/75；CDP-free 代码级验证 `tests/lightweight-verification.mjs` 5/5。
-- 环境级验证阻塞：ST 运行于 `http://127.0.0.1:8001` 且 ILB/ILBM/ILBR 已安装，但 CDP 端口 9222/9227 未开放，payload/chat 继承探针暂不可执行。
+- 版本：ILBM `0.4.0`（`index.js` / `manifest.json`）；ILBR API `1.0.0`。
+- 项目阶段：v2 阶段六（关系线补充）代码级完成；阶段七/八与真实环境验收未完成。
+- 自动验证：`node --test tests/*.test.mjs` **98/98**；CDP-free 代码级验证 `tests/lightweight-verification.mjs` 退出码 0。
+- Git：本地仓库 + `https://github.com/shayo-yoo/ILB-memory.git`；当前工作区在每次变更后提交，避免不可回滚的混合修改。
+- 环境级验证仍受阻：ST 运行于 `http://127.0.0.1:8001`，CDP 端口 9222/9227 未开放，无法捕获最终 provider payload。
 
-## 已完成
-- **v2 §2.1 三类状态卡**：`lib/state-schema.js` 定义物品（持有者/位置/状态）、角色（位置/持续状态/当前有效关系）、地点（在场角色/在场物品）字段集与校验；`calculateCurrentState().cards` 输出 `displayText` 中文可读文本，实体引用显示短名。
-- **状态推导修复**：`stateChanges` 此前只存不用，现已参与线性扫描重算；`applyAction` 按实体类型字段定义泛化应用。
-- 建立独立 ILBM ST 扩展骨架（manifest + ESM entry），不修改 ST 本体、官方 Regex 或 ILB Core。
-- ILBR 同步、按需的正则文本引擎：规则调用方传入、结果返回原文/输出/匹配捕获/逐规则错误；有输入、规则数与 pattern 长度上限；单条坏规则跳过，不抛进聊天路径。
-- ILBM 标记 bridge：支持 `(((ILBM)))`，返回 `original / triggered / displayText / promptText / extractionText / matches / errors`。
-- ST display filter：用 `messageFormatter.addHook(BEFORE_REGEX)` 对渲染副本去标记，不改 chat 数组。
-- Chat Completion prompt hook：用 `CHAT_COMPLETION_PROMPT_READY` 处理 ChatCompletion 的扁平副本；ST EventEmitter 串行 await listeners，函数在该同一副本返回请求前变换内容。仅 assistant 标记会调用 `onMarked`；每轮历史中重复出现的旧 assistant 消息仍可能重复回调，需后续结合已验证的稳定 message/swipe ID 实现持久幂等。
-- 通用字符串 prompt 适配：`GENERATE_AFTER_DATA` 处理 `prompt` 或 `input`，不改其它字段。
-- synthetic 真实 ST probe：formatter 隐藏、prompt-ready 隐藏、generate-data 隐藏、原始消息对象不改、sentinel 保留，全部通过。
-- 多模态 content：仅支持单一 text block；有 image/tool/audio 等非文本部分时完全不改，避免破坏数据结构。
-- dryRun：过滤可用于 prompt 预览，但不调用 onMarked 记忆回调。
-- ILBM API 与 ILBR API 公开为 `window.ILBM` / `window.ILB_SERIES.memory`；未写入 `window.ILB`。
+## 本阶段已完成（0.4.0）
 
-## 未完成 / 人工验收
+- **主节点提及识别**：`lib/mention-resolver.js` 纯文本识别实体短名/别名；按文本位置排序、同位最长匹配；`lib/memory-retrieval.js` 支持显式 ID/短名或 `mentionText`。
+- **关系线补充（§2.3）**：`collectRelationLine()` 从主节点的一跳候选实体中只返回当前状态摘要；按“直接同事件 → 同互动/同楼层 → 实时入度”排序；默认宽度 3，可配置。
+- **主节点时间线**：`retrieveMainNodeTimeline()` 向过去追溯被提及实体的记录，受 `timelineDepth`（默认 20 条）限制；活跃区间不重复注入；不含未来楼层。
+- **合并与去重（§2.4）**：`buildMemoryText()` 合并当前状态、回放、主节点时间线、同互动记录；记录按 ID 去重，状态卡按实体 ID 去重，事件按 `(楼层, 楼内序号)` 排序。
+- **预算裁剪**：先砍关系线间接实体，再砍最早的非保护回放记录；主节点时间线与同事件分组记录受保护；受保护内容超预算时返回 `overBudget`，不静默丢失。
+- **状态卡可读输出**：三类卡始终输出 §2.1 最小字段集；未知值显示 `未知`，不推断为事实。
+- **运行时注入**：`memoryInjector` 生成文本时使用当前聊天最后一条用户消息作为提及文本、当前楼层作为时间上界；注入仍默认关闭、需手动应用（D-ILBM-011）。
+- **新增 API**：`window.ILBM_MEMORY.previewCurrentTurn(options)`；`buildMemoryText()` 新增 `mentionText / relationLine / relationLineWidth / timelineDepth / activeWindowLayers / replayLayers` 选项。
+- **设置项**：`relationLineWidth`（默认 3）、`timelineDepth`（默认 20）。可通过 `setSettings` 修改；可视化入口尚未接入。
 
-- 尚无主动 AI 调用和实体语义解析、自动回放注入或关联补充；已实现可注入的 AI 提取适配器（默认关闭/超时失败）、可选记忆 extension prompt 注入器（默认关闭/手动应用）、稳定 API 契约、AI 候选响应 JSON 解析、候选事件预览/确认导入、候选事件校验/部分接受、提取失败日志、实体注册、事件存储、状态重算、可读记忆注入预览、回放和 MESSAGE_* 失效适配、记忆备份导出/导入。
-- 已新增可视化调试面板：默认不创建悬浮球，改由 ST 扩展设置页的“打开 ILB-Memory 调试面板”入口打开；面板可输入文本测试标记处理、添加/删除实体与事件、按名称/文本/楼层筛选实体和记录、只看有效记录、查看记忆状态、当前状态重算和回放窗口；支持从楼层作废后续记录、按 source message/swipe 保留指定分支；支持修改活跃窗口层数与回放窗口层数；新增可读中文当前状态/回放视图、失败日志清理、状态复制，同时保留原始 JSON。
-- 没有发送真实模型请求；需要人工确认用户界面回复和实际模型上下文都看不到标记。
-- Classic Completion 与其它 backend 的 `GENERATE_AFTER_DATA` payload 结构需在实际使用 backend 上确认；当前只处理 `prompt`/`input` string。
-- 真实编辑、删除、重新生成、swipe 分支后的记录有效性尚未做人工 UI 验收。
-- ST `MESSAGE_*` event 参数语义尚未形成正式 ILBM listener/持久化，因此不能声称编辑/branch pipeline 已实现。
-- ILB 在 ST third-party 目录未安装，未验证 ILB_SERIES 与真实 ILB 联动；ILBM 当前独立运行。
+## 未完成 / 待真实验收
+
+- **阶段七**：延迟确认已实现 helper 和 MESSAGE_RECEIVED 调用，但真实编辑/删除/重新生成/Swipe 分支后的有效性未做人工 UI 验收；`MESSAGE_*` 稳定参数仍按宽容降级处理。
+- **阶段八**：事件列表/实体列表/详情页/设置页尚未在正式 shell 完整实现；当前 `ui-shell.js` 只有基础调试入口，且尚未提供 `relationLineWidth`、`timelineDepth`、提取模式/API 配置的可视化控件。
+- **提取**：模式 A 直出已接入；模式 B 事后 OpenAI 兼容 API、3 秒超时和晚到结果规则仍未实现（GAP-008）。
+- **指针**：关系线按同实体/同互动/同楼层实时推导，未持久化指针；入度查询时计算。需确认需求是否要求落库（ADR D-ILBM-V2-003）。
+- **时间线深度语义**：当前按“最近 N 条记录”解释，需求未给单位，需真实对话实验验证（GAP-011）。
+- **存储继承**：ILB chat 变量备份/分叉/切换行为未验证（GAP-001）。
+- **上下文可见范围**：真实 provider payload 未捕获，活跃窗口排除仅为代码级约束（GAP-007）。
+- **真实模型/手机**：未发送真实模型请求；真实手机 WebView、主题覆盖相关问题（BUG-003/004/005/006）待验收。
+- **ILB/ILBR 协作**：外部 ILB-regex 优先调用尚未切换；ILB 触发条件复用未验证（GAP-009/010）。
+
+## 建议下一步
+
+1. 在真实 ST 聊天中按 `docs/MANUAL_ACCEPTANCE.md` 走一遍：提及短剑 → 检查主节点时间线、甲/乙状态摘要、活跃区间不重复、预算裁剪。
+2. 接入阶段八最小 UI：事件列表（楼层/序号/实体/动作/模式）、实体列表、详情、关系线宽度与时间线深度设置。
+3. 实现/验证模式 B 事后提取与 3 秒超时（GAP-008），保持“失败不阻塞聊天”。
+4. 关闭前置闸门后再扩大功能面；不得在未验证接口上假设能力存在（§8）。
