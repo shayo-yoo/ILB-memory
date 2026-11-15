@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-061 — Add direct entity resolution adapter
+
+- Type: FEATURE / ARCH / TEST
+- Added `lib/entity-resolver.js` to map marker entity short names to stable IDs or register unknown entities through the memory API.
+- Direct parser accepts an optional resolver without owning entity storage.
+- Node suite: 62/62.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-060 — Add v2 trial run guide
 
 - Type: DOCS / TEST
