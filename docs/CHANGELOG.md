@@ -82,6 +82,18 @@
 
 ---
 
+## CHG-20261116-068 — Enforce strict v2 marker syntax
+
+- Type: BREAKING / API / TEST / DOCS
+- Removed legacy `(((ILBM)))` marker compatibility; only `(((ILBM:[entity:...] 动作 ...)))` is recognized.
+- `extractionText` now preserves structured marker content for direct parsing instead of returning only cleaned whitespace.
+- `交给` is accepted as a normalized alias of `转移` for practical Chinese input.
+- Trial version bumped to `0.3.0`.
+- Node suite: 64/64.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-060 — Add v2 trial run guide
 
 - Type: DOCS / TEST
