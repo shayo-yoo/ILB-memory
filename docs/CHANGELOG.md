@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-057 — Add pending confirmation control to trial UI
+
+- Type: UI / FEATURE / TEST
+- Added “确认上一层待确认事件” control and exposed `confirmPending`/`invalidatePendingBranch` through public memory API.
+- UI remains an explicit test/control surface; normal lifecycle still confirms automatically on newly captured assistant message floor.
+- Node suite: 61/61.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-056 — Add event detail view to trial UI
 
 - Type: UI / FEATURE / TEST
