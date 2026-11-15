@@ -8,6 +8,7 @@ import { calculateCurrentState, replayRecords } from './lib/memory-model.js';
 import { buildMemoryText } from './lib/memory-injection.js';
 import { createMemoryInjector } from './lib/memory-injector.js';
 import { parseDirectMarkers } from './lib/direct-parser.js';
+import { createEntityResolver } from './lib/entity-resolver.js';
 import { createMemoryEventAdapter } from './lib/memory-events.js';
 
 export const VERSION = '0.2.1';
@@ -40,7 +41,7 @@ export function initializeILBM({ context, eventSource, eventTypes, globalObject 
     marker: ILBM_MARKER,
   }), (payload) => {
     if (payload?.index != null) memory?.confirmPending?.(payload.index);
-    const direct = parseDirectMarkers(payload?.result?.original ?? payload?.message?.mes ?? '', { floor: payload?.index ?? 0, sourceMessageId: payload?.message?.id ?? null, swipeId: payload?.message?.swipe_id ?? null });
+    const direct = parseDirectMarkers(payload?.result?.original ?? payload?.message?.mes ?? '', { floor: payload?.index ?? 0, sourceMessageId: payload?.message?.id ?? null, swipeId: payload?.message?.swipe_id ?? null, resolveEntities: names => entityResolver.resolve(names) });
     for (const record of direct.records) { try { memory?.addRecord?.(record); } catch { /* candidate failures never block chat */ } }
     lastProcess = { source: payload.source, sourceKey: payload.sourceKey, triggered: payload.result.triggered, errors: payload.result.errors, at: Date.now() };
     markCount += 1;
@@ -50,6 +51,7 @@ export function initializeILBM({ context, eventSource, eventTypes, globalObject 
 
   const chatId = context?.getCurrentChatId?.() ?? context?.chatId ?? 'default';
   const memory = createMemoryStore({ chatId });
+  const entityResolver = createEntityResolver({ list: () => memory.inspect().entities, register: input => memory.registerEntity(input) });
   memoryInjector = createMemoryInjector({ getContext: () => context, getText: () => buildMemoryText(memory.inspect(), { tokenBudget: 2000 }).text });
   let lastMemoryChange = null;
   const eventAdapter = createMemoryEventAdapter({ eventSource: adapterSource, eventTypes: types, getContext: () => context, store: memory, onChange: change => { lastMemoryChange = { ...change, at: Date.now() }; } });
