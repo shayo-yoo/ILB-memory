@@ -1,7 +1,7 @@
 # ILBM 当前项目状态
 
 - 日期：2026-11-14
-- 项目阶段：已完整阅读 `ILBMemory需求文档v2.md`；旧版需求已归档至 `docs/archive/ILBMemory需求文档-v1.md`。后续开发只按 v2；当前暂停旧版需求驱动的功能实现。
+- 项目阶段：已完整阅读 `ILBMemory需求文档v2.md`；旧版需求已归档至 `docs/archive/ILBMemory需求文档-v1.md`。当前处于 v2 需求对齐审计阶段，审计报告为 `docs/V2_GAP_AUDIT.md`；开发前问题追踪为 `docs/BUG_TRACKER.md`。后续开发只按 v2。
 - 版本：ILBM `0.1.1`；ILBR API `1.0.0`。
 - Git：已创建本地 Git 仓库并推送到 `https://github.com/shayo-yoo/ILB-memory.git`；当前工作区干净。独立 ILBR 仓库为 `https://github.com/shayo-yoo/ILB-regex.git`。
 - 最终自动验证：`node --test tests/*.test.mjs` 23/23；入口、库与 probe 脚本语法检查通过；manifest JSON 有效；真实 ST synthetic probe 和调试 UI probe 均通过。

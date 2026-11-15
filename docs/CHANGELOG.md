@@ -11,6 +11,17 @@
 
 ---
 
+## CHG-20261115-033 — Audit project against v2 and add bug tracker
+
+- Type: DOCS / ARCH / TEST
+- Added `docs/V2_GAP_AUDIT.md` with phase-by-phase v2 compliance, evidence, gaps, and verification blockers.
+- Added `docs/BUG_TRACKER.md` with checkbox-based BUG/GAP lifecycle, acceptance criteria, commit and test evidence rules.
+- Updated PROJECT_STATE to mark v2 audit as the current phase.
+- No feature implementation performed; only audit and traceability documents changed.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-032 — Adopt requirements v2 and archive v1
 
 - Type: DOCS / ARCH
