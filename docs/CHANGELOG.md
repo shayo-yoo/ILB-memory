@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-053 — Enforce pending exclusion from state and replay
+
+- Type: FIX / DATA / TEST
+- `calculateCurrentState()` and `replayRecords()` now require both `valid=true` and `status='valid'`.
+- Pending direct records remain stored for confirmation but cannot affect current state or injection.
+- Node suite: 61/61.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-052 — Add entity management trial UI
 
 - Type: FEATURE / UI / TEST
