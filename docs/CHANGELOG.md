@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-065 — Clarify pure parser and runtime resolver boundary
+
+- Type: DOCS / ARCH / TEST
+- Trial probe exposed expected boundary: `parseDirectMarkers()` is pure and does not persist entities; runtime MESSAGE_RECEIVED path injects resolver and binds stable IDs.
+- Updated trial guide and BUG tracker to distinguish parser-only validation from full runtime flow.
+- No architecture change.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-064 — Connect entity resolver to runtime direct path
 
 - Type: FEATURE / ARCH / TEST

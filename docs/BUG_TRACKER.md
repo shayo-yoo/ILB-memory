@@ -50,7 +50,7 @@
   - 前置动作：先完成 `docs/V2_INTERFACE_CONTRACT.md` 中 ILB `set/snapshot` 真实联动探针，再设计迁移。
 - [ ] **GAP-002** 未实现 `direct/post/manual` 统一提取模式和记录字段。
 - [ ] **GAP-003** 未实现 v2 `[entity:...]` 内联标记解析、动作白名单和实体绑定。
-  - 隔离 ST 试运行已验证 parser、实体注册、stateChanges 和 pending EventRecord；复杂语义拆分仍未完成。
+  - 隔离 ST 试运行已验证 parser、实体注册、stateChanges 和 pending EventRecord；纯 parser 不自动写存储，真实消息捕获路径负责 resolver 绑定；复杂语义拆分仍未完成。
 - [ ] **GAP-004** 未实现待确认→有效的第 N+1 层延迟确认机制。
   - 已完成基础 lifecycle helper：上一楼层 pending 可确认，非选中 Swipe pending 可作废；尚未接入 ST 消息时序监听。
 - [ ] **GAP-005** 当前状态尚未完整覆盖物品/角色/地点三类 MVP 状态卡。
