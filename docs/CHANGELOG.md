@@ -11,6 +11,17 @@
 
 ---
 
+## CHG-20261115-062 — Derive state changes from direct actions
+
+- Type: FEATURE / DATA / TEST
+- Added `lib/action-state.js` for whitelist action → stateChanges derivation.
+- Direct parser now includes stateChanges in pending EventRecords.
+- Narrative actions outside the whitelist produce no state changes.
+- Node suite: 64/64.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-061 — Add direct entity resolution adapter
 
 - Type: FEATURE / ARCH / TEST
