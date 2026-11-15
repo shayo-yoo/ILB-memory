@@ -10,7 +10,7 @@ export function section(documentObject, title, ...children) { const box = docume
 
 
 
-export function mountILBMShell({ version = '0.4.0', status = () => ({}), api: contentApi = null, documentObject = globalThis.document, mobile = false } = {}) {
+export function mountILBMShell({ version = '0.4.1', status = () => ({}), api: contentApi = null, documentObject = globalThis.document, mobile = false } = {}) {
   if (!documentObject?.body) return { ok: false, reason: 'document unavailable' };
   cleanupLegacyDebugUI(documentObject);
   const existing = documentObject.getElementById('ilbm-shell');
@@ -28,8 +28,8 @@ export function mountILBMShell({ version = '0.4.0', status = () => ({}), api: co
   const meta = documentObject.createElement('p'); meta.className = 'ilbm-shell-meta'; meta.textContent = 'ILBM 记忆管理';
   const feature = documentObject.createElement('div'); feature.className = 'ilbm-shell-feature';
   const drawer = documentObject.createElement('details'); drawer.className = 'ilbm-shell-drawer'; const drawerSummary = documentObject.createElement('summary'); drawerSummary.textContent = '功能分区'; const drawerNav = documentObject.createElement('nav'); drawerNav.className = 'ilbm-shell-nav'; drawer.append(drawerSummary, drawerNav);
-  const markerHelp = documentObject.createElement('button'); markerHelp.textContent = '标记测试说明'; markerHelp.title = '(((ILBM:{内容}))) 会触发候选记忆处理，旧的 (((ILBM))) 也兼容';
-  const markerInput = documentObject.createElement('textarea'); markerInput.value = '测试文本 (((ILBM:短剑交给甲)))'; markerInput.rows = 3;
+  const markerHelp = documentObject.createElement('button'); markerHelp.textContent = '标记测试说明'; markerHelp.title = '严格 v2 语法：(((ILBM:[entity:实体] 动作 [entity:实体] ...)))';
+  const markerInput = documentObject.createElement('textarea'); markerInput.value = '正文 (((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙])))'; markerInput.rows = 3;
   const markerResult = documentObject.createElement('pre'); markerResult.textContent = '尚未测试';
   const errorHelp = documentObject.createElement('button'); errorHelp.textContent = '错误处理说明'; errorHelp.title = '解析失败不会阻塞聊天；错误会显示在这里并进入失败日志。';
   const markerRun = documentObject.createElement('button'); markerRun.textContent = '测试标记';
@@ -56,7 +56,18 @@ export function mountILBMShell({ version = '0.4.0', status = () => ({}), api: co
   const invalidateInput = documentObject.createElement('input'); invalidateInput.type = 'number'; invalidateInput.placeholder = '从楼层作废';
   const invalidateRun = documentObject.createElement('button'); invalidateRun.textContent = '作废该楼层及之后';
   const invalidateResult = documentObject.createElement('pre'); invalidateResult.className = 'ilbm-shell-status'; invalidateResult.textContent = '尚未执行作废';
-  const sections = [section(documentObject, '标记处理', markerHelp, errorHelp, markerInput, markerRun, markerResult), section(documentObject, '记忆状态与回放', memoryHelp, memoryRun, cardRun, memoryResult, cardResult), section(documentObject, '事件记录', recordHelp, recordRun, detailInput, detailRun, confirmRun, invalidateInput, invalidateRun, recordList, detailResult, confirmResult, invalidateResult), section(documentObject, '实体管理', entityHelp, entityInput, entityAdd, entityResult, timelineInput, timelineRun, timelineResult)]; feature.append(...sections); sections.forEach((node,index)=>{const navButton=documentObject.createElement('button');navButton.type='button';navButton.textContent=node.querySelector?.('h3')?.textContent??`分区${index+1}`;navButton.addEventListener('click',()=>{sections.forEach(item=>{item.hidden=true;item.setAttribute('data-ilbm-section-active','false');item.style.display='none'});node.hidden=false;node.setAttribute('data-ilbm-section-active','true');node.style.display='flex';drawer.open=false;});drawerNav.append(navButton);}); sections.forEach((node,index)=>{node.hidden=index!==0;node.setAttribute('data-ilbm-section-active',index===0?'true':'false');});
+  const settingsActive = documentObject.createElement('input'); settingsActive.type = 'number'; settingsActive.value = '5'; settingsActive.min = '2'; settingsActive.max = '1000'; settingsActive.placeholder = '活跃窗口层数';
+  const settingsReplay = documentObject.createElement('input'); settingsReplay.type = 'number'; settingsReplay.value = '10'; settingsReplay.min = '0'; settingsReplay.max = '10000'; settingsReplay.placeholder = '回放窗口层数';
+  const settingsRelationWidth = documentObject.createElement('input'); settingsRelationWidth.type = 'number'; settingsRelationWidth.value = '3'; settingsRelationWidth.min = '0'; settingsRelationWidth.max = '20'; settingsRelationWidth.placeholder = '关系线宽度';
+  const settingsTimelineDepth = documentObject.createElement('input'); settingsTimelineDepth.type = 'number'; settingsTimelineDepth.value = '20'; settingsTimelineDepth.min = '0'; settingsTimelineDepth.max = '1000'; settingsTimelineDepth.placeholder = '时间线深度';
+  const settingsSave = documentObject.createElement('button'); settingsSave.textContent = '保存检索设置';
+  const settingsResult = documentObject.createElement('pre'); settingsResult.className = 'ilbm-shell-status'; settingsResult.textContent = '活跃窗口 / 回放窗口 / 关系线宽度 / 时间线深度';
+  const injectionPreview = documentObject.createElement('button'); injectionPreview.textContent = '预览本轮注入';
+  const injectionEnable = documentObject.createElement('button'); injectionEnable.textContent = '开启记忆注入';
+  const injectionApply = documentObject.createElement('button'); injectionApply.textContent = '立即应用注入';
+  const injectionDisable = documentObject.createElement('button'); injectionDisable.textContent = '关闭并清除注入';
+  const injectionResult = documentObject.createElement('pre'); injectionResult.className = 'ilbm-shell-status'; injectionResult.textContent = '记忆注入默认关闭；预览不会修改请求。';
+  const sections = [section(documentObject, '标记处理', markerHelp, errorHelp, markerInput, markerRun, markerResult), section(documentObject, '记忆状态与回放', memoryHelp, memoryRun, cardRun, memoryResult, cardResult), section(documentObject, '事件记录', recordHelp, recordRun, detailInput, detailRun, confirmRun, invalidateInput, invalidateRun, recordList, detailResult, confirmResult, invalidateResult), section(documentObject, '实体管理', entityHelp, entityInput, entityAdd, entityResult, timelineInput, timelineRun, timelineResult), section(documentObject, '检索与注入', settingsActive, settingsReplay, settingsRelationWidth, settingsTimelineDepth, settingsSave, settingsResult, injectionPreview, injectionEnable, injectionApply, injectionDisable, injectionResult)]; feature.append(...sections); sections.forEach((node,index)=>{const navButton=documentObject.createElement('button');navButton.type='button';navButton.textContent=node.querySelector?.('h3')?.textContent??`分区${index+1}`;navButton.addEventListener('click',()=>{sections.forEach(item=>{item.hidden=true;item.setAttribute('data-ilbm-section-active','false');item.style.display='none'});node.hidden=false;node.setAttribute('data-ilbm-section-active','true');node.style.display='flex';drawer.open=false;});drawerNav.append(navButton);}); sections.forEach((node,index)=>{node.hidden=index!==0;node.setAttribute('data-ilbm-section-active',index===0?'true':'false');});
   body.append(meta, drawer, feature, statusText); head.append(title, close); root.append(head, body); documentObject.body.append(root);
   const style = documentObject.createElement('style'); style.textContent = `.ilbm-shell{box-sizing:border-box!important;color:#f5f7fb!important;background:#171d27!important;border:1px solid #7f95ad!important;border-radius:10px!important;box-shadow:0 12px 40px #0009;font-family:system-ui,sans-serif}
 .ilbm-shell[hidden],.ilbm-shell.hidden{display:none!important;visibility:hidden!important;pointer-events:none!important;opacity:0!important}
@@ -73,7 +84,12 @@ export function mountILBMShell({ version = '0.4.0', status = () => ({}), api: co
   detailRun.addEventListener('click', () => { try { const record = (globalThis.ILBM_MEMORY?.inspect?.()?.records ?? []).find(item => item.id === detailInput.value); detailResult.textContent = JSON.stringify(record ?? { error: 'record not found' }, null, 2); } catch (error) { detailResult.textContent = `失败：${error?.message ?? error}`; } });
   confirmRun.addEventListener('click', () => { try { const floor = Number(globalThis.ILBM_MEMORY?.inspect?.()?.records?.reduce((max, record) => Math.max(max, record.floor), 0) ?? 0); const result = globalThis.ILBM_MEMORY?.confirmPending?.(floor); confirmResult.textContent = JSON.stringify(result ?? { error: 'memory API unavailable' }, null, 2); } catch (error) { confirmResult.textContent = `失败：${error?.message ?? error}`; } });
   invalidateRun.addEventListener('click', () => { try { const result = globalThis.ILBM_MEMORY?.invalidateFromMessage?.({ floor: Number(invalidateInput.value) }); invalidateResult.textContent = JSON.stringify(result ?? { error: 'memory API unavailable' }, null, 2); } catch (error) { invalidateResult.textContent = `失败：${error?.message ?? error}`; } });
-  markerHelp.addEventListener('click', () => { markerResult.textContent = '语法：(((ILBM:{内容})))；例如 (((ILBM:短剑交给甲)))。旧格式 (((ILBM))) 仍兼容。'; });
+  settingsSave.addEventListener('click', () => { try { const state = globalThis.ILBM_MEMORY?.setSettings?.({ activeWindowLayers: Number(settingsActive.value), replayLayers: Number(settingsReplay.value), relationLineWidth: Number(settingsRelationWidth.value), timelineDepth: Number(settingsTimelineDepth.value) }); settingsResult.textContent = JSON.stringify(state?.settings ?? state ?? { error: 'memory API unavailable' }, null, 2); } catch (error) { settingsResult.textContent = `设置失败：${error?.message ?? error}`; } });
+  injectionPreview.addEventListener('click', () => { try { const api = globalThis.ILBM_MEMORY; const result = api?.previewCurrentTurn?.({ tokenBudget: 2000 }) ?? api?.buildMemoryText?.({ tokenBudget: 2000 }); const { text, ...meta } = result ?? {}; injectionResult.textContent = text ? `${text}\n\n---\n${JSON.stringify(meta, null, 2)}` : JSON.stringify(result ?? { error: 'memory API unavailable' }, null, 2); } catch (error) { injectionResult.textContent = `预览失败：${error?.message ?? error}`; } });
+  injectionEnable.addEventListener('click', () => { try { const enabled = globalThis.ILBM_MEMORY?.injection?.enable?.(); injectionResult.textContent = enabled ? '记忆注入已开启；请预览后点击“立即应用注入”。' : '无法开启记忆注入。'; } catch (error) { injectionResult.textContent = `开启失败：${error?.message ?? error}`; } });
+  injectionApply.addEventListener('click', () => { try { injectionResult.textContent = JSON.stringify(globalThis.ILBM_MEMORY?.injection?.apply?.() ?? { error: 'memory API unavailable' }, null, 2); } catch (error) { injectionResult.textContent = `应用失败：${error?.message ?? error}`; } });
+  injectionDisable.addEventListener('click', () => { try { globalThis.ILBM_MEMORY?.injection?.disable?.(); globalThis.ILBM_MEMORY?.injection?.clear?.(); injectionResult.textContent = '记忆注入已关闭并清除。'; } catch (error) { injectionResult.textContent = `关闭失败：${error?.message ?? error}`; } });
+  markerHelp.addEventListener('click', () => { markerResult.textContent = '严格 v2 语法：(((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙])))；只识别 (((ILBM:...))) 内部的 [entity:名称]，一句话多个动作请拆成多个标记。'; });
   errorHelp.addEventListener('click', () => { markerResult.textContent = '错误不会阻塞正常聊天。常见错误：缺少 [entity:名称]、动作不在白名单、候选格式无效。错误会保留诊断，修正输入后可重新测试。'; });
   memoryHelp.addEventListener('click', () => { memoryResult.textContent = '记忆状态由有效事件重算；回放按活跃窗口/回放窗口设置预览。AI 候选必须先预览，再确认导入。'; });
   const closeShell = () => { 
@@ -99,10 +115,11 @@ export function mountILBMShell({ version = '0.4.0', status = () => ({}), api: co
       try { root.showModal?.(); } catch {} 
     }
     statusText.textContent = JSON.stringify(status(), null, 2); 
+    try { const settings = globalThis.ILBM_MEMORY?.inspect?.()?.settings; if (settings) { settingsActive.value = String(settings.activeWindowLayers ?? 5); settingsReplay.value = String(settings.replayLayers ?? 10); settingsRelationWidth.value = String(settings.relationLineWidth ?? 3); settingsTimelineDepth.value = String(settings.timelineDepth ?? 20); } } catch { /* settings display is best effort */ }
   };
   close.addEventListener('click', (event) => { event.preventDefault(); event.stopPropagation(); closeShell(); }); root.addEventListener('cancel', closeShell); root.addEventListener('close', closeShell);
   let activeApi = contentApi;
   const setApi = next => { activeApi = next; };
-  const api = { root, head, body, open: openShell, close: closeShell, setApi, isOpen: () => root.hidden === false && (!mobile || root.open === true), update: () => { statusText.textContent = JSON.stringify(status(), null, 2); } };
+  const api = { root, head, body, open: openShell, close: closeShell, setApi, isOpen: () => root.hidden === false && (!mobile || root.open === true), update: () => { statusText.textContent = JSON.stringify(status(), null, 2); }, controls: { markerHelp, markerInput, markerRun, markerResult, settingsActive, settingsReplay, settingsRelationWidth, settingsTimelineDepth, settingsSave, settingsResult, injectionPreview, injectionEnable, injectionApply, injectionDisable, injectionResult } };
   root.__ilbmShell = api; return api;
 }

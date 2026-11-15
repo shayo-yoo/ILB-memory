@@ -1,7 +1,7 @@
 # ILBM 当前项目状态
 
 - 日期：2026-11-16
-- 版本：ILBM `0.4.0`（`index.js` / `manifest.json`）；ILBR API `1.0.0`。
+- 版本：ILBM `0.4.1`（`index.js` / `manifest.json`）；ILBR API `1.0.0`。
 - 项目阶段：v2 阶段六（关系线补充）代码级完成；阶段七/八与真实环境验收未完成。
 - 自动验证：`node --test tests/*.test.mjs` **98/98**；CDP-free 代码级验证 `tests/lightweight-verification.mjs` 退出码 0。
 - Git：本地仓库 + `https://github.com/shayo-yoo/ILB-memory.git`；当前工作区在每次变更后提交，避免不可回滚的混合修改。
@@ -17,12 +17,13 @@
 - **状态卡可读输出**：三类卡始终输出 §2.1 最小字段集；未知值显示 `未知`，不推断为事实。
 - **运行时注入**：`memoryInjector` 生成文本时使用当前聊天最后一条用户消息作为提及文本、当前楼层作为时间上界；注入仍默认关闭、需手动应用（D-ILBM-011）。
 - **新增 API**：`window.ILBM_MEMORY.previewCurrentTurn(options)`；`buildMemoryText()` 新增 `mentionText / relationLine / relationLineWidth / timelineDepth / activeWindowLayers / replayLayers` 选项。
-- **设置项**：`relationLineWidth`（默认 3）、`timelineDepth`（默认 20）。可通过 `setSettings` 修改；可视化入口尚未接入。
+- **设置项**：`relationLineWidth`（默认 3）、`timelineDepth`（默认 20）。可通过 `setSettings` 修改；面板“检索与注入”分区已提供输入框、当前轮注入预览和手动注入开关。
+- **版本**：0.4.1；面板标记说明已改为严格 v2 语法，不再错误提示旧 `(((ILBM)))` 兼容。
 
 ## 未完成 / 待真实验收
 
 - **阶段七**：延迟确认已实现 helper 和 MESSAGE_RECEIVED 调用，但真实编辑/删除/重新生成/Swipe 分支后的有效性未做人工 UI 验收；`MESSAGE_*` 稳定参数仍按宽容降级处理。
-- **阶段八**：事件列表/实体列表/详情页/设置页尚未在正式 shell 完整实现；当前 `ui-shell.js` 只有基础调试入口，且尚未提供 `relationLineWidth`、`timelineDepth`、提取模式/API 配置的可视化控件。
+- **阶段八**：事件列表/实体列表/详情页/固定设置页尚未在正式 shell 完整实现；当前 shell 已提供检索设置、当前轮注入预览和手动注入控制，但事件/实体/状态仍以原始 JSON 展示，提取模式与 API 配置尚未接入。
 - **提取**：模式 A 直出已接入；模式 B 事后 OpenAI 兼容 API、3 秒超时和晚到结果规则仍未实现（GAP-008）。
 - **指针**：关系线按同实体/同互动/同楼层实时推导，未持久化指针；入度查询时计算。需确认需求是否要求落库（ADR D-ILBM-V2-003）。
 - **时间线深度语义**：当前按“最近 N 条记录”解释，需求未给单位，需真实对话实验验证（GAP-011）。
