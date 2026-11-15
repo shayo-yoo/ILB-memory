@@ -21,7 +21,7 @@ test('marker result separates trigger from display/prompt cleanup and extraction
   assert.equal(result.triggered, true);
   assert.equal(result.displayText, '甲交出短剑。');
   assert.equal(result.promptText, '甲交出短剑。');
-  assert.equal(result.extractionText, '甲交出短剑。');
+  assert.equal(result.extractionText, '[entity:甲] 转移 [entity:短剑] 给 [entity:乙]');
   assert.equal(result.original, '甲交出短剑。(((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙])))');
 });
 
