@@ -24,6 +24,18 @@
 | ILB 变量内部存储 | 已知限制 | ILB `api.set` 写入 `extension_settings.independent_lorebook.chatStates[chatId].__vars` 并调用扩展设置持久化；这不是已证明的 ST chat metadata 变量 |
 | ST EventEmitter 顺序 | 通过 | `emit()` 按注册顺序串行 await listener，异常被宿主捕获后继续 |
 
+## Trial runtime probe
+
+`tests/trial-runtime-probe.mjs` passed in isolated ST with ILB, ILBM and ILBR installed together:
+
+- direct parser: `ok=true`;
+- marker cleaned to `正文 `;
+- one pending direct EventRecord generated;
+- one state change generated;
+- entity registration returned stable ID;
+- state card groups `items/persons/places` present;
+- temporary extension installs/profile cleaned; no formal chat data written.
+
 ## Context probe
 
 `tests/context-network-probe.mjs` 真实 ST probe confirmed `CHAT_COMPLETION_PROMPT_READY`, `setExtensionPrompt` and `ctx.generate` are available. It did not send a model request or capture a final provider network payload, so final context visibility remains open.

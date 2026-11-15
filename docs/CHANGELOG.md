@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-063 — Verify direct trial runtime in ST
+
+- Type: TEST / DOCS
+- Isolated ST probe passed with ILB, ILBM and ILBR installed together.
+- Verified direct parser, cleaned text, pending EventRecord, one derived state change, stable entity registration and state-card groups.
+- Temporary installs/profile cleaned; no formal chat data written.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-062 — Derive state changes from direct actions
 
 - Type: FEATURE / DATA / TEST
