@@ -11,6 +11,17 @@
 
 ---
 
+## CHG-20261115-035 — Verify ILB/ST preflight capabilities
+
+- Type: TEST / DOCS / API
+- Added `tests/v2-preflight-probe.mjs` and `docs/V2_PREFLIGHT_RESULTS.md`.
+- Real isolated ST probe verified ILBM + ILB coexistence, ILB 1.4 `set/snapshot/remove`, ST chat context, `setExtensionPrompt`, and lifecycle event names.
+- Probe used a temporary variable and cleared it; temporary extension/profile were removed afterward.
+- Remaining chat inheritance, event payload identity, final context visibility, external ILB-regex handoff, post API and mobile WebView remain pending.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-034 — Establish v2 interface and environment preflight contract
 
 - Type: API / ARCH / TEST / DOCS

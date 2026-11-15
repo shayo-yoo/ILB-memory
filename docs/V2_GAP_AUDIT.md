@@ -74,7 +74,7 @@ v2 要求：通过 `window.ILB.api.set` 写入聊天变量，使 chat 备份、�
 
 - [ ] ILB-regex 作为外部服务被 ILBM 调用并接收匹配结果
 - [ ] ILB 触发条件复用和触发结果传递
-- [ ] `window.ILB.api.get/set` 真实接口
+- [x] `window.ILB.api.set/snapshot/remove` 真实接口；`get` 不是当前 ILB 1.4 顶层方法，需通过 snapshot/变量接口读取；证据：`docs/V2_PREFLIGHT_RESULTS.md`
 - [ ] 稳定 message ID / swipe ID / 编辑删除参数
 - [ ] ST 最终模型上下文实际可见范围
 - [ ] OpenAI 兼容 post 提取 API 与 3 秒超时

@@ -160,7 +160,7 @@ extract({ messages, prompt, baseUrl, apiKey, model, timeoutMs: 3000 })
 
 前置工作只有在以下项目有证据后才结束：
 
-- [ ] ST + ILB 真实环境中 `ILB.api.set/snapshot` 往返成功；
+- [x] ST + ILB 真实环境中 `ILB.api.set/snapshot` 往返成功；证据：`docs/V2_PREFLIGHT_RESULTS.md`。
 - [ ] chat 切换、备份、分叉的记忆继承行为已记录；
 - [ ] ILB-regex 外部服务发现/调用成功或明确替代方案；
 - [ ] 每个 MESSAGE_* 事件参数形状有 probe 记录；
