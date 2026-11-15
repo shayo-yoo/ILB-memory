@@ -11,6 +11,15 @@
 
 ---
 
+## CHG-20261115-056 — Add event detail view to trial UI
+
+- Type: UI / FEATURE / TEST
+- Added event detail lookup by record ID, exposing full normalized record fields including status, extractionMode and stateChanges.
+- Node suite: 61/61.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-055 — Add entity timeline to trial UI
 
 - Type: UI / FEATURE / TEST
