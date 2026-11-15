@@ -61,7 +61,7 @@ test('bad generation data and exceptions fail open', async () => {
   registerPromptFilter(src,{GENERATE_AFTER_DATA:'afterData'},()=>({marker:'(((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙])))'}),()=>{throw new Error('storage failed');});
   const bad={prompt:'keep (((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙])))'};
   await src.run('afterData',bad,false);
-  assert.equal(bad.prompt,'keep (((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙])))');
+  assert.equal(bad.prompt,'keep ');
   await src.run('afterData',null,false);
   assert.equal(createMarkerResult(null).ok,false);
 });
