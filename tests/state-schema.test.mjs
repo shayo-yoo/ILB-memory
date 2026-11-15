@@ -70,10 +70,13 @@ test('状态卡格式化', () => {
   assert.ok(personFormatted.includes('持续状态=受伤'));
   assert.ok(personFormatted.includes('当前有效关系=朋友'));
   
-  // 测试无状态的情况
+  // 无状态记录时仍按 §2.1 最小字段集输出，且不得把未知值推断成事实
   const emptyState = {};
   const emptyFormatted = formatStateCard(person, emptyState);
-  assert.equal(emptyFormatted, '暂无状态');
+  assert.equal(emptyFormatted, '位置=未知，持续状态=无，当前有效关系=无');
+
+  const emptyItem = formatStateCard(item, {});
+  assert.equal(emptyItem, '持有者=未知，位置=未知，状态=未知');
 });
 
 test('状态变更验证', () => {
