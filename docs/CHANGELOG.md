@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261116-067 — Refactor drawer UI and shell lifecycle
+
+- Type: FIX / UI / REFACTOR / TEST
+- Shell close now explicitly sets `hidden`, `open`, `display` and `aria-hidden`; shell is created before API publication and receives API via `setApi` after publication.
+- Added top expandable “功能分区” drawer with section navigation; hides non-selected sections to avoid long flat scrolling.
+- Node suite: 64/64.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-066 — Finalize v2 trial run evidence
 
 - Type: TEST / DOCS
