@@ -74,7 +74,7 @@ test('ILBM global API exposes ILBR and marker processing independently of ILB', 
   assert.equal(globalObject.ILBM.id, 'ILBM');
   assert.equal(globalObject.ILBM.processMarker('x (((ILBM)))').triggered, true);
   assert.equal(globalObject.ILB, undefined);
-  assert.equal(getILBMStatus().version, '0.1.2');
+  assert.equal(getILBMStatus().version, '0.2.0');
 });
 
 test('initialize degrades safely when host hooks are absent', () => {
