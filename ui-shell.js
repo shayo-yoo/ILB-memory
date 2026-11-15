@@ -1,14 +1,23 @@
+function cleanupLegacyDebugUI(documentObject) {
+  const legacyNodes = documentObject.querySelectorAll?.('#ilbm-debug-root, .ilbm-debug-toggle') ?? [];
+  for (const node of legacyNodes) {
+    try { node.remove?.(); } catch { node.hidden = true; node.style = node.style ?? {}; node.style.display = 'none'; }
+  }
+  try { documentObject.getElementById?.('ilbm-debug-style')?.remove?.(); } catch { /* legacy style cleanup is best effort */ }
+}
+
 export function section(documentObject, title, ...children) { const box = documentObject.createElement('section'); box.className = 'ilbm-shell-section'; const heading = documentObject.createElement('h3'); heading.textContent = title; box.append(heading, ...children); return box; }
 
 
 
 export function mountILBMShell({ version = '0.3.0', status = () => ({}), api: contentApi = null, documentObject = globalThis.document, mobile = false } = {}) {
   if (!documentObject?.body) return { ok: false, reason: 'document unavailable' };
+  cleanupLegacyDebugUI(documentObject);
   const existing = documentObject.getElementById('ilbm-shell');
   if (existing?.__ilbmShell) return existing.__ilbmShell;
   const root = documentObject.createElement(mobile ? 'dialog' : 'section');
   root.id = 'ilbm-shell'; root.className = mobile ? 'ilbm-shell ilbm-shell-mobile' : 'ilbm-shell ilbm-shell-desktop';
-  root.hidden = true; root.setAttribute('hidden', ''); root.setAttribute('aria-hidden','true'); root.style.cssText = mobile ? 'display:none!important;visibility:hidden!important' : 'display:none!important;visibility:hidden!important';
+  root.hidden = true; root.setAttribute('hidden', ''); root.setAttribute('aria-hidden','true'); root.setAttribute('data-ilbm-open','false'); root.style.cssText = 'display:none!important;visibility:hidden!important;pointer-events:none!important';
   const head = documentObject.createElement('header'); head.className = 'ilbm-shell-head';
   const title = documentObject.createElement('strong'); title.textContent = `ILB-Memory ${version}`;
   const close = documentObject.createElement('button'); close.type = 'button'; close.textContent = '×'; close.setAttribute('aria-label', '关闭'); close.className = 'ilbm-shell-close';

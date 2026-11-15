@@ -5,6 +5,7 @@
 ## 当前未关闭问题
 
 - [ ] **BUG-001** 双重设置入口/旧面板残留风险
+  - 2026-11-16 增加启动兼容清理：mountILBMShell 会移除遗留 `#ilbm-debug-root`、`.ilbm-debug-toggle` 与旧样式，且 legacy mount 在 `showToggle=false` 时直接移除 toggle；自动测试已覆盖。真实 ST 更新安装仍待验收。
   - 本轮 shell 关闭时明确清理 `hidden/open/display/aria-hidden`，顶部抽屉只管理分区显示；仍需真实 PC/手机人工确认。
   - 现象：历史版本曾出现两个 ILBM 折叠入口、两个面板状态不同。
   - 当前状态：代码已改为单一入口、新 shell 不再挂载旧业务面板；需要真实 ST 更新安装后确认旧 DOM 是否清理。

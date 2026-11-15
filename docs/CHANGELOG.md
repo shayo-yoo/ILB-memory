@@ -1,5 +1,16 @@
 # ILBM Change Log
 
+## CHG-20261116-071 — Remove legacy debug UI residue
+
+- Type: FIX / UI / TEST
+- Added startup compatibility cleanup for legacy `#ilbm-debug-root`, `.ilbm-debug-toggle`, and `#ilbm-debug-style` before mounting the v2 shell.
+- Legacy `mountILBMPanel` no longer leaves a floating toggle in the DOM when `showToggle=false`.
+- Added regression coverage for removing pre-existing legacy nodes before shell mount.
+- Real ST update-install and mobile WebView acceptance remain pending per BUG-001/002/004.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-022 — Publish ILBM and standalone ILBR repositories
 
 - Type: BUILD / ARCH / DOCS
