@@ -56,7 +56,7 @@ test('按名称提及同样生效，且只展开主节点一跳范围', () => {
 });
 
 test('预算裁剪保留当前状态并丢弃最早历史', () => {
-  let state = createMemoryState({ settings: { activeWindowLayers: 1, replayLayers: 30 } });
+  let state = createMemoryState({ settings: { activeWindowLayers: 2, replayLayers: 30 } });
   const sword = registerEntity(state, { name: '短剑', type: 'item' }); state = sword.state;
   state = addRecord(state, { id: 's1', text: '持有', floor: 2, action: { entityId: sword.entity.id, ownerId: '乙' } }).state;
   for (let i = 1; i <= 20; i += 1) state = addRecord(state, { id: `h${i}`, text: `历史${i}`.repeat(20), floor: i + 2 }).state;

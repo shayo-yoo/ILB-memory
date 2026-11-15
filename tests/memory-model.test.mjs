@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { addRecord, calculateCurrentState, createMemoryState, invalidateFromMessage, invalidateSwipeBranch, registerEntity, replayRecords } from '../lib/memory-model.js';
+import { addRecord, calculateCurrentState, createMemoryState, getActiveWindowBoundary, invalidateFromMessage, invalidateSwipeBranch, registerEntity, replayRecords } from '../lib/memory-model.js';
 import { createMemoryStore } from '../lib/memory-store.js';
 
 test('entity names collide safely and IDs remain stable', () => {
@@ -46,6 +46,13 @@ test('swipe invalidation keeps selected branch and invalidates other branch', ()
   const next = invalidateSwipeBranch(state, { sourceMessageId: 'm4', selectedSwipeId: 1 });
   assert.equal(next.records.find(record => record.id === 's1').valid, false);
   assert.equal(next.records.find(record => record.id === 's2').valid, true);
+});
+
+test('active window cannot be configured below two layers (§4.3)', () => {
+  const state = createMemoryState({ settings: { activeWindowLayers: 1, replayLayers: 3 } });
+  assert.equal(state.settings.activeWindowLayers, 2);
+  assert.equal(getActiveWindowBoundary(state, { currentFloor: 10, activeWindowLayers: 0 }).activeLayers, 2);
+  assert.equal(getActiveWindowBoundary(state, { currentFloor: 10 }).activeStart, 9);
 });
 
 test('store persists independently and degrades when storage fails', () => {
