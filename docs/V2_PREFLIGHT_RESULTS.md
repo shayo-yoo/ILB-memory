@@ -30,7 +30,7 @@
 
 ## 尚未完成/不能据此宣称通过
 
-- chat 变量随真实 chat 备份、分叉、切换继承；ILB 源码显示变量位于 extension_settings 的 chatStates 桶，不能直接等同于 ST chat metadata；
+- chat 变量随真实 chat 备份、分叉、切换继承；ILB 源码显示变量位于 extension_settings 的 chatStates 桶，不能直接等同于 ST chat metadata；ST 源码显示 chat 文件加载时从 `data[0].chat_metadata` 读取元数据、通过 `saveMetadata()`/`saveMetadataDebounced()` 写回，但尚未证明 ILB 的 extension_settings 变量随同一 chat 文件复制。
 - 每个 MESSAGE_* 事件的真实参数形状和稳定消息/Swipe ID；源码仅确认部分调用以楼层整数和来源字符串发出，例如 `MESSAGE_RECEIVED(index, source)`、`MESSAGE_EDITED(index)`；
 - Chat Completion 最终发送上下文的实际可见范围；
 - ILB-regex 外部网络安装后的发现/调用交接；

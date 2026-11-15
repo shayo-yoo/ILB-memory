@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-039 — Audit ST chat metadata lifecycle paths
+
+- Type: TEST / DOCS / DATA
+- Confirmed ST loads chat metadata from chat-file header `data[0].chat_metadata` and writes via `saveMetadata`/`saveMetadataDebounced`.
+- Confirmed ILB variables are stored separately in extension settings `chatStates[chatId].__vars`; inheritance with ST chat file backup/fork remains unproven.
+- No business feature implementation performed.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-038 — Clarify ILB variable persistence boundary
 
 - Type: API / DATA / DOCS
