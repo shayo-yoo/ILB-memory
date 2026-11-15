@@ -30,6 +30,7 @@
 ## v2 需求差距（不是传统运行时 BUG，但必须跟踪）
 
 - [ ] **GAP-001** 记忆存储仍以 localStorage 为主，未迁移至 `window.ILB.api.set/get`。
+  - 前置动作：先完成 `docs/V2_INTERFACE_CONTRACT.md` 中 ILB `set/snapshot` 真实联动探针，再设计迁移。
 - [ ] **GAP-002** 未实现 `direct/post/manual` 统一提取模式和记录字段。
 - [ ] **GAP-003** 未实现 v2 `[entity:...]` 内联标记解析、动作白名单和实体绑定。
 - [ ] **GAP-004** 未实现待确认→有效的第 N+1 层延迟确认机制。

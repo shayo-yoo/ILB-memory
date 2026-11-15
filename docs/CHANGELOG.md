@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-034 — Establish v2 interface and environment preflight contract
+
+- Type: API / ARCH / TEST / DOCS
+- Added `docs/V2_INTERFACE_CONTRACT.md` defining ILBM, ST, ILB, ILB-regex, event, storage, token and post-extraction boundaries.
+- Updated v2 audit, BUG tracker and PROJECT_STATE to mark preflight verification as the gate before feature development.
+- No business feature implementation or storage migration performed.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-033 — Audit project against v2 and add bug tracker
 
 - Type: DOCS / ARCH / TEST

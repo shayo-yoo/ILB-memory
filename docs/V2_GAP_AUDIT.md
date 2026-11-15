@@ -11,6 +11,7 @@
 - **与 v2 明确不一致**：持久化仍以 localStorage 为主，尚未切换到 `window.ILB.api.set`；事件结构缺少完整 `direct/post/manual` 和待确认生命周期；关系线未实现；v2 内联 `[entity:...]` 解析未实现。
 - **未验证**：ILB-regex 正式外部协作、ILB 触发复用、ST 实际上下文可见范围、稳定消息/Swipe 身份、事后 OpenAI 兼容 API、真实手机 WebView。
 - **当前开发闸门**：先完成阶段一接口与环境验证，再改存储结构；不继续按旧版需求追加功能。
+- **前置契约**：见 `docs/V2_INTERFACE_CONTRACT.md`，统一事件记录、ST/ILB/ILB-regex/事后提取接口边界。
 
 ## 分阶段审计
 
