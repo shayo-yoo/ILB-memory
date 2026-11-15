@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-066 — Finalize v2 trial run evidence
+
+- Type: TEST / DOCS
+- Final Node regression: 64/64 passed.
+- Workspace clean; direct runtime probe previously passed in isolated ST with ILB/ILBM/ILBR.
+- Updated trial guide with final verification evidence.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-065 — Clarify pure parser and runtime resolver boundary
 
 - Type: DOCS / ARCH / TEST
