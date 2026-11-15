@@ -60,7 +60,7 @@ export function initializeILBM({ context, eventSource, eventTypes, globalObject 
   const ilb = registerILBSeriesAPI(globalObject, bridge);
   integration = { display, prompt, capture, ilb, ilbr, memory: memoryApi };
   try { globalObject.ILBM_MEMORY = memoryApi; } catch { /* optional global diagnostic */ }
-  try { const isMobile = globalObject.matchMedia?.('(max-width: 767px)')?.matches === true; globalObject.__ILBM_SHELL__ = mountILBMShell({ version: VERSION, status: getILBMStatus, api: globalObject.ILBM, documentObject: globalObject.document, mobile: isMobile }); installSettingsEntryWhenReady(globalObject, globalObject.__ILBM_SHELL__); } catch { /* shell optional */ }
+  try { const isMobile = globalObject.matchMedia?.('(max-width: 767px)')?.matches === true; globalObject.__ILBM_SHELL__ = mountILBMShell({ version: VERSION, status: getILBMStatus, api: null, documentObject: globalObject.document, mobile: isMobile }); installSettingsEntryWhenReady(globalObject, globalObject.__ILBM_SHELL__); } catch { /* shell optional */ }
   return { ok: true, version: VERSION, capabilities: bridge.capabilities, integration };
 }
 
@@ -110,6 +110,7 @@ export function publishGlobalApi(globalObject, context, initialized) {
     capture: (source, getContext, onMarked) => registerMessageCapture(source, context?.eventTypes?.MESSAGE_RECEIVED ?? 'message_received', getContext, onMarked),
   });
   globalObject.ILBM = api;
+  globalObject.__ILBM_SHELL__?.setApi?.(api);
   // UI shell is mounted during initializeILBM; API publication must not create a second UI.
   try { globalObject.dispatchEvent?.(new CustomEvent('ilbm:ready', { detail: api })); } catch { /* optional event */ }
   return { ok: true, api };
