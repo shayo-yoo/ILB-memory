@@ -1,5 +1,16 @@
 # ILBM Change Log
 
+## CHG-20261116-074 — On-demand state-card injection (§2.1)
+
+- Type: FEATURE / INJECTION / TEST
+- `buildMemoryText()` 新增 `mentionedEntityIds` 选项：仅注入本轮提及实体的状态卡（支持实体 ID 或短名），符合 §2.1 状态注入策略；未提供时保持全量注入以兼容人工预览。
+- 当前状态段改为使用状态卡可读文本（`displayText`，中文标签 + 实体短名），不再输出原始 JSON 字段值，符合 §6.2 注入格式。
+- 返回新增 `injectedEntityIds` / `mentionFiltered` 元数据；预算裁剪顺序不变（保留当前状态，从最早历史丢弃）。
+- 新增 `tests/memory-injection-mention.test.mjs`（4 项）。全套：79/79。
+- Commit: pending.
+
+---
+
 ## CHG-20261116-073 — Implement three state-card field sets (§2.1)
 
 - Type: FEATURE / DATA / TEST / REFACTOR

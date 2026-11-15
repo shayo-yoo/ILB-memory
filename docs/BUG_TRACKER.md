@@ -58,8 +58,9 @@
   - 已完成基础 lifecycle helper：上一楼层 pending 可确认，非选中 Swipe pending 可作废；尚未接入 ST 消息时序监听。
 - [ ] **GAP-005** 当前状态尚未完整覆盖物品/角色/地点三类 MVP 状态卡。
   - 2026-11-16 更新：三类卡字段集已实现（`lib/state-schema.js` + `calculateCurrentState().cards`），含 `displayText` 中文可读文本；新增 `tests/state-cards.test.mjs` 覆盖 §2.1 最小字段集。
+  - 2026-11-16 更新：状态卡按需注入已实现（`buildMemoryText({ mentionedEntityIds })`），未提及实体不注入；注入文本使用中文标签与实体短名。
   - 同时修复 `stateChanges` 未参与状态推导的核心缺陷。
-  - 仍待完成：状态卡按需注入（只注入本轮涉及实体）与注入文本合并（§2.1/§2.4）。
+  - 仍待完成：主节点提及识别（由真实对话文本自动判定“本轮涉及实体”）与 §2.4 合并去重（关系线补充接入后统一处理）。
 - [ ] **GAP-006** 未实现一跳关系线补充、宽度预算和入度排序。
 - [ ] **GAP-007** 未完成 ST 实际上下文可见范围和活跃窗口排除验证。
   - 当前基础能力：ST `setExtensionPrompt`、`CHAT_COMPLETION_PROMPT_READY` 和 `ctx.generate` 均可用；未发送真实模型请求或捕获最终 provider payload。
