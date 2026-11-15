@@ -11,6 +11,17 @@
 
 ---
 
+## CHG-20261115-050 — Add pending confirmation lifecycle foundation
+
+- Type: FEATURE / DATA / TEST
+- Added `lib/confirmation.js`: previous-floor pending records become valid on a later user floor; non-selected Swipe pending records become invalid.
+- Preserved v2 `status`/`extractionMode` fields through memory normalization.
+- Node suite: 61/61.
+- ST event timing integration remains later work; no architecture ambiguity encountered.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-049 — Add v2 direct marker parser foundation
 
 - Type: FEATURE / API / TEST
