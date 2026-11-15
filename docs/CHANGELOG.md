@@ -1,5 +1,20 @@
 # ILBM Change Log
 
+## CHG-20261116-080 — Stage-eight event/entity lists and record-action persistence fix
+
+- Type: UI / FEATURE / FIX / DATA / TEST / DOCS
+- Added `lib/memory-view.js` as a read-only view model; the shell no longer renders raw record JSON by default:
+  - event rows default to `floor · sequence · entities · action · extraction mode`, sorted only by `(floor, sequence)`;
+  - status is hidden by default and shown by the “显示全部状态” toggle; per-row “详情” expands every record field (status, source message, swipe, interaction group, state changes, text);
+  - entity filter by short name or entity ID keeps the `(floor, sequence)` order;
+  - entity list shows short name, type, current state summary and related event count; the row action opens that entity timeline.
+- Fixed record-action loss: `normalizeRecord()` previously kept only object actions, so mode-A direct records (`action: '转移'`) were persisted with `action: null`. String actions are now preserved; structured legacy actions still work.
+- Action column uses Chinese field labels (`持有者/位置/状态/…`) and resolves entity IDs to short names.
+- Version: `0.5.0`.
+- Tests: `node --test tests/*.test.mjs` **111/111** (`tests/memory-view.test.mjs` 7 new, `tests/ui-shell.test.mjs` 3 new).
+- Known: records persisted before this fix have `action: null` and cannot recover the string; only the event text/state changes remain in UI.
+
+---
 ## CHG-20261116-079 — Enforce active-window minimum of two layers (§4.3)
 
 - Type: FIX / CONFIG / TEST
