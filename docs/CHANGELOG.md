@@ -1,5 +1,32 @@
 # ILBM Change Log
 
+## CHG-20261116-073 — Implement three state-card field sets (§2.1)
+
+- Type: FEATURE / DATA / TEST / REFACTOR
+- Added `lib/state-schema.js`: v2 §2.1 字段定义（物品：持有者/位置/状态；角色：位置/持续状态/当前有效关系；地点：在场角色/在场物品）、枚举、校验与可读状态卡格式化。
+- Item status is stored as stable codes (`intact/damaged/lost/destroyed`) and rendered as Chinese labels（完好/损坏/遗失/已销毁）；旧存储值保持兼容。
+- `calculateCurrentState()` cards now include `type` and `displayText`, and entity references render as entity short names instead of ID prefixes.
+- Fixed a real core defect: `stateChanges` were stored but never applied to derived state, so direct-marker records could not affect 当前状态. `applyRecord()` now applies both explicit `action` and v2 `stateChanges`.
+- `applyAction()` now applies fields generically from the entity-type field definition (enables place `charactersPresent`/`itemsPresent`).
+- `lib/action-state.js` now emits v2 whitelist semantics: 死亡/受伤/中毒 → `continuousStatus`（角色），物品动作 → stable status codes，并导出 `SUPPORTED_ACTIONS`/`extractActionAndEntities`。
+- Removed transitional duplicate modules (`action-state-mapper.js`, `action-state-v2.js`) to avoid duplicated derivation rules (§9.1).
+- Tests: `node --test tests/*.test.mjs` 75/75（新增 `tests/state-cards.test.mjs`、`tests/state-schema.test.mjs`）。
+- Commit: pending.
+
+---
+
+## CHG-20261116-072 — Design GAP-007/001 verification probes
+
+- Type: TEST / DOCS / GAP-VERIFICATION
+- Added `tests/context-payload-probe.mjs` for GAP-007: capture real provider request payloads to verify ILBM memory injection reaches model context.
+- Added `tests/chat-inheritance-probe.mjs` for GAP-001: verify chat backup/fork/switch inheritance behavior of ILB variables.
+- Added `tests/quick-env-check.mjs` and `tests/lightweight-verification.mjs` (CDP-free code-level verification, 5/5 pass).
+- Environment finding: ST is running at `http://127.0.0.1:8001` with ILB/ILBM/ILBR installed, but CDP debugging ports 9222/9227 are closed, so payload/payload-level probes cannot execute yet.
+- Evidence recorded in `docs/GAP-007_VERIFICATION_REPORT.md`; GAP-007 remains **open** pending CDP availability.
+- Commit: pending.
+
+---
+
 ## CHG-20261116-071 — Remove legacy debug UI residue
 
 - Type: FIX / UI / TEST
@@ -7,7 +34,7 @@
 - Legacy `mountILBMPanel` no longer leaves a floating toggle in the DOM when `showToggle=false`.
 - Added regression coverage for removing pre-existing legacy nodes before shell mount.
 - Real ST update-install and mobile WebView acceptance remain pending per BUG-001/002/004.
-- Commit: pending.
+- Commit: c84d1d9.
 
 ---
 

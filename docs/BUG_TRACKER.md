@@ -57,10 +57,13 @@
 - [ ] **GAP-004** 未实现待确认→有效的第 N+1 层延迟确认机制。
   - 已完成基础 lifecycle helper：上一楼层 pending 可确认，非选中 Swipe pending 可作废；尚未接入 ST 消息时序监听。
 - [ ] **GAP-005** 当前状态尚未完整覆盖物品/角色/地点三类 MVP 状态卡。
-  - 试运行 UI 已能查看当前状态，并新增实体注册；三类状态卡字段仍待实现。
+  - 2026-11-16 更新：三类卡字段集已实现（`lib/state-schema.js` + `calculateCurrentState().cards`），含 `displayText` 中文可读文本；新增 `tests/state-cards.test.mjs` 覆盖 §2.1 最小字段集。
+  - 同时修复 `stateChanges` 未参与状态推导的核心缺陷。
+  - 仍待完成：状态卡按需注入（只注入本轮涉及实体）与注入文本合并（§2.1/§2.4）。
 - [ ] **GAP-006** 未实现一跳关系线补充、宽度预算和入度排序。
 - [ ] **GAP-007** 未完成 ST 实际上下文可见范围和活跃窗口排除验证。
   - 当前基础能力：ST `setExtensionPrompt`、`CHAT_COMPLETION_PROMPT_READY` 和 `ctx.generate` 均可用；未发送真实模型请求或捕获最终 provider payload。
+  - 2026-11-16：代码级验证通过（`tests/lightweight-verification.mjs` 5/5）；环境级验证受阻——ST 运行于 127.0.0.1:8001，但 CDP 端口 9222/9227 关闭，无法捕获 payload。结论与限制见 `docs/GAP-007_VERIFICATION_REPORT.md`。
 - [ ] **GAP-008** 未实现真实 post OpenAI 兼容 API、3 秒超时和晚到结果规则。
 - [ ] **GAP-009** ILB 触发条件复用尚未形成验证证据。
 - [ ] **GAP-010** 外部 ILB-regex 协作接口尚未在网络安装形态验证。

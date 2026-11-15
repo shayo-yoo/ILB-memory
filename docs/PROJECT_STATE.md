@@ -1,14 +1,15 @@
 # ILBM 当前项目状态
 
-- 日期：2026-11-14
-- 项目阶段：已完整阅读 `ILBMemory需求文档v2.md`；旧版需求已归档至 `docs/archive/ILBMemory需求文档-v1.md`。当前已进入 v2 试运行开发阶段；试运行说明为 `docs/TRIAL_RUN.md`；已完成 ILB/ST 基础能力探针，证据为 `docs/V2_PREFLIGHT_RESULTS.md`；审计报告为 `docs/V2_GAP_AUDIT.md`，前置契约为 `docs/V2_INTERFACE_CONTRACT.md`，问题追踪为 `docs/BUG_TRACKER.md`。前置验证完成前不进入正式功能开发。后续开发只按 v2。
-- 版本：ILBM `0.1.1`；ILBR API `1.0.0`。
-- Git：已创建本地 Git 仓库并推送到 `https://github.com/shayo-yoo/ILB-memory.git`；当前工作区干净。独立 ILBR 仓库为 `https://github.com/shayo-yoo/ILB-regex.git`。
-- 最终自动验证：`node --test tests/*.test.mjs` 23/23；入口、库与 probe 脚本语法检查通过；manifest JSON 有效；真实 ST synthetic probe 和调试 UI probe 均通过。
-- ST 测试安装和隔离 CDP profile 已清理；备份保留。
+- 日期：2026-11-16
+- 项目阶段：全权代理开发进行中。已完成首个 v2 核心功能切片：三类状态卡字段集（§2.1）与 `stateChanges` 状态推导修复。前置闸门 GAP-007/GAP-001 的代码级验证通过，但环境级验证被 CDP 端口关闭阻塞。前置验证完成前不进入完整 v2 功能开发。后续开发只按 v2。
+- 版本：ILBM `0.3.0`（`index.js` VERSION）；ILBR API `1.0.0`。
+- Git：已创建本地 Git 仓库并推送到 `https://github.com/shayo-yoo/ILB-memory.git`；独立 ILBR 仓库为 `https://github.com/shayo-yoo/ILB-regex.git`。
+- 最终自动验证：`node --test tests/*.test.mjs` 75/75；CDP-free 代码级验证 `tests/lightweight-verification.mjs` 5/5。
+- 环境级验证阻塞：ST 运行于 `http://127.0.0.1:8001` 且 ILB/ILBM/ILBR 已安装，但 CDP 端口 9222/9227 未开放，payload/chat 继承探针暂不可执行。
 
 ## 已完成
-
+- **v2 §2.1 三类状态卡**：`lib/state-schema.js` 定义物品（持有者/位置/状态）、角色（位置/持续状态/当前有效关系）、地点（在场角色/在场物品）字段集与校验；`calculateCurrentState().cards` 输出 `displayText` 中文可读文本，实体引用显示短名。
+- **状态推导修复**：`stateChanges` 此前只存不用，现已参与线性扫描重算；`applyAction` 按实体类型字段定义泛化应用。
 - 建立独立 ILBM ST 扩展骨架（manifest + ESM entry），不修改 ST 本体、官方 Regex 或 ILB Core。
 - ILBR 同步、按需的正则文本引擎：规则调用方传入、结果返回原文/输出/匹配捕获/逐规则错误；有输入、规则数与 pattern 长度上限；单条坏规则跳过，不抛进聊天路径。
 - ILBM 标记 bridge：支持 `(((ILBM)))`，返回 `original / triggered / displayText / promptText / extractionText / matches / errors`。
