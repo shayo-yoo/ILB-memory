@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-058 — Add direct parser error help and bump trial version
+
+- Type: UI / DOCS / BUILD / TEST
+- Added direct parser error-help guidance to trial UI.
+- Bumped ILBM trial version to `0.2.1` for update detection.
+- Node suite: 61/61.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-057 — Add pending confirmation control to trial UI
 
 - Type: UI / FEATURE / TEST
