@@ -11,6 +11,17 @@
 
 ---
 
+## CHG-20261115-032 — Adopt requirements v2 and archive v1
+
+- Type: DOCS / ARCH
+- Read `ILBMemory需求文档v2.md` in full and recorded the key changes in `docs/REQUIREMENTS_V2_REVIEW.md`.
+- Archived the previous requirements document as `docs/archive/ILBMemory需求文档-v1.md`.
+- Updated README, requirements pointer, and PROJECT_STATE to make v2 the sole current development basis.
+- No feature implementation was performed under this change.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-031 — Isolate minimal shell from legacy business panel
 
 - Type: REFACTOR / UI / FIX / TEST

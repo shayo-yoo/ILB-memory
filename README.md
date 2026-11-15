@@ -1,4 +1,6 @@
-# ILB-Memory / ILBR 第一周期
+# ILB-Memory / ILBR
+
+> 当前开发唯一依据：[`ILBMemory需求文档v2.md`](./ILBMemory需求文档v2.md)。旧版需求已归档，仅保留历史参考。
 
 本目录是 ILB-Memory 独立 SillyTavern 扩展工作区，不是 Git 仓库（基线见 `docs/LEGACY-BASELINE.md`）。
 
