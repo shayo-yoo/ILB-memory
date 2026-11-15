@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-064 — Connect entity resolver to runtime direct path
+
+- Type: FEATURE / ARCH / TEST
+- Runtime direct marker capture now resolves entity short names through the memory-owned entity resolver before creating pending records.
+- Existing entities/aliases are reused; unknown names are registered through the public memory API.
+- Node suite: 64/64.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-063 — Verify direct trial runtime in ST
 
 - Type: TEST / DOCS
