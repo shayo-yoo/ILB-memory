@@ -11,6 +11,17 @@
 
 ---
 
+## CHG-20261115-049 — Add v2 direct marker parser foundation
+
+- Type: FEATURE / API / TEST
+- Added `lib/direct-parser.js` for v2 `(((ILBM:[entity:...] 动作 ...)))` markers.
+- Parser enforces action whitelist, extracts entity short names, cleans marker text, and emits pending `EventRecord` objects.
+- Entity identity binding and full semantic action decomposition remain later work.
+- Node suite: 59/59.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-048 — Route memory store through v2 storage adapter
 
 - Type: ARCH / DATA / TEST
