@@ -1,6 +1,6 @@
 # ILBM v2 试运行说明
 
-当前版本：`0.2.1`
+当前版本：`0.3.0`
 
 最后回归测试：`node --test tests/*.test.mjs` → 64/64 通过。真实隔离 ST direct runtime probe 已通过。
 

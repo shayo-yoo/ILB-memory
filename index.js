@@ -11,7 +11,7 @@ import { parseDirectMarkers } from './lib/direct-parser.js';
 import { createEntityResolver } from './lib/entity-resolver.js';
 import { createMemoryEventAdapter } from './lib/memory-events.js';
 
-export const VERSION = '0.2.1';
+export const VERSION = '0.3.0';
 export const ILBM_EXTENSION_ID = 'ilb-memory';
 
 let started = false;
