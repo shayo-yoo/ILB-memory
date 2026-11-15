@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261116-069 — Isolate shell buttons from ST perspective/layout
+
+- Type: FIX / UI / TEST
+- Shell buttons and nav controls now force static positioning, inline-flex layout, neutral inset/transform/float, controlled wrapping and local high-contrast appearance.
+- Targets the reported “only buttons look displaced/perspective” issue without changing pagination logic.
+- Node suite: 64/64.
+- Commit: pending.
+
+---
+
 ## CHG-20261116-067 — Refactor drawer UI and shell lifecycle
 
 - Type: FIX / UI / REFACTOR / TEST
