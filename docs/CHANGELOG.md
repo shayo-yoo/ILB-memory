@@ -6,7 +6,7 @@
 - `createMemoryState()` now clamps `activeWindowLayers` to `[2, 1000]`; `getActiveWindowBoundary()` also clamps runtime overrides to at least 2.
 - Reason: v2 §4.3 requires the active window to stay at 2+ layers so delayed confirmation (1 layer) does not create a memory gap.
 - Updated affected replay/truncation tests and added a boundary test. Full suite: 101/101.
-- Commit: pending.
+- Commit: a0a86b5.
 
 ---
 ## CHG-20261116-078 — Minimal retrieval settings and injection controls in shell
