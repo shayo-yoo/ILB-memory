@@ -28,7 +28,8 @@
   - 验收：手机设置入口、全屏 dialog、关闭、返回键均通过。
 
 - [ ] **BUG-005** PC shell 标题栏布局异常
-  - 修复方案：shell header 使用独立 flex 规则并强制覆盖 ST 主题布局；探针确认 `display:flex`/`flex-direction:row`，但 headless 布局尺寸为 0，需真实可见 PC 主题人工确认。
+  - 修复方案：shell root/header/body 使用独立强制几何规则，header 横向排列、body block；探针确认 `display:flex`/`flex-direction:row`，但 headless 布局尺寸为 0，需真实可见 PC 主题人工确认。
+  - 版本：0.1.2；commit `612c80e`。
   - 现象：标题未保持在管理面板标题栏，关闭按钮随之错位。
   - 当前状态：待复现和修复；需要在 PC ST 主题下检查 shell header 的 flex/grid 覆盖。
   - 验收：标题在标题栏左侧、关闭按钮在右侧同一行，面板主体从下一行开始。
