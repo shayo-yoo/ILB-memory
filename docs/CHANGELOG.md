@@ -12,7 +12,7 @@
 - Exposed `controls` on the shell handle for deterministic tests.
 - New UI tests: settings save payload, preview metadata, enable/apply/disable flow, strict marker guidance. Full suite: 100/100.
 - Version: `0.4.1`.
-- Commit: pending.
+- Commit: 1e8a1e6.
 
 ---
 ## CHG-20261116-077 — One-hop relation line and §2.4 merge/trim (§2.3/§2.4)
