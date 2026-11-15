@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-054 — Add categorized state cards to trial UI
+
+- Type: UI / FEATURE / TEST
+- Added “查看分类状态卡” to the new shell; displays `items/persons/places` cards from derived current state.
+- UI continues to call the public memory API and does not own storage.
+- Node suite: 61/61.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-053 — Enforce pending exclusion from state and replay
 
 - Type: FIX / DATA / TEST
