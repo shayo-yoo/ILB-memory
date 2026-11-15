@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261116-070 — Reset repeated-open shell state
+
+- Type: FIX / UI / TEST
+- Repeated open/close now clears shell state classes (`open/active/expanded/show`), `data-ilbm-open`, `aria-hidden`, dialog open state, display and visibility.
+- Buttons keep neutral static positioning through open cycles; drawer section state uses explicit data attributes/display rules.
+- Node suite: 64/64.
+- Commit: pending.
+
+---
+
 ## CHG-20261116-069 — Isolate shell buttons from ST perspective/layout
 
 - Type: FIX / UI / TEST
