@@ -11,6 +11,7 @@
 - Fixed record-action loss: `normalizeRecord()` previously kept only object actions, so mode-A direct records (`action: '转移'`) were persisted with `action: null`. String actions are now preserved; structured legacy actions still work.
 - Action column uses Chinese field labels (`持有者/位置/状态/…`) and resolves entity IDs to short names.
 - Version: `0.5.0`.
+- Commit: 803ced7.
 - Tests: `node --test tests/*.test.mjs` **111/111** (`tests/memory-view.test.mjs` 7 new, `tests/ui-shell.test.mjs` 3 new).
 - Known: records persisted before this fix have `action: null` and cannot recover the string; only the event text/state changes remain in UI.
 
