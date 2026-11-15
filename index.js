@@ -9,7 +9,7 @@ import { buildMemoryText } from './lib/memory-injection.js';
 import { createMemoryInjector } from './lib/memory-injector.js';
 import { createMemoryEventAdapter } from './lib/memory-events.js';
 
-export const VERSION = '0.1.1';
+export const VERSION = '0.1.2';
 export const ILBM_EXTENSION_ID = 'ilb-memory';
 
 let started = false;
