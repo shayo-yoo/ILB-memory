@@ -17,12 +17,12 @@ function fakeEmitter() {
 }
 
 test('marker result separates trigger from display/prompt cleanup and extraction text', () => {
-  const result = createMarkerResult('甲交出短剑。(((ILBM)))');
+  const result = createMarkerResult('甲交出短剑。(((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙])))');
   assert.equal(result.triggered, true);
   assert.equal(result.displayText, '甲交出短剑。');
   assert.equal(result.promptText, '甲交出短剑。');
   assert.equal(result.extractionText, '甲交出短剑。');
-  assert.equal(result.original, '甲交出短剑。(((ILBM)))');
+  assert.equal(result.original, '甲交出短剑。(((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙])))');
 });
 
 test('display hook filters rendering input only and is idempotently registered', () => {
@@ -30,23 +30,23 @@ test('display hook filters rendering input only and is idempotently registered',
   assert.equal(registerDisplayFilter(formatter).ok, true);
   assert.equal(registerDisplayFilter(formatter).duplicate, true);
   const hook = formatter.hooks[0].fn;
-  assert.equal(hook('visible (((ILBM)))', { isSystem: false }), 'visible ');
-  assert.equal(hook('system (((ILBM)))', { isSystem: true }), 'system (((ILBM)))');
+  assert.equal(hook('visible (((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙])))', { isSystem: false }), 'visible ');
+  assert.equal(hook('system (((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙])))', { isSystem: true }), 'system (((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙])))');
 });
 
 test('prompt hook filters request copy without treating prompt history as new messages', async () => {
   const source = fakeEmitter();
   const calls = [];
-  const options = { marker: '(((ILBM)))' };
+  const options = { marker: '(((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙])))' };
   const reg = registerPromptFilter(source, { CHAT_COMPLETION_PROMPT_READY: 'ready' }, () => options, (data) => calls.push(data));
   assert.equal(reg.ok, true);
-  const chat = [{ role: 'assistant', content: 'A (((ILBM)))' }, { role: 'user', content: 'ordinary' }];
+  const chat = [{ role: 'assistant', content: 'A (((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙])))' }, { role: 'user', content: 'ordinary' }];
   await source.emit('ready', { chat, dryRun: false });
   assert.equal(chat[0].content, 'A ');
   assert.equal(chat[1].content, 'ordinary');
   assert.equal(calls.length, 0);
 
-  const dryChat = [{ role: 'assistant', content: 'B (((ILBM)))' }];
+  const dryChat = [{ role: 'assistant', content: 'B (((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙])))' }];
   await source.emit('ready', { chat: dryChat, dryRun: true });
   assert.equal(dryChat[0].content, 'B ');
   assert.equal(calls.length, 0);
@@ -72,7 +72,7 @@ test('ILBM global API exposes ILBR and marker processing independently of ILB', 
   const published = publishGlobalApi(globalObject, {}, out);
   assert.equal(published.ok, true);
   assert.equal(globalObject.ILBM.id, 'ILBM');
-  assert.equal(globalObject.ILBM.processMarker('x (((ILBM)))').triggered, true);
+  assert.equal(globalObject.ILBM.processMarker('x (((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙])))').triggered, true);
   assert.equal(globalObject.ILB, undefined);
   assert.equal(getILBMStatus().version, '0.2.1');
 });

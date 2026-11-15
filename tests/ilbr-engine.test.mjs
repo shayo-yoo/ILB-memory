@@ -3,17 +3,17 @@ import assert from 'node:assert/strict';
 import { createIlbmMarkerRule, createLiteralRemovalRule, createIlbrService, inspectRegexRule, processText } from '../lib/ilbr-engine.js';
 
 test('pure replacement returns original, output, match positions and captures', () => {
-  const result = processText('a (((ILBM))) b', [createIlbmMarkerRule()]);
+  const result = processText('a (((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙]))) b', [createIlbmMarkerRule()]);
   assert.equal(result.ok, true);
-  assert.equal(result.original, 'a (((ILBM))) b');
+  assert.equal(result.original, 'a (((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙]))) b');
   assert.equal(result.text, 'a  b');
   assert.equal(result.matched, true);
-  assert.equal(result.matches[0].captures[0].value, '(((ILBM)))');
+  assert.equal(result.matches[0].captures[0].value, '(((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙])))');
 });
 
 test('ILBM marker accepts content syntax and legacy syntax', () => {
   assert.equal(processText('x (((ILBM:短剑交给甲)))', [createLiteralRemovalRule({ marker: '(((ILBM:短剑交给甲)))' })]).text, 'x ');
-  assert.equal(processText('x (((ILBM)))', [createIlbmMarkerRule()]).text, 'x ');
+  assert.equal(processText('x (((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙])))', [createIlbmMarkerRule()]).text, 'x ');
 });
 
 test('literal helper safely escapes regex metacharacters', () => {
@@ -41,7 +41,7 @@ test('scope filters display and prompt rules independently', () => {
 });
 
 test('invalid regex is skipped and never throws or destroys input', () => {
-  const result = processText('keep (((ILBM)))', [
+  const result = processText('keep (((ILBM:[entity:甲] 转移 [entity:短剑] 给 [entity:乙])))', [
     { id: 'broken', pattern: '(', replacement: '' },
     createIlbmMarkerRule(),
   ]);
