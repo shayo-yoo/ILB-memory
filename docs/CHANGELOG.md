@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-040 — Audit prompt timing and post-request reuse boundaries
+
+- Type: TEST / API / DOCS
+- Confirmed `prepareOpenAIMessages()` emits `CHAT_COMPLETION_PROMPT_READY` after `ChatCompletion.getChat()` and before generation request creation.
+- Confirmed ST has `custom-request.js` and generation request services, but no stable ILBM-specific post-extraction API was established.
+- Updated preflight and interface contract; no business feature implementation performed.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-039 — Audit ST chat metadata lifecycle paths
 
 - Type: TEST / DOCS / DATA

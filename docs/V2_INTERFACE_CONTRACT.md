@@ -144,6 +144,8 @@ ST 事件名称已从 `events.js` 源码确认：
 
 ## 7. 事后提取契约（post）
 
+ST 源码存在 `custom-request.js` 的文本/聊天请求服务，也存在 `sendGenerationRequest`、`sendStreamingRequest`；但这些是 ST 生成路径，不等于已确认可供 ILBM 直接调用的稳定外部提取 API。前置阶段只能记录能力存在，不能直接依赖内部实现。
+
 预期接口：
 
 ```js
