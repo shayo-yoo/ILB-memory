@@ -20,6 +20,11 @@
 | 生命周期事件名称 | 通过 | received/edited/deleted/swiped/swipeDeleted/promptReady 均返回明确名称 |
 | ILBM 与 ILB 同时加载 | 通过 | 两个全局 API 同时存在 |
 
+## 回归测试
+
+- `node --test tests/*.test.mjs`：55/55 通过。
+- 这些测试验证当前原型不回归，不等于 v2 前置环境全部完成。
+
 ## 尚未完成/不能据此宣称通过
 
 - chat 变量随真实 chat 备份、分叉、切换继承；

@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-036 — Record preflight regression suite
+
+- Type: TEST / DOCS
+- Recorded ILBM regression suite result: 55/55 passed.
+- Clarified that passing prototype tests does not close remaining v2 environment gaps.
+- No business feature implementation performed.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-035 — Verify ILB/ST preflight capabilities
 
 - Type: TEST / DOCS / API
