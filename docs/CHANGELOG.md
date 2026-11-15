@@ -11,6 +11,18 @@
 
 ---
 
+## CHG-20261115-048 — Route memory store through v2 storage adapter
+
+- Type: ARCH / DATA / TEST
+- Existing `memory-store` now depends on replaceable `MemoryStorage` adapter.
+- ILB backend is preferred; legacy localStorage remains fallback for migration safety.
+- Existing business methods and public API remain unchanged.
+- Version remains `0.2.0`; no destructive migration performed.
+- Node suite: 57/57.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-047 — Add width guards and v2 storage/schema foundation
 
 - Type: FIX / ARCH / DATA / TEST
