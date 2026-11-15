@@ -1,7 +1,7 @@
 # ILBM 当前项目状态
 
 - 日期：2026-11-14
-- 项目阶段：已完整阅读 `ILBMemory需求文档v2.md`；旧版需求已归档至 `docs/archive/ILBMemory需求文档-v1.md`。当前处于 v2 开发前置接口与环境验证阶段；已完成 ILB/ST 基础能力探针，证据为 `docs/V2_PREFLIGHT_RESULTS.md`；审计报告为 `docs/V2_GAP_AUDIT.md`，前置契约为 `docs/V2_INTERFACE_CONTRACT.md`，问题追踪为 `docs/BUG_TRACKER.md`。前置验证完成前不进入正式功能开发。后续开发只按 v2。
+- 项目阶段：已完整阅读 `ILBMemory需求文档v2.md`；旧版需求已归档至 `docs/archive/ILBMemory需求文档-v1.md`。当前已进入 v2 试运行开发阶段；试运行说明为 `docs/TRIAL_RUN.md`；已完成 ILB/ST 基础能力探针，证据为 `docs/V2_PREFLIGHT_RESULTS.md`；审计报告为 `docs/V2_GAP_AUDIT.md`，前置契约为 `docs/V2_INTERFACE_CONTRACT.md`，问题追踪为 `docs/BUG_TRACKER.md`。前置验证完成前不进入正式功能开发。后续开发只按 v2。
 - 版本：ILBM `0.1.1`；ILBR API `1.0.0`。
 - Git：已创建本地 Git 仓库并推送到 `https://github.com/shayo-yoo/ILB-memory.git`；当前工作区干净。独立 ILBR 仓库为 `https://github.com/shayo-yoo/ILB-regex.git`。
 - 最终自动验证：`node --test tests/*.test.mjs` 23/23；入口、库与 probe 脚本语法检查通过；manifest JSON 有效；真实 ST synthetic probe 和调试 UI probe 均通过。
