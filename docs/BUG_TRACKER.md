@@ -23,11 +23,13 @@
   - 关联：`39d52b5`、`3ea5204`。
 
 - [ ] **BUG-004** 手机真实 WebView 行为未验证
+  - 本轮增加 mobile max-width/overflow-x 保护；真实设备仍需验收。
   - 现象：桌面移动视口已通过，但真实手机端曾出现入口和关闭异常。
   - 当前状态：待真实设备验收。
   - 验收：手机设置入口、全屏 dialog、关闭、返回键均通过。
 
 - [ ] **BUG-005** PC shell 标题栏布局异常
+  - 宽度/几何修复已推送到 `612c80e`；本轮继续增加 root/body max-width 和横向溢出保护，待真实可见主题确认。
   - 修复方案：shell root/header/body 使用独立强制几何规则，header 横向排列、body block；探针确认 `display:flex`/`flex-direction:row`，但 headless 布局尺寸为 0，需真实可见 PC 主题人工确认。
   - 版本：0.1.2；commit `612c80e`。
   - 现象：标题未保持在管理面板标题栏，关闭按钮随之错位。

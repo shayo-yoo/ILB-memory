@@ -11,6 +11,19 @@
 
 ---
 
+## CHG-20261115-047 — Add width guards and v2 storage/schema foundation
+
+- Type: FIX / ARCH / DATA / TEST
+- Added PC/mobile max-width and horizontal overflow guards to prevent unreadable horizontal scrolling.
+- Added replaceable `lib/memory-storage.js` adapter: ILB backend first, legacy fallback second; existing store not replaced yet.
+- Added `lib/event-record.js` v2 record normalization and schema tests.
+- Bumped ILBM version to `0.2.0`.
+- Node suite: 57/57.
+- Added ADR `docs/decisions/D-ILBM-V2-002-storage-adapter.md`.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-046 — Fix PC shell layout and settings button contrast
 
 - Type: FIX / UI / ARCH / TEST
