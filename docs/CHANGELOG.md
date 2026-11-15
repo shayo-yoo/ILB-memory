@@ -21,7 +21,7 @@
 - New tests: `tests/relation-line.test.mjs` (7), `tests/memory-injection-merge.test.mjs` (7). Full suite: 98/98.
 - ADR: `docs/decisions/D-ILBM-V2-003-retrieval-pipeline.md`.
 - Known limits: timeline-depth unit is an interpretation pending real-chat validation; settings are API-level only; relation-line/merge not yet accepted in real ST.
-- Commit: pending.
+- Commit: cc41c8e.
 
 ---
 
@@ -34,7 +34,7 @@
   - place: `在场角色=无，在场物品=无`.
 - Missing item status is displayed as `未知` rather than inferring `完好`, so display does not turn an assumption into a fact (§9.4).
 - Updated `tests/state-schema.test.mjs`. Full suite: 98/98.
-- Commit: pending.
+- Commit: c7c78e8.
 
 ---
 
