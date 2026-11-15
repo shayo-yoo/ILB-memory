@@ -11,6 +11,16 @@
 
 ---
 
+## CHG-20261115-059 — Add event invalidation control to trial UI
+
+- Type: UI / FEATURE / TEST
+- Added floor-based “作废该楼层及之后” control for trial validation of edit/delete semantics.
+- Uses public `invalidateFromMessage` API; does not directly mutate UI state.
+- Node suite: 61/61.
+- Commit: pending.
+
+---
+
 ## CHG-20261115-058 — Add direct parser error help and bump trial version
 
 - Type: UI / DOCS / BUILD / TEST
