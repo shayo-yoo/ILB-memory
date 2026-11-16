@@ -11,6 +11,7 @@
 - **提取设置 UI（§7.7）**：提取模式、Base URL、API Key、模型、上下文档数、软超时、提示词、试提取；失败日志查看/清空；检索设置增加注入风格选择。
 - **设置与持久化**：`settings.extractionMode`（direct/post）、`settings.injectionStyle`、`settings.postApi`；`postApi` 深合并；备份 schema 2 自动携带新字段与提取标记。
 - Version: `0.7.0`.
+- Commit: 507f991.
 - Tests: `node --test tests/*.test.mjs` **148/148**（新增 `tests/post-extractor.test.mjs` 6、`tests/manual-edit.test.mjs` 3、`tests/candidate-events.test.mjs` 4、`tests/settings-extraction.test.mjs` 5、UI 3）。
 - ADR: `docs/decisions/D-ILBM-V2-006-injection-and-post-extraction.md`.
 - Known: 真实外部 API、晚到写入与 ST provider payload 尚未真实验收；API Key 随 chat 变量保存。
@@ -30,6 +31,7 @@
   - `narrative` 把状态卡改写为自然句、历史用动词模板生成（转移/移动/损坏/关系等），未知字段仍保留；不输出 JSON、记录 ID 或内部标记。
 - **兼容**：旧关系记录的 `targetId`、旧备份可继续读取；`STATE_ENUMS.RELATION_TYPES` 保留。
 - Tests: 新增 `tests/relation-model.test.mjs` 6、`tests/injection-style.test.mjs` 5；更新状态卡/关系线/UI 期望。全套 **148/148**。
+- Commit: 507f991.
 - ADR: `docs/decisions/D-ILBM-V2-004-entity-tags.md`、`D-ILBM-V2-005-directed-relations.md`.
 - Known: 角色解析只识别已知词/显式写法；真实 ST 注入可读性待验收。
 
