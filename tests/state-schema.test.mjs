@@ -4,6 +4,7 @@ import {
   STATE_ENUMS, 
   STATE_FIELDS, 
   getStateFieldsForEntityType,
+  getStateFieldsForTags,
   formatStateCard,
   validateStateChange 
 } from '../lib/state-schema.js';
@@ -123,6 +124,21 @@ test('状态字段默认值', () => {
   // 在场物品默认值
   const itemsPresentField = STATE_FIELDS.PLACE.ITEMS_PRESENT;
   assert.deepEqual(itemsPresentField.defaultValue, []);
+});
+
+test('多标签实体取字段并集并显示未知字段', () => {
+  const fields = getStateFieldsForTags(['item', 'person']);
+  assert.equal(fields.OWNER.label, '持有者');
+  assert.equal(fields.STATUS.label, '状态');
+  assert.equal(fields.CONTINUOUS_STATUS.label, '持续状态');
+  assert.equal(fields.RELATIONS.label, '当前有效关系');
+
+  const sentientSword = { id: 'e1', name: '有意识短剑', tags: ['item', 'sentient'] };
+  const text = formatStateCard(sentientSword, { ownerId: null, status: 'intact', mood: '警惕' });
+  assert.match(text, /持有者=未知/);
+  assert.match(text, /状态=完好/);
+  assert.match(text, /mood=警惕/);
+  assert.equal(validateStateChange(['item', 'sentient'], 'ownerId', 'e2').valid, true);
 });
 
 console.log('✅ 状态字段定义测试通过');

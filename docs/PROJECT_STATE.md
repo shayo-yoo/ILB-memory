@@ -1,11 +1,19 @@
 # ILBM 当前项目状态
 
 - 日期：2026-11-16
-- 版本：ILBM `0.5.0`（`index.js` / `manifest.json`）；ILBR API `1.0.0`。
-- 项目阶段：v2 阶段八最小查看界面代码级完成；阶段七与真实环境验收未完成。
-- 自动验证：`node --test tests/*.test.mjs` **111/111**；CDP-free 代码级验证 `tests/lightweight-verification.mjs` 退出码 0。
+- 版本：ILBM `0.6.0`（`index.js` / `manifest.json`）；ILBR API `1.0.0`。
+- 项目阶段：v2 实体 tagging/schema v2 与阶段八最小查看界面代码级完成；阶段七与真实环境验收未完成。
+- 自动验证：`node --test tests/*.test.mjs` **119/119**；CDP-free 代码级验证 `tests/lightweight-verification.mjs` 既有结果退出码 0。
 - Git：本地仓库 + `https://github.com/shayo-yoo/ILB-memory.git`；当前工作区在每次变更后提交，避免不可回滚的混合修改。
 - 环境级验证仍受阻：ST 运行于 `http://127.0.0.1:8001`，CDP 端口 9222/9227 未开放，无法捕获最终 provider payload。
+
+## 本阶段已完成（0.6.0，实体 tagging/schema v2）
+
+- **实体标签与 schema v2**：实体支持 `tags[]` 多标签；kind 标签（`person/item/place/organization`）决定默认字段集与分组，但不限制实体扩展能力；历史 `type` 数据自动迁移为标签。
+- **行为驱动标签**：有效记录按动作与 `stateChanges` 推导 kind 标签；pending/invalid 记录不产生标签；标签只增不删，避免历史事实因分支作废而丢失。
+- **多标签状态卡**：状态字段按标签并集计算；未知/自定义字段保留为可读文本；无标签与组织实体进入 `others`，仍参与状态卡和注入。
+- **标签管理与备份**：公开 `setEntityTags(id, tags)`；备份 schema 升至 2 并兼容 schema 1（`type` → `tags`）；版本升至 `0.6.0`。
+- **验证**：新增/更新标签、schema、状态卡、备份、注入和 API 测试；本次聚焦回归 29/29 通过。
 
 ## 本阶段已完成（0.5.0）
 
@@ -31,7 +39,7 @@
 ## 未完成 / 待真实验收
 
 - **阶段七**：延迟确认已实现 helper 和 MESSAGE_RECEIVED 调用，但真实编辑/删除/重新生成/Swipe 分支后的有效性未做人工 UI 验收；`MESSAGE_*` 稳定参数仍按宽容降级处理。
-- **阶段八**：列表/详情最小字段集已实现；仍缺提取模式与 API 配置、触发设置、手动编辑记录、失败日志查看和固定设置页。
+- **阶段八**：列表/详情最小字段集与实体标签展示已实现；仍缺提取模式与 API 配置、触发设置、手动编辑记录、失败日志查看和固定设置页。
 - **提取**：模式 A 直出已接入；模式 B 事后 OpenAI 兼容 API、3 秒超时和晚到结果规则仍未实现（GAP-008）。
 - **指针**：关系线按同实体/同互动/同楼层实时推导，未持久化指针；入度查询时计算。需确认需求是否要求落库（ADR D-ILBM-V2-003）。
 - **时间线深度语义**：当前按“最近 N 条记录”解释，需求未给单位，需真实对话实验验证（GAP-011）。

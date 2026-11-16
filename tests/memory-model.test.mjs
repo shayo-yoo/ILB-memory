@@ -55,6 +55,17 @@ test('active window cannot be configured below two layers (§4.3)', () => {
   assert.equal(getActiveWindowBoundary(state, { currentFloor: 10 }).activeStart, 9);
 });
 
+test('store exposes setEntityTags and persists normalized tags', () => {
+  const memory = new Map();
+  const storage = { getItem: key => memory.get(key) ?? null, setItem: (key, value) => memory.set(key, value) };
+  const store = createMemoryStore({ storage, chatId: 'tags-api' });
+  const entity = store.registerEntity({ name: '有意识短剑', type: 'other' });
+  const updated = store.setEntityTags(entity.id, ['item', 'sentient']);
+  assert.deepEqual(updated.tags, ['item', 'sentient']);
+  assert.equal(updated.type, 'item');
+  assert.deepEqual(createMemoryStore({ storage, chatId: 'tags-api' }).inspect().entities[0].tags, ['item', 'sentient']);
+});
+
 test('store persists independently and degrades when storage fails', () => {
   const memory = new Map();
   const storage = { getItem: key => memory.get(key) ?? null, setItem: (key, value) => memory.set(key, value) };

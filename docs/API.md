@@ -2,7 +2,7 @@
 
 > 当前需求依据为 `../ILBMemory需求文档v2.md`；本文旧接口记录仅作为已实现能力参考，不代表 v2 目标均已完成。
 
-接口版本：ILBR 1.0.0；ILBM 0.4.0。第一周期范围仅供 ILB 系列扩展调用。
+接口版本：ILBR 1.0.0；ILBM 0.6.0。第一周期范围仅供 ILB 系列扩展调用。
 
 ## ILBR
 
@@ -40,8 +40,10 @@ const result = ilbr.processText(rawText, [createIlbmMarkerRule()], { scope: 'pro
 `window.ILBM_MEMORY`（以及 `window.ILBM_MEMORY` 的 `ILB_SERIES` 适配）提供当前聊天的记忆管理能力：
 
 - `inspect()`：返回 entities、records、settings、failures、currentState、replay、lastChange 和 eventAdapter。
-- `registerEntity({name,type,aliases?})`：注册实体，同名自动编号。
+- `registerEntity({name,type?,tags?,aliases?})`：注册实体，同名自动编号；旧 `type` 会迁移为 kind 标签。
+- `setEntityTags(id, tags)`：显式编辑实体标签；kind 标签决定默认字段集，实体可同时拥有多个 kind/自由标签。
 - `addRecord(record)`：添加手动事件记录；程序生成稳定记录 ID。
+- `exportBackup()` / `importBackup(payload)`：备份 schema v2；可导入 schema v1 并将 `type` 迁移为 `tags`。
 - `previewCandidates(payload, meta?)`：校验候选事件但不保存。
 - `importCandidates(payload, meta?)`：校验并保存合法候选事件。
 - `importCandidateResponse(raw, meta?)`：解析 AI 文本后再进入候选校验。

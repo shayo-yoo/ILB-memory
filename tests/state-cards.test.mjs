@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { addRecord, calculateCurrentState, createMemoryState, registerEntity } from '../lib/memory-model.js';
+import { addRecord, calculateCurrentState, createMemoryState, registerEntity, setEntityTags } from '../lib/memory-model.js';
 import { deriveStateChanges } from '../lib/action-state.js';
 import { ITEM_STATUS_CODE } from '../lib/state-schema.js';
 
@@ -97,4 +97,50 @@ test('状态推导按楼层线性扫描，取最近一次后值', () => {
   state = addRecord(state, { id: 'o2', text: '乙持有', floor: 9, action: { entityId: sword.entity.id, ownerId: '乙' } }).state;
   state = addRecord(state, { id: 'o3', text: '丙持有', floor: 4, action: { entityId: sword.entity.id, ownerId: '丙' } }).state;
   assert.equal(calculateCurrentState(state).entities[0].state.ownerId, '乙');
+});
+
+test('无类型实体由有效行为推导 kind 标签，pending 不触发', () => {
+  let state = createMemoryState();
+  const sword = registerEntity(state, { name: '短剑', type: 'other' }); state = sword.state;
+  const jia = registerEntity(state, { name: '甲', type: 'other' }); state = jia.state;
+  state = addRecord(state, {
+    id: 'pending', text: '甲获得短剑', floor: 1, status: 'pending',
+    stateChanges: deriveStateChanges('转移', [jia.entity.id, sword.entity.id]),
+  }).state;
+  assert.deepEqual(state.entities.find(entity => entity.id === sword.entity.id).tags, []);
+  assert.deepEqual(state.entities.find(entity => entity.id === jia.entity.id).tags, []);
+
+  state = addRecord(state, {
+    id: 'valid', text: '甲获得短剑', floor: 2, status: 'valid',
+    stateChanges: deriveStateChanges('转移', [jia.entity.id, sword.entity.id]),
+  }).state;
+  assert.deepEqual(state.entities.find(entity => entity.id === sword.entity.id).tags, ['item']);
+  assert.deepEqual(state.entities.find(entity => entity.id === jia.entity.id).tags, ['person']);
+
+  const cards = calculateCurrentState(state).cards;
+  assert.equal(cards.items.length, 1);
+  assert.equal(cards.items[0].entityId, sword.entity.id);
+  assert.equal(cards.persons.length, 1);
+  assert.equal(cards.persons[0].entityId, jia.entity.id);
+  assert.ok(cards.items[0].displayText.includes('持有者=甲'));
+});
+
+test('无标签与组织实体进入 others 状态卡，仍可注入摘要', () => {
+  let state = createMemoryState();
+  const guild = registerEntity(state, { name: '公会', tags: ['organization'] }); state = guild.state;
+  const mystery = registerEntity(state, { name: '神秘物', type: 'other' }); state = mystery.state;
+  const cards = calculateCurrentState(state).cards;
+  assert.deepEqual(cards.others.map(card => card.entityId).sort(), [guild.entity.id, mystery.entity.id].sort());
+  assert.deepEqual(cards.others.find(card => card.entityId === guild.entity.id).tags, ['organization']);
+  assert.equal(cards.others.find(card => card.entityId === mystery.entity.id).displayText, '暂无状态');
+});
+
+test('setEntityTags 支持多标签并派生主类型', () => {
+  let state = createMemoryState();
+  const dagger = registerEntity(state, { name: '有意识短剑', type: 'other' }); state = dagger.state;
+  const result = setEntityTags(state, dagger.entity.id, ['item', 'sentient']);
+  assert.deepEqual(result.entity.tags, ['item', 'sentient']);
+  assert.equal(result.entity.type, 'item');
+  const cards = calculateCurrentState(result.state).cards;
+  assert.equal(cards.items[0].tags.includes('sentient'), true);
 });

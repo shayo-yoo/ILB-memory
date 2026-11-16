@@ -1,5 +1,29 @@
 # ILBM Change Log
 
+## CHG-20261116-082 — Entity tag API/UI chips
+
+- Type: FEATURE / API / UI / TEST
+- Preserved the existing model-owned `setEntityTags(state, id, tags)` contract and verified forwarding through `memory-store` and `ILBM_MEMORY` (`setEntityTags(id, tags)`); edits persist normalized tags and derived primary `type`.
+- Entity management UI now renders tags as chips and provides an inline comma-separated tag editor/save action; registration accepts initial tags.
+- Added store persistence regression coverage. Focused API/model/view/UI tests: **34/34 passed** (`node --test tests/memory-model.test.mjs tests/memory-view.test.mjs tests/ui-shell.test.mjs tests/state-cards.test.mjs tests/api-contract.test.mjs`).
+
+---
+## CHG-20261116-081 — Entity tagging and schema v2 completion
+
+- Type: FEATURE / DATA / API / BACKUP / TEST / DOCS
+- Completed entity tagging/schema v2 work without changing the existing record/event contract:
+  - entities persist `tags[]`; kind tags (`person`, `item`, `place`, `organization`) determine default state-field sets and display grouping, while multi-tag entities use the union of tagged fields;
+  - legacy `type`-only entities migrate to tags during normalization; `type` remains a derived primary kind for compatibility;
+  - valid actions/state changes derive additive kind tags; pending and invalid records do not affect tags;
+  - untagged/organization/custom-tag entities are grouped under `others` and remain included in state cards and injection;
+  - public memory API adds `setEntityTags(id, tags)` for explicit tag edits;
+  - backup schema increments to v2 and imports schema v1 (`type` → `tags`) safely; ILBM/manifest version increments to `0.6.0`.
+- Architecture/data impact: tag derivation is owned by `memory-model`, field-union/formatting by `state-schema`, persistence/API forwarding by `memory-store`/`index`; no separate pointer table or duplicated state store introduced.
+- Confirmation path re-normalizes promoted pending records, so behavior-derived tags appear immediately after floor confirmation; regression coverage added in `tests/confirmation.test.mjs`.
+- Evidence: focused regression plus confirmation coverage passed; full `node --test tests/*.test.mjs` — **119/119 passed**.
+- Real ST/provider acceptance remains pending; see `docs/PROJECT_STATE.md`.
+
+---
 ## CHG-20261116-080 — Stage-eight event/entity lists and record-action persistence fix
 
 - Type: UI / FEATURE / FIX / DATA / TEST / DOCS

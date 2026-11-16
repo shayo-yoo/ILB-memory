@@ -20,3 +20,12 @@ test('memory text truncates oldest history under budget', () => {
   assert.equal(result.truncated, true);
   assert.match(result.text, /历史19/);
 });
+
+test('无标签与组织实体状态也参与注入', () => {
+  let state = createMemoryState();
+  const guild = registerEntity(state, { name: '公会', tags: ['organization'] }); state = guild.state;
+  const mystery = registerEntity(state, { name: '神秘物', type: 'other' }); state = mystery.state;
+  const result = buildMemoryText(state, { currentFloor: 1, tokenBudget: 2000 });
+  assert.match(result.text, /公会：暂无当前状态/);
+  assert.match(result.text, /神秘物：暂无当前状态/);
+});

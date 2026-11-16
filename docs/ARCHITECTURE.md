@@ -11,8 +11,9 @@ ILBM mark callback (currently no storage implementation) ──> future extracto
 
 - `lib/ilbr-engine.js`: pure computation only. No DOM, ST imports, event subscriptions, persistence, or global state.
 - `lib/ilbm-bridge.js`: marker policy and ST hook registration; catches failures so normal chat continues.
-- `lib/memory-model.js`: pure entity/record normalization, state recomputation and replay window.
-- `lib/memory-store.js`: chat-scoped persistence port with fail-open localStorage behavior.
+- `lib/memory-model.js`: pure entity/record normalization, additive entity-kind tag derivation, multi-tag state recomputation and replay window.
+- `lib/state-schema.js`: canonical kind-tag definitions, field-set union, enum validation and readable state-card formatting.
+- `lib/memory-store.js`: chat-scoped persistence port with fail-open localStorage behavior; forwards explicit tag edits.
 - `ui.js`: non-technical debug/control UI; calls memory store API but does not implement state logic.
 - `index.js`: browser bootstrap, memory store assembly and additive API publication. Does not mutate `window.ILB`.
 - `tests/`: Node unit/contract tests and optional local-ST CDP probe.
