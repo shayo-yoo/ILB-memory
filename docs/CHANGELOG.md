@@ -1,5 +1,19 @@
 # ILBM Change Log
 
+## CHG-20261117-085 — Marker prompt text, copy UI and optional prompt injection
+
+- Type: FEATURE / DOCS / UI / TEST
+- Added `lib/marker-prompt.js`:
+  - `MARKER_PROMPT_ZH` / `MARKER_PROMPT_EN`：与解析器一致的完整标记说明（外层语法、实体顺序、动作白名单、对称/不对称关系、常见禁止项）；
+  - `MARKER_SYNTAX_REFERENCE`：UI/文档使用的语法速查；
+  - `buildMarkerPrompt({language})`、`getMarkerPromptInfo()`。
+- Exposed API: `ILBM_MEMORY.markerPrompt({language?})`、`markerPromptInfo()`、`markerPromptInjection.{enable,apply,disable,clear}`（独立 key `ILBM_MARKER_PROMPT`，默认关闭）。
+- UI “标记处理”新增：查看/复制提示词、开启/立即注入/清除提示词注入；帮助文本明确“默认不自动注入”。
+- Added `docs/MARKER_PROMPT.md`：现状说明、完整语法、动作表、关系角色、示例、完整提示词、模式 B 差异与常见错误。
+- Tests: 新增 `tests/marker-prompt.test.mjs` 3、UI 提示词面板 1；全套 **152/152**。
+- Known: 自动注入仍默认关闭，避免与 ILB/用户系统提示词冲突；真实模型遵循率需实测。
+
+---
 ## CHG-20261117-084 — Mode B post extraction, manual record editing and failure-log UI
 
 - Type: FEATURE / API / UI / DATA / TEST / DOCS

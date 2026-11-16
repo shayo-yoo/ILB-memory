@@ -17,6 +17,7 @@ ILBM mark callback (currently no storage implementation) ──> future extracto
 - `lib/action-state.js`: action whitelist → `stateChanges` derivation (including relation type/role from marker tail).
 - `lib/injection-format.js`: compact/narrative rendering; verb templates; never emits JSON, record IDs or marker syntax.
 - `lib/post-extractor.js`: mode-B extraction adapter (OpenAI-compatible, soft timeout, late write, dedupe, failure log).
+- `lib/marker-prompt.js`: copyable mode-A instruction text (zh/en) and syntax reference; ILBM does not auto-inject it unless the user enables the optional prompt injector.
 - `lib/memory-store.js`: chat-scoped persistence port with fail-open localStorage behavior; forwards explicit tag edits, record edits and extraction marks.
 - `ui.js`: non-technical debug/control UI; calls memory store API but does not implement state logic.
 - `ui-shell.js`: management shell (events/entities/state/settings/extraction/failures); view-only, no state derivation.

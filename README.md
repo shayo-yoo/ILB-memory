@@ -14,6 +14,8 @@
 - `lib/injection-format.js`：compact/narrative 注入排版与动词模板。
 - `lib/memory-injection.js`：当前状态 + 回放 + 关系线的合并、去重、预算裁剪。
 - `lib/post-extractor.js`：模式 B 事后提取（OpenAI 兼容、软超时、晚到写入、去重、失败日志）。
+- `lib/marker-prompt.js`：模式 A 的 AI 标记提示词（中/英）与语法参考。
+- [`docs/MARKER_PROMPT.md`](./docs/MARKER_PROMPT.md)：标记语法、动作白名单、关系角色与完整提示词。
 - `lib/ilbr-engine.js`：纯同步、按调用的正则处理引擎；调用方传规则，返回原文/输出/命中/捕获/错误。
 - `lib/ilbm-bridge.js`：ILBM marker result、ST display formatter 和 prompt event adapters。
 - `tests/*.test.mjs`：Node 原生单元/契约测试。

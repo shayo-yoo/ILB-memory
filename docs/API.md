@@ -58,6 +58,9 @@ const result = ilbr.processText(rawText, [createIlbmMarkerRule()], { scope: 'pro
   - 返回 `text`、`style`、`usedRecords`、`truncated`、`injectedEntityIds`、`mainEntityIds`、`relationEntityIds`、`timelineRecordIds`、`protectedRecordIds`、`droppedRecords`、`overBudget` 等。
   - 裁剪顺序：关系线间接实体 → 最早的非保护回放记录；主节点时间线与同事件分组记录不裁剪。
 - `previewCurrentTurn(options?)`：使用当前聊天最后一条用户消息和当前楼层生成注入预览。
+- `markerPrompt({language?})`：返回模式 A 的标记提示词文本（`zh` 默认 / `en`）；用于放入 ILB 提示词注入、ST 系统提示词或世界书。
+- `markerPromptInfo()`：返回中英文提示词、语法参考和“不会自动注入”的说明。
+- `markerPromptInjection.{enable,apply,disable,clear}()`：可选的独立 extension prompt 注入，默认关闭；使用 `setExtensionPrompt` 的 `ILBM_MARKER_PROMPT` key。
 - `setSettings({activeWindowLayers?,replayLayers?,relationLineWidth?,timelineDepth?,injectionStyle?,extractionMode?,postApi?})`：修改当前 chat 的检索/提取/注入配置；`postApi` 为深合并对象（`baseUrl`、`apiKey`、`model`、`prompt`、`contextRounds`、`timeoutMs`、`requestTimeoutMs`）。
 - `injection.enable()` / `injection.apply()` / `injection.disable()`：记忆 extension prompt 注入；默认关闭，只有用户明确操作才写入。运行时注入文本会在应用时按当前最后一轮用户消息重新生成。
 - `removeRecord(id)`、`removeEntity(id)`、`reset()`：显式管理数据。
