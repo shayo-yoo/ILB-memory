@@ -13,8 +13,13 @@ ILBM mark callback (currently no storage implementation) ──> future extracto
 - `lib/ilbm-bridge.js`: marker policy and ST hook registration; catches failures so normal chat continues.
 - `lib/memory-model.js`: pure entity/record normalization, additive entity-kind tag derivation, multi-tag state recomputation and replay window.
 - `lib/state-schema.js`: canonical kind-tag definitions, field-set union, enum validation and readable state-card formatting.
-- `lib/memory-store.js`: chat-scoped persistence port with fail-open localStorage behavior; forwards explicit tag edits.
+- `lib/relation-model.js`: pure directed-relation registry, role parsing, display and natural-language sentences.
+- `lib/action-state.js`: action whitelist → `stateChanges` derivation (including relation type/role from marker tail).
+- `lib/injection-format.js`: compact/narrative rendering; verb templates; never emits JSON, record IDs or marker syntax.
+- `lib/post-extractor.js`: mode-B extraction adapter (OpenAI-compatible, soft timeout, late write, dedupe, failure log).
+- `lib/memory-store.js`: chat-scoped persistence port with fail-open localStorage behavior; forwards explicit tag edits, record edits and extraction marks.
 - `ui.js`: non-technical debug/control UI; calls memory store API but does not implement state logic.
+- `ui-shell.js`: management shell (events/entities/state/settings/extraction/failures); view-only, no state derivation.
 - `index.js`: browser bootstrap, memory store assembly and additive API publication. Does not mutate `window.ILB`.
 - `tests/`: Node unit/contract tests and optional local-ST CDP probe.
 
@@ -25,6 +30,10 @@ ILBM mark callback (currently no storage implementation) ──> future extracto
 - Prompt hook only mutates `generate_data.prompt/input` string fields.
 - Multimodal message arrays with non-text blocks are passed through unchanged.
 - Marker callback is currently a seam only; no event/entity persistence is implemented in this cycle.
+- Relations are directed edges `fromId → toId: type (role)`; symmetric types mirror one reverse edge, asymmetric types require two explicit records.
+- Injection never emits JSON, internal record IDs or `[entity:...]`; compact and narrative styles share the same merge/budget pipeline.
+- Mode-B extraction writes results as `pending`; late results never retroactively change the current turn's injection.
+- Extraction marks are chat-scoped and invalidated by message edit/delete/swipe so re-extraction remains possible.
 
 ## ST source evidence (local 1.19.0)
 

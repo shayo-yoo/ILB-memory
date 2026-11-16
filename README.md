@@ -7,10 +7,13 @@
 ## 模块
 
 - `manifest.json` + `index.js`：ST 扩展入口；发布 `window.ILBM` 和 additive `window.ILB_SERIES.memory`。
-- `ui-shell.js`：解耦的 PC/手机管理面板 shell；业务控件仍在逐步接入。
-- `lib/memory-model.js` + `lib/memory-store.js`：实体注册、事件存储、状态重算、回放与 chat 级设置。
+- `ui-shell.js`：解耦的 PC/手机管理面板 shell；含事件/实体/状态/标签/检索/提取/失败日志。
+- `lib/memory-model.js` + `lib/memory-store.js`：实体注册、事件存储、状态重算、回放、提取标记与 chat 级设置。
 - `lib/memory-retrieval.js`：主节点提及、一跳关系线、主节点时间线和同事件分组检索。
+- `lib/relation-model.js`：有向关系类型、角色解析、显示与自然语言句子。
+- `lib/injection-format.js`：compact/narrative 注入排版与动词模板。
 - `lib/memory-injection.js`：当前状态 + 回放 + 关系线的合并、去重、预算裁剪。
+- `lib/post-extractor.js`：模式 B 事后提取（OpenAI 兼容、软超时、晚到写入、去重、失败日志）。
 - `lib/ilbr-engine.js`：纯同步、按调用的正则处理引擎；调用方传规则，返回原文/输出/命中/捕获/错误。
 - `lib/ilbm-bridge.js`：ILBM marker result、ST display formatter 和 prompt event adapters。
 - `tests/*.test.mjs`：Node 原生单元/契约测试。

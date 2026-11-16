@@ -45,9 +45,9 @@ test('getRecordEntityIds 合并 entityIds、action 与 stateChanges 引用', () 
   const ids = getRecordEntityIds({
     entityIds: ['a'],
     action: { entityId: 'b', ownerId: 'c', locationId: 'd', relation: { targetId: 'e' } },
-    stateChanges: [{ entityId: 'f', before: 'g', after: 'h' }],
+    stateChanges: [{ entityId: 'f', before: 'g', after: 'h' }, { entityId: 'i', field: 'relations', after: { toId: 'j' } }],
   });
-  assert.deepEqual(new Set(ids), new Set(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']));
+  assert.deepEqual(new Set(ids), new Set(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']));
 });
 
 test('resolveMainEntityIds 支持 ID、短名与文本提及', () => {
@@ -68,6 +68,19 @@ test('关系线只带出一跳实体，并按直接相关与入度排序', () =>
   assert.ok(result.candidates[0].directCount >= 3);
   assert.equal(result.entities[0].inDegree >= result.candidates.at(-1).inDegree, true);
   assert.ok(result.excludedCount >= 1);
+});
+
+test('关系线通过有向关系边 toId 带出目标实体', () => {
+  let state = createMemoryState({ settings: { relationLineWidth: 3 } });
+  const jia = registerEntity(state, { name: '甲', type: 'person' }); state = jia.state;
+  const yi = registerEntity(state, { name: '乙', type: 'person' }); state = yi.state;
+  state = addRecord(state, {
+    id: 'rel1', text: '甲与乙结盟', floor: 3, status: 'valid', action: '建立关系',
+    entityIds: [jia.entity.id],
+    stateChanges: [{ entityId: jia.entity.id, field: 'relations', after: { toId: yi.entity.id, type: 'ALLY', role: '盟友', active: true } }],
+  }).state;
+  const relation = collectRelationLine(state, { mainEntityIds: [jia.entity.id], currentFloor: 5 });
+  assert.ok(relation.entities.some((entity) => entity.entityId === yi.entity.id));
 });
 
 test('关系线宽度为 0 时不带出任何实体', () => {

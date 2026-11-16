@@ -2,7 +2,7 @@
 
 > 当前需求依据为 `../ILBMemory需求文档v2.md`；本文旧接口记录仅作为已实现能力参考，不代表 v2 目标均已完成。
 
-接口版本：ILBR 1.0.0；ILBM 0.6.0。第一周期范围仅供 ILB 系列扩展调用。
+接口版本：ILBR 1.0.0；ILBM 0.7.0。第一周期范围仅供 ILB 系列扩展调用。
 
 ## ILBR
 
@@ -43,21 +43,39 @@ const result = ilbr.processText(rawText, [createIlbmMarkerRule()], { scope: 'pro
 - `registerEntity({name,type?,tags?,aliases?})`：注册实体，同名自动编号；旧 `type` 会迁移为 kind 标签。
 - `setEntityTags(id, tags)`：显式编辑实体标签；kind 标签决定默认字段集，实体可同时拥有多个 kind/自由标签。
 - `addRecord(record)`：添加手动事件记录；程序生成稳定记录 ID。
-- `exportBackup()` / `importBackup(payload)`：备份 schema v2；可导入 schema v1 并将 `type` 迁移为 `tags`。
+- `addManualRecord({text,floor,action?,entities?,description?})`：手动新增记录；短名会解析/注册，动作字符串按白名单推导 `stateChanges`，直接有效。
+- `updateRecord(id, patch)`：字段级修改记录，记录 ID 不变；`action` 字符串会重新推导状态变更，手动编辑直接有效。
+- `postExtract({floor?,sourceMessageId?,swipeId?})`：模式 B 事后提取（需 `extractionMode='post'` 与 `postApi` 配置）；返回本轮结果，`pending` 为完整请求 promise，软超时后仍会写入存储。
+- `postExtraction()`：返回当前提取模式与进行中的消息键。
+- `exportBackup()` / `importBackup(payload)`：备份 schema v2；可导入 schema v1 并将 `type` 迁移为 `tags`；包含 `extractionMarks` 与提取设置。
 - `previewCandidates(payload, meta?)`：校验候选事件但不保存。
-- `importCandidates(payload, meta?)`：校验并保存合法候选事件。
+- `importCandidates(payload, meta?)`：校验并保存合法候选事件；`meta` 支持 `status`、`extractionMode`、`resolveEntities`。
 - `importCandidateResponse(raw, meta?)`：解析 AI 文本后再进入候选校验。
 - `extractCandidates(text, {extract?,timeoutMs?})`：可注入 AI 适配器；默认不调用模型。
-- `buildMemoryText({currentFloor?,tokenBudget?,mentionedEntityIds?,mentionText?,relationLine?,relationLineWidth?,timelineDepth?,activeWindowLayers?,replayLayers?})`：生成合并后的记忆文本与诊断元数据。
+- `buildMemoryText({currentFloor?,tokenBudget?,mentionedEntityIds?,mentionText?,relationLine?,relationLineWidth?,timelineDepth?,activeWindowLayers?,replayLayers?,style?})`：生成合并后的记忆文本与诊断元数据。
+  - `style`：`compact`（默认）或 `narrative`；未提供时读取 `settings.injectionStyle`。
   - `mentionedEntityIds` 可传实体 ID 或短名；`mentionText` 传本轮文本由程序识别主节点；两者都未提供时退化为全量状态卡预览。
-  - 返回 `text`、`usedRecords`、`truncated`、`injectedEntityIds`、`mainEntityIds`、`relationEntityIds`、`timelineRecordIds`、`protectedRecordIds`、`droppedRecords`、`overBudget` 等。
+  - 返回 `text`、`style`、`usedRecords`、`truncated`、`injectedEntityIds`、`mainEntityIds`、`relationEntityIds`、`timelineRecordIds`、`protectedRecordIds`、`droppedRecords`、`overBudget` 等。
   - 裁剪顺序：关系线间接实体 → 最早的非保护回放记录；主节点时间线与同事件分组记录不裁剪。
 - `previewCurrentTurn(options?)`：使用当前聊天最后一条用户消息和当前楼层生成注入预览。
-- `setSettings({activeWindowLayers?,replayLayers?,relationLineWidth?,timelineDepth?})`：修改当前 chat 的检索/注入配置。
+- `setSettings({activeWindowLayers?,replayLayers?,relationLineWidth?,timelineDepth?,injectionStyle?,extractionMode?,postApi?})`：修改当前 chat 的检索/提取/注入配置；`postApi` 为深合并对象（`baseUrl`、`apiKey`、`model`、`prompt`、`contextRounds`、`timeoutMs`、`requestTimeoutMs`）。
 - `injection.enable()` / `injection.apply()` / `injection.disable()`：记忆 extension prompt 注入；默认关闭，只有用户明确操作才写入。运行时注入文本会在应用时按当前最后一轮用户消息重新生成。
 - `removeRecord(id)`、`removeEntity(id)`、`reset()`：显式管理数据。
 
 失败时返回诊断或抛出可读错误；失败不会阻塞聊天。候选事件必须先预览/校验，AI 不直接拥有最终存储权。
+
+### 关系数据结构
+
+实体状态中的关系为有向边：
+
+```js
+{ fromId, toId, type, role, establishedAt }
+```
+
+- `type` 使用关系类型码（如 `MASTER_SERVANT`），未知词为自定义类型；
+- `role` 是角色词（`主人`/`仆人`/`丈夫`/`妻子`…）；
+- 读取层兼容旧记录 `{ targetId, type }`；
+- 对称类型（朋友/敌人/盟友/家人/恋人）由一条记录补反向边；不对称类型必须两条记录。
 
 ## ST 适配时序
 

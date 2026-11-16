@@ -1,5 +1,39 @@
 # ILBM Change Log
 
+## CHG-20261117-084 — Mode B post extraction, manual record editing and failure-log UI
+
+- Type: FEATURE / API / UI / DATA / TEST / DOCS
+- **模式 B 事后提取（§5.2）**：新增 `lib/post-extractor.js`。AI 正常回复后，把当前轮 + 前 N 轮（默认 2，可配）和提取提示词发给用户配置的 OpenAI 兼容 `/chat/completions`；候选事件复用模式 A 的校验出口，保存为 `pending`。
+  - 3 秒软超时：本轮注入先用已有数据，请求继续；晚到结果仍写入存储、不回溯注入；30 秒硬超时中止请求。
+  - `extractionMarks` 按 `消息ID#Swipe` 去重；同一消息已有任意模式记录时跳过；编辑/删除/Swipe 会作废对应标记以允许重新提取。
+  - HTTP/解析/校验失败写失败日志（楼层、原因、来源消息），不阻塞聊天。
+- **手动编辑（§3.3/§4.3）**：新增 `updateRecord`（模型/store/API）与 `addManualRecord`；只改传入字段、记录 ID 不变、手动编辑直接有效并触发状态重算。UI 提供手动新增与事件编辑。
+- **提取设置 UI（§7.7）**：提取模式、Base URL、API Key、模型、上下文档数、软超时、提示词、试提取；失败日志查看/清空；检索设置增加注入风格选择。
+- **设置与持久化**：`settings.extractionMode`（direct/post）、`settings.injectionStyle`、`settings.postApi`；`postApi` 深合并；备份 schema 2 自动携带新字段与提取标记。
+- Version: `0.7.0`.
+- Tests: `node --test tests/*.test.mjs` **148/148**（新增 `tests/post-extractor.test.mjs` 6、`tests/manual-edit.test.mjs` 3、`tests/candidate-events.test.mjs` 4、`tests/settings-extraction.test.mjs` 5、UI 3）。
+- ADR: `docs/decisions/D-ILBM-V2-006-injection-and-post-extraction.md`.
+- Known: 真实外部 API、晚到写入与 ST provider payload 尚未真实验收；API Key 随 chat 变量保存。
+
+---
+## CHG-20261117-083 — Directed relations with roles and narrative injection
+
+- Type: FEATURE / DATA / API / INJECTION / TEST / DOCS
+- **有向关系边（§2.1/§5.3）**：新增 `lib/relation-model.js`。
+  - 关系存为 `{ fromId, toId, type, role, establishedAt }`；读取兼容旧 `targetId`。
+  - 对称类型（朋友/敌人/盟友/家人/恋人）由一条标记补反向边；不对称类型（主仆/夫妻/亲子/俘虏/主宠）必须写两条标记，角色各自独立。
+  - 标记尾部描述解析角色（`主人`、`仆人`、`丈夫`、`妻子`、`看守`、`俘虏`、`宠物`）；`主仆:主人`/`主宠:主人` 显式写法消除歧义；未知词作为自定义关系。
+  - 解除关系未写角色时移除该目标全部关系；写类型/角色时只移除匹配边。
+  - 状态卡显示 `对乙：主人`；事件动作列显示 `建立关系（主人）`；关系线通过 `after.toId` 带出目标实体。
+- **注入风格（§6）**：新增 `lib/injection-format.js` 与 `settings.injectionStyle`。
+  - `compact`（默认）保持 `实体：字段=值` + `第N层：原文`；
+  - `narrative` 把状态卡改写为自然句、历史用动词模板生成（转移/移动/损坏/关系等），未知字段仍保留；不输出 JSON、记录 ID 或内部标记。
+- **兼容**：旧关系记录的 `targetId`、旧备份可继续读取；`STATE_ENUMS.RELATION_TYPES` 保留。
+- Tests: 新增 `tests/relation-model.test.mjs` 6、`tests/injection-style.test.mjs` 5；更新状态卡/关系线/UI 期望。全套 **148/148**。
+- ADR: `docs/decisions/D-ILBM-V2-004-entity-tags.md`、`D-ILBM-V2-005-directed-relations.md`.
+- Known: 角色解析只识别已知词/显式写法；真实 ST 注入可读性待验收。
+
+---
 ## CHG-20261116-082 — Entity tag API/UI chips
 
 - Type: FEATURE / API / UI / TEST

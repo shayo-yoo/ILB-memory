@@ -69,7 +69,7 @@ test('状态卡格式化', () => {
   const personFormatted = formatStateCard(person, personState);
   assert.ok(personFormatted.includes('位置='));
   assert.ok(personFormatted.includes('持续状态=受伤'));
-  assert.ok(personFormatted.includes('当前有效关系=朋友'));
+  assert.ok(personFormatted.includes('当前有效关系=对实体person-2：朋友'), personFormatted);
   
   // 无状态记录时仍按 §2.1 最小字段集输出，且不得把未知值推断成事实
   const emptyState = {};

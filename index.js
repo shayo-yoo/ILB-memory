@@ -10,8 +10,10 @@ import { createMemoryInjector } from './lib/memory-injector.js';
 import { parseDirectMarkers } from './lib/direct-parser.js';
 import { createEntityResolver } from './lib/entity-resolver.js';
 import { createMemoryEventAdapter } from './lib/memory-events.js';
+import { createPostExtractor } from './lib/post-extractor.js';
+import { deriveStateChanges } from './lib/action-state.js';
 
-export const VERSION = '0.6.0';
+export const VERSION = '0.7.0';
 export const ILBM_EXTENSION_ID = 'ilb-memory';
 
 let started = false;
@@ -41,8 +43,15 @@ export function initializeILBM({ context, eventSource, eventTypes, globalObject 
     marker: ILBM_MARKER,
   }), (payload) => {
     if (payload?.index != null) memory?.confirmPending?.(payload.index);
-    const direct = parseDirectMarkers(payload?.result?.original ?? payload?.message?.mes ?? '', { floor: payload?.index ?? 0, sourceMessageId: payload?.message?.id ?? null, swipeId: payload?.message?.swipe_id ?? null, resolveEntities: names => entityResolver.resolve(names) });
-    for (const record of direct.records) { try { memory?.addRecord?.(record); } catch { /* candidate failures never block chat */ } }
+    const floor = payload?.index ?? 0;
+    const settings = memory?.inspect?.().settings ?? {};
+    if (settings.extractionMode === 'post') {
+      // §5.2：模式 B 下标记只过滤、不解析；事后提取异步进行，失败不阻塞聊天。
+      try { postExtractor?.extract?.({ floor, sourceMessageId: payload?.message?.id ?? null, swipeId: payload?.message?.swipe_id ?? null })?.catch?.(() => {}); } catch { /* never block chat */ }
+    } else {
+      const direct = parseDirectMarkers(payload?.result?.original ?? payload?.message?.mes ?? '', { floor, sourceMessageId: payload?.message?.id ?? null, swipeId: payload?.message?.swipe_id ?? null, resolveEntities: names => entityResolver.resolve(names) });
+      for (const record of direct.records) { try { memory?.addRecord?.(record); } catch { /* candidate failures never block chat */ } }
+    }
     lastProcess = { source: payload.source, sourceKey: payload.sourceKey, triggered: payload.result.triggered, errors: payload.result.errors, at: Date.now() };
     markCount += 1;
     lastMarkAt = lastProcess.at;
@@ -52,6 +61,15 @@ export function initializeILBM({ context, eventSource, eventTypes, globalObject 
   const chatId = context?.getCurrentChatId?.() ?? context?.chatId ?? 'default';
   const memory = createMemoryStore({ chatId });
   const entityResolver = createEntityResolver({ list: () => memory.inspect().entities, register: input => memory.registerEntity(input) });
+  let postExtractor = null;
+  postExtractor = createPostExtractor({
+    store: memory,
+    getSettings: () => memory.inspect().settings,
+    getChat: () => context?.chat ?? [],
+    getEntities: () => memory.inspect().entities,
+    fetchImpl: globalObject?.fetch?.bind?.(globalObject) ?? globalThis.fetch,
+    resolveEntities: names => entityResolver.resolve(names),
+  });
   const currentFloor = () => {
     const chat = context?.chat;
     return Array.isArray(chat) && chat.length > 0 ? chat.length - 1 : Infinity;
@@ -74,7 +92,7 @@ export function initializeILBM({ context, eventSource, eventTypes, globalObject 
   let lastMemoryChange = null;
   const eventAdapter = createMemoryEventAdapter({ eventSource: adapterSource, eventTypes: types, getContext: () => context, store: memory, onChange: change => { lastMemoryChange = { ...change, at: Date.now() }; } });
   const inspectMemory = () => ({ ...memory.inspect(), currentState: calculateCurrentState(memory.inspect()), replay: replayRecords(memory.inspect()), lastChange: lastMemoryChange, eventAdapter: { ok: eventAdapter.ok, events: eventAdapter.events ?? [], degraded: Boolean(lastMemoryChange?.degraded) } });
-  const memoryApi = { id: 'ILBM-Memory', version: VERSION, inspect: inspectMemory, parseDirectMarkers: (text, meta) => parseDirectMarkers(text, meta), buildMemoryText: options => buildMemoryText(memory.inspect(), options), previewCurrentTurn: options => buildTurnInjection(options), injection: { enabled: () => memoryInjector?.isEnabled() ?? false, enable: () => memoryInjector?.setEnabled(true), disable: () => memoryInjector?.setEnabled(false), apply: () => memoryInjector?.apply(), clear: () => memoryInjector?.clear() }, registerEntity: input => memory.registerEntity(input), setEntityTags: (id, tags) => memory.setEntityTags(id, tags), addRecord: input => memory.addRecord(input), confirmPending: floor => memory.confirmPending(floor), invalidatePendingBranch: change => memory.invalidatePendingBranch(change), invalidateFromMessage: input => memory.invalidateFromMessage(input), invalidateSwipeBranch: input => memory.invalidateSwipeBranch(input), setSettings: input => memory.setSettings(input), removeRecord: id => memory.removeRecord(id), removeEntity: id => memory.removeEntity(id), clearFailures: () => memory.clearFailures(), exportBackup: () => memory.exportBackup(), importBackup: payload => memory.importBackup(payload), previewCandidates: (payload, meta) => memory.previewCandidates(payload, meta), importCandidates: (payload, meta) => memory.importCandidates(payload, meta), importCandidateResponse: (raw, meta) => memory.importCandidateResponse(raw, meta), extractCandidates: (text, options) => runCandidateExtraction(text, options), reset: () => memory.reset(), events: () => ({ ...eventAdapter, events: eventAdapter.events ?? [] }) };
+  const memoryApi = { id: 'ILBM-Memory', version: VERSION, inspect: inspectMemory, parseDirectMarkers: (text, meta) => parseDirectMarkers(text, meta), buildMemoryText: options => buildMemoryText(memory.inspect(), options), previewCurrentTurn: options => buildTurnInjection(options), injection: { enabled: () => memoryInjector?.isEnabled() ?? false, enable: () => memoryInjector?.setEnabled(true), disable: () => memoryInjector?.setEnabled(false), apply: () => memoryInjector?.apply(), clear: () => memoryInjector?.clear() }, registerEntity: input => memory.registerEntity(input), setEntityTags: (id, tags) => memory.setEntityTags(id, tags), addRecord: input => memory.addRecord(input), addManualRecord: input => { const resolved = entityResolver.resolve(Array.isArray(input?.entities) ? input.entities : []); const entityIds = resolved.entityIds; const action = input?.action ? String(input.action).trim() : null; const stateChanges = action ? deriveStateChanges(action, entityIds, { description: input?.description ?? '' }) : []; return memory.addRecord({ ...input, entityIds, action, stateChanges, extractionMode: 'manual', status: 'valid' }); }, updateRecord: (id, patch) => { const current = memory.inspect().records.find(record => record.id === String(id)); if (!current) throw new Error(`record not found: ${id}`); const next = { ...(patch ?? {}) }; if (patch?.stateChanges !== undefined) next.stateChanges = patch.stateChanges; else if (typeof patch?.action === 'string') next.stateChanges = patch.action ? deriveStateChanges(patch.action, current.entityIds, { description: patch.description ?? '' }) : []; return memory.updateRecord(id, next); }, postExtract: input => postExtractor?.extract?.(input), postExtraction: () => ({ mode: memory.inspect().settings.extractionMode, inFlight: postExtractor?.inFlight?.() ?? [] }), confirmPending: floor => memory.confirmPending(floor), invalidatePendingBranch: change => memory.invalidatePendingBranch(change), invalidateFromMessage: input => memory.invalidateFromMessage(input), invalidateSwipeBranch: input => memory.invalidateSwipeBranch(input), setSettings: input => memory.setSettings(input), removeRecord: id => memory.removeRecord(id), removeEntity: id => memory.removeEntity(id), clearFailures: () => memory.clearFailures(), exportBackup: () => memory.exportBackup(), importBackup: payload => memory.importBackup(payload), previewCandidates: (payload, meta) => memory.previewCandidates(payload, meta), importCandidates: (payload, meta) => memory.importCandidates(payload, meta), importCandidateResponse: (raw, meta) => memory.importCandidateResponse(raw, meta), extractCandidates: (text, options) => runCandidateExtraction(text, options), reset: () => memory.reset(), events: () => ({ ...eventAdapter, events: eventAdapter.events ?? [] }) };
   const ilb = registerILBSeriesAPI(globalObject, bridge);
   integration = { display, prompt, capture, ilb, ilbr, memory: memoryApi };
   try { globalObject.ILBM_MEMORY = memoryApi; } catch { /* optional global diagnostic */ }

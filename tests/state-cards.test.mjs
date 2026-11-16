@@ -52,7 +52,7 @@ test('角色卡包含位置与持续状态与当前有效关系', () => {
   assert.equal(person.state.locationId, c.camp.id);
   assert.deepEqual(person.state.continuousStatus, ['受伤']);
   assert.equal(person.state.relations.length, 1);
-  assert.equal(person.state.relations[0].targetId, c.jia.id);
+  assert.equal(person.state.relations[0].toId, c.jia.id);
   assert.ok(person.displayText.includes('位置=营地'), person.displayText);
   assert.ok(person.displayText.includes('持续状态=受伤'), person.displayText);
   assert.ok(person.displayText.includes('当前有效关系='), person.displayText);
