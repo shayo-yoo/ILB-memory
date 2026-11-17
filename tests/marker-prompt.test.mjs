@@ -18,6 +18,12 @@ test('英文提示词可用且语法一致', () => {
   assert.equal(buildMarkerPrompt(), MARKER_PROMPT_ZH);
 });
 
+test('提示词禁止 XML/Markdown 包装与全角冒号改写', () => {
+  assert.match(MARKER_PROMPT_ZH, /不要使用 <mem>/);
+  assert.match(MARKER_PROMPT_ZH, /全角冒号/);
+  assert.match(MARKER_PROMPT_EN, /Never rewrite the syntax/);
+});
+
 test('语法参考与提示词信息可用于 UI/API', () => {
   assert.equal(MARKER_SYNTAX_REFERENCE.wrapper, '(((ILBM:[entity:主体] 动作 [entity:客体] [entity:接收者] 补充说明)))');
   assert.ok(MARKER_SYNTAX_REFERENCE.actions.includes('转移'));

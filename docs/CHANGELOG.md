@@ -1,5 +1,24 @@
 # ILBM Change Log
 
+## CHG-20261117-086 — Bad marker rejection tests and anti-rewrite prompt rules
+
+- Type: FEATURE / TEST / DOCS
+- Added `tests/bad-marker-rejection.test.mjs` (4 cases):
+  - 正确标记可解析为转移记录；
+  - `<mem>...</mem>`、全角冒号、尖括号动作等非法文本不产生记录，也不被静默改写；
+  - 提取器要求半角冒号，拒绝全角冒号与尖括号包装；
+  - 关系动作读取标记尾部角色。
+- Prompt hardening (`lib/marker-prompt.js` / `docs/MARKER_PROMPT.md`):
+  - 新增规则 7：禁止改写语法（不得使用 `<mem>`、`</mem>`、`<转移>`、`<to>`、全角冒号“：”或任何 XML/Markdown 包装）；
+  - 新增规则 8：输出前逐字复制示例；
+  - 英文版同步加入 `Never rewrite the syntax`；
+  - 新增反面示例段落；
+  - 常见错误表新增“模型输出 `<mem>...</mem>`”与“模型使用全角冒号”。
+- Tests: 新增 `tests/bad-marker-rejection.test.mjs` 4、`tests/marker-prompt.test.mjs` 1、`tests/marker-prompt-doc-consistency.test.mjs` 3；全套 **160/160**。
+- 修复：`docs/MARKER_PROMPT.md` 第 5 节复制块与 `MARKER_PROMPT_ZH` 曾出现规则 7/8 重复与示例缺失；现由一致性测试保证两者逐字相同。
+- Known: 解析器仍 fail-closed，非法文本不会被改写；真实模型遵循率需实测。
+
+---
 ## CHG-20261117-085 — Marker prompt text, copy UI and optional prompt injection
 
 - Type: FEATURE / DOCS / UI / TEST
